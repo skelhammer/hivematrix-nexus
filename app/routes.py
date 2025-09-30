@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 import jwt
 
 # Cache for Core's public key to avoid fetching it on every request
-# This will be initialized on the first request to avoid app context issues
 jwks_client = None
 
 def get_jwks_client():
@@ -15,6 +14,29 @@ def get_jwks_client():
         core_url = current_app.config['CORE_SERVICE_URL']
         jwks_client = jwt.PyJWKClient(f"{core_url}/.well-known/jwks.json")
     return jwks_client
+
+def validate_token(token):
+    """
+    Validates a JWT token and returns the decoded data.
+    Returns None if the token is invalid or expired.
+    """
+    try:
+        client = get_jwks_client()
+        signing_key = client.get_signing_key_from_jwt(token)
+        data = jwt.decode(
+            token,
+            signing_key.key,
+            algorithms=["RS256"],
+            issuer="hivematrix.core",
+            options={"verify_exp": True}
+        )
+        return data
+    except jwt.ExpiredSignatureError:
+        # Token has expired
+        return None
+    except jwt.PyJWTError:
+        # Token is invalid for other reasons
+        return None
 
 @app.route('/auth-callback')
 def auth_callback():
@@ -27,41 +49,56 @@ def auth_callback():
     if not token:
         return "Authentication failed: No token provided.", 400
 
-    try:
-        client = get_jwks_client()
-        signing_key = client.get_signing_key_from_jwt(token)
-        data = jwt.decode(
-            token,
-            signing_key.key,
-            algorithms=["RS256"],
-            issuer="hivematrix.core",
-            options={"verify_exp": True}
-        )
-        session['token'] = token
-        session['user'] = data
+    data = validate_token(token)
+    if not data:
+        return "Authentication failed: Invalid or expired token.", 401
 
-        # Redirect to the originally requested path
-        return redirect(session.pop('next_url', '/'))
+    session['token'] = token
+    session['user'] = data
 
-    except jwt.PyJWTError as e:
-        return f"Authentication failed: Invalid token. {e}", 401
+    # Redirect to the originally requested path
+    return redirect(session.pop('next_url', '/'))
+
+
+@app.route('/logout')
+def logout():
+    """
+    Clears the user's session and redirects to Core's logout.
+    """
+    session.clear()
+    core_url = current_app.config['CORE_SERVICE_URL']
+    return redirect(f"{core_url}/logout")
 
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def main_gateway(path):
     """
-    This is now the single entry point for all user-facing requests.
-    It handles authentication and then proxies to the correct service.
+    This is the single entry point for all user-facing requests.
+    It handles authentication, token validation, and proxying to services.
     """
-    # --- Authentication Check ---
+    # --- Check if user has a token ---
     if 'token' not in session:
-        # Store the full path the user was trying to access
+        # No token at all - redirect to login
         session['next_url'] = request.full_path
-        # Redirect to Core for login
         nexus_callback_url = url_for('auth_callback', _external=True)
         core_login_url = f"{current_app.config['CORE_SERVICE_URL']}/login?next={nexus_callback_url}"
         return redirect(core_login_url)
+
+    # --- Validate the token ---
+    token = session['token']
+    token_data = validate_token(token)
+
+    if not token_data:
+        # Token is expired or invalid - clear session and redirect to login
+        session.clear()
+        session['next_url'] = request.full_path
+        nexus_callback_url = url_for('auth_callback', _external=True)
+        core_login_url = f"{current_app.config['CORE_SERVICE_URL']}/login?next={nexus_callback_url}"
+        return redirect(core_login_url)
+
+    # Update session with fresh token data (in case it was decoded again)
+    session['user'] = token_data
 
     # If the path is empty, redirect to the first available service
     if not path:
@@ -87,7 +124,7 @@ def main_gateway(path):
 
     # --- Add Auth Header to Proxied Request ---
     headers = {key: value for (key, value) in request.headers if key != 'Host'}
-    headers['Authorization'] = f"Bearer {session['token']}"
+    headers['Authorization'] = f"Bearer {token}"
 
     try:
         resp = requests.request(
