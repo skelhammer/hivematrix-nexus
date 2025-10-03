@@ -32,11 +32,79 @@ def validate_token(token):
         )
         return data
     except jwt.ExpiredSignatureError:
-        # Token has expired
         return None
     except jwt.PyJWTError:
-        # Token is invalid for other reasons
         return None
+
+def inject_side_panel(soup, current_service):
+    """Injects the side panel navigation into the HTML."""
+    services = current_app.config.get('SERVICES', {})
+
+    # Create side panel HTML
+    side_panel_html = '''
+    <div class="hivematrix-side-panel">
+        <div class="side-panel__header">
+            <h3 class="side-panel__title">HiveMatrix</h3>
+        </div>
+        <nav class="side-panel__nav">
+            <ul class="side-panel__list">
+    '''
+
+    # Service icons mapping
+    service_icons = {
+        'template': '📝',
+        'codex': '📚',
+        'knowledgetree': '🌳',
+        'resolve': '🎫',
+        'architect': '🏗️',
+        'treasury': '💰'
+    }
+
+    # Add each service as a link
+    for service_name, service_config in services.items():
+        icon = service_icons.get(service_name, '📦')
+        active_class = 'side-panel__item--active' if service_name == current_service else ''
+        display_name = service_name.title()
+
+        side_panel_html += f'''
+            <li class="side-panel__item {active_class}">
+                <a href="/{service_name}/" class="side-panel__link">
+                    <span class="side-panel__icon">{icon}</span>
+                    <span class="side-panel__label">{display_name}</span>
+                </a>
+            </li>
+        '''
+
+    side_panel_html += '''
+            </ul>
+        </nav>
+        <div class="side-panel__footer">
+            <a href="/logout" class="side-panel__link">
+                <span class="side-panel__icon">🚪</span>
+                <span class="side-panel__label">Logout</span>
+            </a>
+        </div>
+    </div>
+    '''
+
+    # Add wrapper div for layout
+    wrapper_start = '<div class="hivematrix-layout">'
+    wrapper_end = '</div>'
+
+    # Find body tag and inject
+    body = soup.find('body')
+    if body:
+        # Wrap existing content
+        body_contents = ''.join(str(tag) for tag in body.contents)
+        body.clear()
+
+        # Create new structure
+        body.append(BeautifulSoup(wrapper_start, 'html.parser'))
+        body.append(BeautifulSoup(side_panel_html, 'html.parser'))
+
+        content_wrapper = BeautifulSoup('<div class="hivematrix-content">' + body_contents + '</div>', 'html.parser')
+        body.append(content_wrapper)
+        body.append(BeautifulSoup(wrapper_end, 'html.parser'))
 
 @app.route('/auth-callback')
 def auth_callback():
@@ -143,9 +211,18 @@ def main_gateway(path):
             soup = BeautifulSoup(content, 'html.parser')
             head = soup.find('head')
             if head:
+                # Inject global CSS
                 css_link = soup.new_tag('link', rel='stylesheet', href=url_for('static', filename='css/global.css'))
                 head.append(css_link)
-                content = str(soup)
+
+                # Inject side panel CSS
+                panel_css_link = soup.new_tag('link', rel='stylesheet', href=url_for('static', filename='css/side-panel.css'))
+                head.append(panel_css_link)
+
+            # Inject side panel
+            inject_side_panel(soup, service_name)
+
+            content = str(soup)
 
         return Response(content, resp.status_code, headers)
 

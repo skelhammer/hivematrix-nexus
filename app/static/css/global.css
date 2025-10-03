@@ -1,9 +1,15 @@
-/* A very basic design system based on our BEM definitions */
+/* Updated global.css with body adjustments for side panel */
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background-color: #f4f7f9;
     color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Adjust padding when side panel is present */
+.hivematrix-content {
     padding: 2rem;
 }
 
@@ -40,10 +46,21 @@ body {
     cursor: pointer;
     margin-right: 0.5rem;
     transition: background-color 0.2s ease-in-out;
+    background-color: #ecf0f1;
+    color: #2c3e50;
 }
 
 .btn__label {
     font-weight: bold;
+}
+
+.btn:hover {
+    background-color: #bdc3c7;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 /* Modifiers */
@@ -62,3 +79,101 @@ body {
 .btn--danger:hover {
     background-color: #c0392b;
 }
+
+/* --- Table Component --- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+}
+
+thead {
+    background-color: #ecf0f1;
+    font-weight: bold;
+}
+
+th, td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* --- Form Elements --- */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+select,
+textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+/* --- Links --- */
+a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* --- Code blocks --- */
+code {
+    background-color: #f4f7f9;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+pre {
+    background-color: #f4f7f9;
+    padding: 1rem;
+    border-radius: 4px;
+    overflow-x: auto;
+}
+
+pre code {
+    background-color: transparent;
+    padding: 0;
+}
+
+/* --- Utility classes --- */
+.text-center {
+    text-align: center;
+}
+
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mt-4 { margin-top: 2rem; }
+
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+.mb-4 { margin-bottom: 2rem; }
