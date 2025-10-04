@@ -1,14 +1,14 @@
 {
-    "template": {
-        "url": "http://localhost:5001"
+    "helm": {
+        "url": "http://localhost:5004"
     },
     "codex": {
         "url": "http://localhost:5010"
     },
-    "knowledgetree": {
-        "url": "http://localhost:5020"
-    },
     "ledger": {
         "url": "http://localhost:5030"
+    },
+    "knowledgetree": {
+        "url": "http://localhost:5020"
     }
 }
