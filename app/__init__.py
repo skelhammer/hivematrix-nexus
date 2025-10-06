@@ -12,6 +12,7 @@ if not app.config['SECRET_KEY']:
 
 # Load other configuration variables
 app.config['CORE_SERVICE_URL'] = os.environ.get('CORE_SERVICE_URL')
+app.config['NEXUS_SERVICE_URL'] = os.environ.get('NEXUS_SERVICE_URL', 'http://localhost:8000')
 
 
 # Load services configuration from services.json
@@ -23,5 +24,17 @@ except FileNotFoundError:
     print("WARNING: services.json not found. The proxy will not know about any backend services.")
     app.config['SERVICES'] = {}
 
+# Initialize Helm logger for centralized logging
+app.config['SERVICE_NAME'] = os.environ.get('SERVICE_NAME', 'nexus')
+app.config['HELM_SERVICE_URL'] = os.environ.get('HELM_SERVICE_URL', 'http://localhost:5004')
+
+from app.helm_logger import init_helm_logger
+helm_logger = init_helm_logger(
+    app.config['SERVICE_NAME'],
+    app.config['HELM_SERVICE_URL']
+)
 
 from app import routes
+
+# Log service startup
+helm_logger.info(f"{app.config['SERVICE_NAME']} service started")
