@@ -27,13 +27,15 @@ def validate_token(token):
             token,
             signing_key.key,
             algorithms=["RS256"],
-            issuer="hivematrix.core",
+            issuer="hivematrix-core",
             options={"verify_exp": True}
         )
         return data
     except jwt.ExpiredSignatureError:
+        print("Token validation failed: Token expired")
         return None
-    except jwt.PyJWTError:
+    except jwt.PyJWTError as e:
+        print(f"Token validation failed: {e}")
         return None
 
 def inject_side_panel(soup, current_service):
@@ -55,9 +57,13 @@ def inject_side_panel(soup, current_service):
         'template': '📝',
         'codex': '📚',
         'knowledgetree': '🌳',
+        'ledger': '💰',
         'resolve': '🎫',
         'architect': '🏗️',
-        'treasury': '💰'
+        'treasury': '💵',
+        'core': '🔐',
+        'nexus': '🌐',
+        'helm': '⚙️'
     }
 
     # Add each service as a link
@@ -98,13 +104,26 @@ def inject_side_panel(soup, current_service):
         body_contents = ''.join(str(tag) for tag in body.contents)
         body.clear()
 
-        # Create new structure
-        body.append(BeautifulSoup(wrapper_start, 'html.parser'))
-        body.append(BeautifulSoup(side_panel_html, 'html.parser'))
+        # Create new structure with proper nesting
+        layout_wrapper = BeautifulSoup(f'''
+        <div class="hivematrix-layout">
+            {side_panel_html}
+            <div class="hivematrix-content">
+                {body_contents}
+            </div>
+        </div>
+        ''', 'html.parser')
 
-        content_wrapper = BeautifulSoup('<div class="hivematrix-content">' + body_contents + '</div>', 'html.parser')
-        body.append(content_wrapper)
-        body.append(BeautifulSoup(wrapper_end, 'html.parser'))
+        body.append(layout_wrapper)
+
+@app.route('/health')
+def health():
+    """
+    Health check endpoint for monitoring.
+    Returns 200 if service is running.
+    """
+    return {'status': 'healthy', 'service': 'nexus'}, 200
+
 
 @app.route('/auth-callback')
 def auth_callback():
@@ -115,11 +134,19 @@ def auth_callback():
     """
     token = request.args.get('token')
     if not token:
-        return "Authentication failed: No token provided.", 400
+        # No token provided, redirect to login
+        session.clear()
+        core_url = current_app.config['CORE_SERVICE_URL']
+        next_url = session.pop('next_url', '/')
+        return redirect(f"{core_url}/login?next={request.host_url}auth-callback")
 
     data = validate_token(token)
     if not data:
-        return "Authentication failed: Invalid or expired token.", 401
+        # Invalid or expired token, clear session and redirect to login
+        session.clear()
+        core_url = current_app.config['CORE_SERVICE_URL']
+        next_url = session.pop('next_url', '/')
+        return redirect(f"{core_url}/login?next={request.host_url}auth-callback")
 
     session['token'] = token
     session['user'] = data
@@ -159,6 +186,7 @@ def main_gateway(path):
 
     if not token_data:
         # Token is expired or invalid - clear session and redirect to login
+        print(f"Token validation failed for path: {request.full_path}")
         session.clear()
         session['next_url'] = request.full_path
         nexus_callback_url = url_for('auth_callback', _external=True)
