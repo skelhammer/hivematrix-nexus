@@ -158,11 +158,51 @@ def auth_callback():
 @app.route('/logout')
 def logout():
     """
-    Clears the user's session and redirects to Core's logout.
+    Clears all sessions: Nexus, Core, and Keycloak.
+    Returns HTML that calls Core logout, then Keycloak logout, then redirects to Nexus.
     """
+    from flask import make_response
+    import os
+
+    # Clear Nexus session
     session.clear()
+
+    # Get configuration
     core_url = current_app.config['CORE_SERVICE_URL']
-    return redirect(f"{core_url}/logout")
+    keycloak_url = os.environ.get('KEYCLOAK_SERVER_URL', 'http://localhost:8080')
+    keycloak_realm = os.environ.get('KEYCLOAK_REALM', 'hivematrix')
+    nexus_url = current_app.config.get('NEXUS_SERVICE_URL', 'http://localhost:8000')
+
+    # Return HTML that performs multi-step logout
+    html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Logging out...</title>
+        <meta http-equiv="refresh" content="2;url={keycloak_url}/realms/{keycloak_realm}/protocol/openid-connect/logout?redirect_uri={nexus_url}">
+    </head>
+    <body>
+        <p>Logging out...</p>
+        <iframe src="{core_url}/logout" style="display:none;" onload="console.log('Core logout called')"></iframe>
+        <script>
+            // After 1.5 seconds, redirect to Keycloak logout
+            setTimeout(function() {{
+                window.location.href = '{keycloak_url}/realms/{keycloak_realm}/protocol/openid-connect/logout?redirect_uri={nexus_url}';
+            }}, 1500);
+        </script>
+    </body>
+    </html>
+    """
+
+    response = make_response(html)
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+
+    # Delete Nexus session cookie
+    response.delete_cookie('session', path='/')
+
+    return response
 
 
 @app.route('/', defaults={'path': ''})
