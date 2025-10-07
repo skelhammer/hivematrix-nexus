@@ -154,8 +154,22 @@ def keycloak_proxy(path):
 
         # Build response
         excluded_headers = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
-        response_headers = [(name, value) for (name, value) in resp.raw.headers.items()
-                          if name.lower() not in excluded_headers]
+        response_headers = []
+
+        for name, value in resp.raw.headers.items():
+            if name.lower() in excluded_headers:
+                continue
+
+            # Rewrite Set-Cookie headers to use the proxy path
+            if name.lower() == 'set-cookie':
+                # Remove domain restrictions and set path to /keycloak
+                value = re.sub(r'; Domain=[^;]+', '', value)
+                value = re.sub(r'; Path=[^;]+', '; Path=/keycloak', value)
+                # Ensure SameSite=None for cross-origin cookies if using HTTPS
+                if 'SameSite' not in value:
+                    value += '; SameSite=Lax'
+
+            response_headers.append((name, value))
 
         content = resp.content
 
