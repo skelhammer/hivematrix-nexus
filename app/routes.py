@@ -135,8 +135,11 @@ def keycloak_proxy(path):
     import os
     import re
 
-    keycloak_url = os.environ.get('KEYCLOAK_SERVER_URL', 'http://localhost:8080')
-    backend_url = f"{keycloak_url}/{path}"
+    # Use backend URL for proxy connection (always localhost:8080)
+    # KEYCLOAK_SERVER_URL is the frontend URL that clients use
+    keycloak_backend = os.environ.get('KEYCLOAK_BACKEND_URL', 'http://localhost:8080')
+    keycloak_url = keycloak_backend
+    backend_url = f"{keycloak_backend}/{path}"
 
     # Forward the request to Keycloak with proxy headers
     headers = {key: value for (key, value) in request.headers if key.lower() != 'host'}
@@ -282,13 +285,14 @@ def keycloak_callback():
         return "No authorization code received", 401
 
     # Exchange code for tokens with Keycloak
-    keycloak_server = os.environ.get('KEYCLOAK_SERVER_URL', 'http://localhost:8080')
+    # Use backend URL for server-to-server communication (avoids SSL issues)
+    keycloak_backend = os.environ.get('KEYCLOAK_BACKEND_URL', 'http://localhost:8080')
     keycloak_realm = os.environ.get('KEYCLOAK_REALM', 'hivematrix')
     client_id = os.environ.get('KEYCLOAK_CLIENT_ID', 'core-client')
     client_secret = os.environ.get('KEYCLOAK_CLIENT_SECRET')
     redirect_uri = url_for('keycloak_callback', _external=True)
 
-    token_url = f"{keycloak_server}/realms/{keycloak_realm}/protocol/openid-connect/token"
+    token_url = f"{keycloak_backend}/realms/{keycloak_realm}/protocol/openid-connect/token"
 
     try:
         token_response = requests.post(
