@@ -17,10 +17,14 @@ def get_jwks_client():
 
 def validate_token(token):
     """
-    Validates a JWT token and returns the decoded data.
-    Returns None if the token is invalid or expired.
+    Validates a JWT token by checking with Core.
+    This ensures the session hasn't been revoked.
+    Returns the decoded data if valid, None otherwise.
     """
+    import requests
+
     try:
+        # First verify signature locally
         client = get_jwks_client()
         signing_key = client.get_signing_key_from_jwt(token)
         data = jwt.decode(
@@ -30,7 +34,30 @@ def validate_token(token):
             issuer="hivematrix-core",
             options={"verify_exp": True}
         )
-        return data
+
+        # Then check with Core if session is still valid (not revoked)
+        core_url = current_app.config['CORE_SERVICE_URL']
+        try:
+            validation_response = requests.post(
+                f"{core_url}/api/token/validate",
+                json={'token': token},
+                timeout=2
+            )
+
+            if validation_response.status_code == 200:
+                # Session is valid
+                return data
+            else:
+                # Session revoked or invalid
+                print(f"Token validation failed at Core: {validation_response.status_code}")
+                return None
+        except requests.exceptions.RequestException as e:
+            # If Core is unreachable, fall back to local validation
+            # This ensures the system keeps working even if Core is down
+            print(f"Warning: Could not reach Core for validation: {e}")
+            print("Falling back to local JWT validation")
+            return data
+
     except jwt.ExpiredSignatureError:
         print("Token validation failed: Token expired")
         return None
@@ -344,49 +371,97 @@ def keycloak_callback():
 @app.route('/logout')
 def logout():
     """
-    Clears all sessions: Nexus, Core, and Keycloak.
-    Returns HTML that calls Core logout, then Keycloak logout, then redirects to Nexus.
+    Logout: revokes token at Core, clears session, and redirects to login.
     """
     from flask import make_response
-    import os
+    import requests
 
-    # Clear Nexus session
+    # Get the token before clearing session
+    token = session.get('token')
+
+    # Revoke the token at Core if present
+    if token:
+        try:
+            core_url = current_app.config['CORE_SERVICE_URL']
+            revoke_response = requests.post(
+                f"{core_url}/api/token/revoke",
+                json={'token': token},
+                timeout=5
+            )
+            if revoke_response.status_code == 200:
+                print("Token revoked successfully at Core")
+            else:
+                print(f"Token revocation failed: {revoke_response.status_code}")
+        except Exception as e:
+            print(f"Error revoking token: {e}")
+
+    # Clear the Nexus session
     session.clear()
 
-    # Get configuration
-    core_url = current_app.config['CORE_SERVICE_URL']
-    keycloak_url = os.environ.get('KEYCLOAK_SERVER_URL', 'http://localhost:8080')
-    keycloak_realm = os.environ.get('KEYCLOAK_REALM', 'hivematrix')
-    nexus_url = current_app.config.get('NEXUS_SERVICE_URL', 'http://localhost:8000')
-
-    # Return HTML that performs multi-step logout
-    html = f"""
+    # Return HTML that clears storage and redirects
+    html = """
     <!DOCTYPE html>
     <html>
     <head>
-        <title>Logging out...</title>
-        <meta http-equiv="refresh" content="2;url={keycloak_url}/realms/{keycloak_realm}/protocol/openid-connect/logout?redirect_uri={nexus_url}">
+        <title>Logged Out</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+                background: #f0f0f0;
+            }
+            .message {
+                text-align: center;
+                padding: 2rem;
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+        </style>
     </head>
     <body>
-        <p>Logging out...</p>
-        <iframe src="{core_url}/logout" style="display:none;" onload="console.log('Core logout called')"></iframe>
+        <div class="message">
+            <h2>You have been logged out</h2>
+            <p>Redirecting to login...</p>
+        </div>
         <script>
-            // After 1.5 seconds, redirect to Keycloak logout
-            setTimeout(function() {{
-                window.location.href = '{keycloak_url}/realms/{keycloak_realm}/protocol/openid-connect/logout?redirect_uri={nexus_url}';
-            }}, 1500);
+            // Clear all browser storage
+            if (window.sessionStorage) {
+                sessionStorage.clear();
+            }
+            if (window.localStorage) {
+                localStorage.clear();
+            }
+
+            // Delete all cookies
+            document.cookie.split(";").forEach(function(c) {
+                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+            });
+
+            // Force redirect to home with cache busting
+            setTimeout(function() {
+                window.location.replace('/?logout=' + Date.now());
+            }, 1000);
         </script>
     </body>
     </html>
     """
 
     response = make_response(html)
-    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+
+    # Delete session cookie server-side
+    response.set_cookie('session', '', expires=0, path='/', max_age=0,
+                       samesite='Lax', secure=True, httponly=True)
+
+    # Prevent caching
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate, max-age=0, private'
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
-
-    # Delete Nexus session cookie
-    response.delete_cookie('session', path='/')
+    response.headers['Clear-Site-Data'] = '"cache", "cookies", "storage"'
 
     return response
 
