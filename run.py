@@ -16,9 +16,18 @@ if __name__ == "__main__":
         cert_file = os.path.join(cert_dir, 'nexus.crt')
         key_file = os.path.join(cert_dir, 'nexus.key')
 
+        # Find gunicorn in venv
+        venv_bin = os.path.join(os.path.dirname(__file__), 'pyenv', 'bin')
+        gunicorn_path = os.path.join(venv_bin, 'gunicorn')
+
+        if not os.path.exists(gunicorn_path):
+            print(f" * ERROR: gunicorn not found at {gunicorn_path}")
+            print(f" * Install with: pip install gunicorn")
+            sys.exit(1)
+
         # Build gunicorn command
         cmd = [
-            'gunicorn',
+            gunicorn_path,
             '--bind', f'{host}:{port}',
             '--workers', '4',
             '--timeout', '60',
@@ -38,7 +47,7 @@ if __name__ == "__main__":
         print(f" * Using Gunicorn WSGI server (production mode)")
 
         # Execute gunicorn
-        os.execvp('gunicorn', cmd)
+        os.execvp(gunicorn_path, cmd)
     else:
         # Development mode with Flask's built-in server
         print(f" * Nexus starting on http://{host}:{port}")
