@@ -1,6 +1,5 @@
 from app import app
 import os
-import ssl
 
 if __name__ == "__main__":
     # Nexus is the main entry point
@@ -16,12 +15,23 @@ if __name__ == "__main__":
         key_file = os.path.join(cert_dir, 'nexus.key')
 
         if os.path.exists(cert_file) and os.path.exists(key_file):
-            ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-            ssl_context.load_cert_chain(cert_file, key_file)
+            # Use Cheroot for production SSL serving
+            from cheroot.wsgi import Server as WSGIServer
+            from cheroot.ssl.builtin import BuiltinSSLAdapter
+
             print(f" * Running with SSL on https://{host}:{port}")
-            app.run(host=host, port=port, ssl_context=ssl_context)
+            print(f" * Using Cheroot WSGI server")
+
+            server = WSGIServer((host, port), app)
+            server.ssl_adapter = BuiltinSSLAdapter(cert_file, key_file)
+
+            try:
+                server.start()
+            except KeyboardInterrupt:
+                server.stop()
         else:
             print(f" * WARNING: SSL certificates not found, falling back to HTTP")
             app.run(host=host, port=port)
     else:
+        # Development mode on non-privileged port
         app.run(host=host, port=port)
