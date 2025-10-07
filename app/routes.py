@@ -125,34 +125,89 @@ def health():
     return {'status': 'healthy', 'service': 'nexus'}, 200
 
 
-@app.route('/auth-callback')
-def auth_callback():
+@app.route('/login')
+def login_proxy():
     """
-    Callback route for after Core authenticates a user.
-    It receives the HiveMatrix JWT, validates it, and sets the local session.
-    This route MUST remain public.
+    Initiates Keycloak login by calling Core's /login endpoint internally,
+    then redirecting the user's browser to Keycloak. The callback comes back to Nexus.
     """
-    token = request.args.get('token')
-    if not token:
-        # No token provided, redirect to login
-        session.clear()
-        core_url = current_app.config['CORE_SERVICE_URL']
-        next_url = session.pop('next_url', '/')
-        return redirect(f"{core_url}/login?next={request.host_url}auth-callback")
+    import os
 
-    data = validate_token(token)
-    if not data:
-        # Invalid or expired token, clear session and redirect to login
-        session.clear()
-        core_url = current_app.config['CORE_SERVICE_URL']
-        next_url = session.pop('next_url', '/')
-        return redirect(f"{core_url}/login?next={request.host_url}auth-callback")
+    # Save where the user wanted to go
+    session['next_url'] = request.args.get('next', '/')
 
-    session['token'] = token
-    session['user'] = data
+    # Build the Keycloak authorization URL through Core
+    # Core's /login endpoint will generate the Keycloak URL, but we intercept it
+    core_url = current_app.config['CORE_SERVICE_URL']
+    nexus_auth_callback = url_for('keycloak_callback', _external=True)
 
-    # Redirect to the originally requested path
-    return redirect(session.pop('next_url', '/'))
+    # Call Core's login endpoint with our callback URL
+    try:
+        # Make internal request to Core to get the Keycloak redirect URL
+        resp = requests.get(
+            f"{core_url}/login",
+            params={'next': nexus_auth_callback},
+            allow_redirects=False
+        )
+
+        if resp.status_code in [301, 302, 303, 307, 308]:
+            # Core redirected to Keycloak - follow that redirect
+            keycloak_url = resp.headers.get('Location')
+            return redirect(keycloak_url)
+        else:
+            return f"Unexpected response from Core login: {resp.status_code}", 502
+
+    except requests.exceptions.RequestException as e:
+        return f"Login proxy error: {e}", 502
+
+
+@app.route('/keycloak-callback')
+def keycloak_callback():
+    """
+    Keycloak redirects here after authentication.
+    Forward to Core's /auth endpoint to exchange for JWT, then validate and create session.
+    """
+    core_url = current_app.config['CORE_SERVICE_URL']
+
+    # Forward the callback to Core's /auth endpoint with all query parameters
+    core_auth_url = f"{core_url}/auth"
+    if request.query_string:
+        core_auth_url += f"?{request.query_string.decode()}"
+
+    try:
+        # Make request to Core with the same cookies to maintain session
+        resp = requests.get(
+            core_auth_url,
+            allow_redirects=False
+        )
+
+        # Core will redirect to next_url with ?token=JWT
+        if resp.status_code in [301, 302, 303, 307, 308]:
+            redirect_url = resp.headers.get('Location', '')
+
+            # Extract token from the redirect URL
+            from urllib.parse import urlparse, parse_qs
+            parsed = urlparse(redirect_url)
+            token = parse_qs(parsed.query).get('token', [None])[0]
+
+            if token:
+                # Validate and store the token
+                token_data = validate_token(token)
+                if token_data:
+                    session['token'] = token
+                    session['user'] = token_data
+                    # Redirect to original destination
+                    return redirect(session.pop('next_url', '/'))
+
+            # If no token or invalid, redirect to the URL Core provided
+            return redirect(redirect_url)
+
+        return f"Unexpected response from Core auth: {resp.status_code}", 502
+
+    except requests.exceptions.RequestException as e:
+        return f"Keycloak callback proxy error: {e}", 502
+
+
 
 
 @app.route('/logout')
@@ -214,11 +269,8 @@ def main_gateway(path):
     """
     # --- Check if user has a token ---
     if 'token' not in session:
-        # No token at all - redirect to login
-        session['next_url'] = request.full_path
-        nexus_callback_url = url_for('auth_callback', _external=True)
-        core_login_url = f"{current_app.config['CORE_SERVICE_URL']}/login?next={nexus_callback_url}"
-        return redirect(core_login_url)
+        # No token at all - redirect to Nexus's login (which proxies to Core/Keycloak)
+        return redirect(url_for('login_proxy', next=request.full_path))
 
     # --- Validate the token ---
     token = session['token']
@@ -228,10 +280,7 @@ def main_gateway(path):
         # Token is expired or invalid - clear session and redirect to login
         print(f"Token validation failed for path: {request.full_path}")
         session.clear()
-        session['next_url'] = request.full_path
-        nexus_callback_url = url_for('auth_callback', _external=True)
-        core_login_url = f"{current_app.config['CORE_SERVICE_URL']}/login?next={nexus_callback_url}"
-        return redirect(core_login_url)
+        return redirect(url_for('login_proxy', next=request.full_path))
 
     # Update session with fresh token data (in case it was decoded again)
     session['user'] = token_data
