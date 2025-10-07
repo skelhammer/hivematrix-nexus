@@ -138,8 +138,15 @@ def keycloak_proxy(path):
     keycloak_url = os.environ.get('KEYCLOAK_SERVER_URL', 'http://localhost:8080')
     backend_url = f"{keycloak_url}/{path}"
 
-    # Forward the request to Keycloak
+    # Forward the request to Keycloak with proxy headers
     headers = {key: value for (key, value) in request.headers if key.lower() != 'host'}
+
+    # Add X-Forwarded headers for Keycloak proxy detection
+    headers['X-Forwarded-For'] = request.remote_addr
+    headers['X-Forwarded-Proto'] = 'https' if request.is_secure else 'http'
+    headers['X-Forwarded-Host'] = request.host
+    headers['X-Forwarded-Port'] = '443'
+    headers['X-Forwarded-Prefix'] = '/keycloak'
 
     try:
         resp = requests.request(
@@ -387,6 +394,39 @@ def main_gateway(path):
     This is the single entry point for all user-facing requests.
     It handles authentication, token validation, and proxying to services.
     """
+    # Proxy Keycloak paths directly without authentication
+    # These are needed for the login flow to work
+    if path.startswith('realms/') or path.startswith('resources/'):
+        import os
+        keycloak_url = os.environ.get('KEYCLOAK_SERVER_URL', 'http://localhost:8080')
+        backend_url = f"{keycloak_url}/{path}"
+
+        headers = {key: value for (key, value) in request.headers if key.lower() != 'host'}
+        headers['X-Forwarded-For'] = request.remote_addr
+        headers['X-Forwarded-Proto'] = 'https' if request.is_secure else 'http'
+        headers['X-Forwarded-Host'] = request.host
+        headers['X-Forwarded-Port'] = '443'
+        headers['X-Forwarded-Prefix'] = '/keycloak'
+
+        try:
+            resp = requests.request(
+                method=request.method,
+                url=backend_url,
+                headers=headers,
+                data=request.get_data(),
+                params=request.args,
+                cookies=request.cookies,
+                allow_redirects=False
+            )
+
+            excluded_headers = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
+            response_headers = [(name, value) for (name, value) in resp.raw.headers.items()
+                              if name.lower() not in excluded_headers]
+
+            return Response(resp.content, resp.status_code, response_headers)
+        except requests.exceptions.RequestException as e:
+            return f"Keycloak proxy error: {e}", 502
+
     # --- Check if user has a token ---
     if 'token' not in session:
         # No token at all - redirect to Nexus's login (which proxies to Core/Keycloak)
