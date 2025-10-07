@@ -128,84 +128,124 @@ def health():
 @app.route('/login')
 def login_proxy():
     """
-    Initiates Keycloak login by calling Core's /login endpoint internally,
-    then redirecting the user's browser to Keycloak. The callback comes back to Nexus.
+    Initiates Keycloak login by building the authorization URL directly.
+    This ensures external-facing URLs are used instead of localhost.
     """
     import os
+    import secrets
+    from urllib.parse import urlencode
 
     # Save where the user wanted to go
     session['next_url'] = request.args.get('next', '/')
 
-    # Build the Keycloak authorization URL through Core
-    # Core's /login endpoint will generate the Keycloak URL, but we intercept it
-    core_url = current_app.config['CORE_SERVICE_URL']
-    nexus_auth_callback = url_for('keycloak_callback', _external=True)
+    # Generate state and nonce for OIDC
+    state = secrets.token_urlsafe(32)
+    nonce = secrets.token_urlsafe(32)
+    session['oauth_state'] = state
+    session['oauth_nonce'] = nonce
 
-    # Call Core's login endpoint with our callback URL
-    try:
-        # Make internal request to Core to get the Keycloak redirect URL
-        resp = requests.get(
-            f"{core_url}/login",
-            params={'next': nexus_auth_callback},
-            allow_redirects=False
-        )
+    # Build Keycloak authorization URL manually
+    keycloak_server = os.environ.get('KEYCLOAK_SERVER_URL', 'http://localhost:8080')
+    keycloak_realm = os.environ.get('KEYCLOAK_REALM', 'hivematrix')
+    client_id = os.environ.get('KEYCLOAK_CLIENT_ID', 'core-client')
 
-        if resp.status_code in [301, 302, 303, 307, 308]:
-            # Core redirected to Keycloak - follow that redirect
-            keycloak_url = resp.headers.get('Location')
-            return redirect(keycloak_url)
-        else:
-            return f"Unexpected response from Core login: {resp.status_code}", 502
+    # Nexus's callback URL (external-facing)
+    redirect_uri = url_for('keycloak_callback', _external=True)
 
-    except requests.exceptions.RequestException as e:
-        return f"Login proxy error: {e}", 502
+    # Build authorization URL
+    auth_params = {
+        'response_type': 'code',
+        'client_id': client_id,
+        'redirect_uri': redirect_uri,
+        'scope': 'openid email profile',
+        'state': state,
+        'nonce': nonce
+    }
+
+    keycloak_auth_url = f"{keycloak_server}/realms/{keycloak_realm}/protocol/openid-connect/auth"
+    auth_url_with_params = f"{keycloak_auth_url}?{urlencode(auth_params)}"
+
+    return redirect(auth_url_with_params)
 
 
 @app.route('/keycloak-callback')
 def keycloak_callback():
     """
     Keycloak redirects here after authentication.
-    Forward to Core's /auth endpoint to exchange for JWT, then validate and create session.
+    Exchange authorization code for tokens, then request JWT from Core.
     """
-    core_url = current_app.config['CORE_SERVICE_URL']
+    import os
 
-    # Forward the callback to Core's /auth endpoint with all query parameters
-    core_auth_url = f"{core_url}/auth"
-    if request.query_string:
-        core_auth_url += f"?{request.query_string.decode()}"
+    # Check for errors from Keycloak
+    error = request.args.get('error')
+    if error:
+        error_description = request.args.get('error_description', 'Unknown error')
+        session.clear()
+        return f"Authentication error: {error} - {error_description}", 401
+
+    # Verify state to prevent CSRF
+    state = request.args.get('state')
+    if state != session.get('oauth_state'):
+        session.clear()
+        return "Invalid state parameter", 401
+
+    # Get authorization code
+    code = request.args.get('code')
+    if not code:
+        return "No authorization code received", 401
+
+    # Exchange code for tokens with Keycloak
+    keycloak_server = os.environ.get('KEYCLOAK_SERVER_URL', 'http://localhost:8080')
+    keycloak_realm = os.environ.get('KEYCLOAK_REALM', 'hivematrix')
+    client_id = os.environ.get('KEYCLOAK_CLIENT_ID', 'core-client')
+    client_secret = os.environ.get('KEYCLOAK_CLIENT_SECRET')
+    redirect_uri = url_for('keycloak_callback', _external=True)
+
+    token_url = f"{keycloak_server}/realms/{keycloak_realm}/protocol/openid-connect/token"
 
     try:
-        # Make request to Core with the same cookies to maintain session
-        resp = requests.get(
-            core_auth_url,
-            allow_redirects=False
+        token_response = requests.post(
+            token_url,
+            data={
+                'grant_type': 'authorization_code',
+                'code': code,
+                'redirect_uri': redirect_uri,
+                'client_id': client_id,
+                'client_secret': client_secret
+            }
         )
 
-        # Core will redirect to next_url with ?token=JWT
-        if resp.status_code in [301, 302, 303, 307, 308]:
-            redirect_url = resp.headers.get('Location', '')
+        if token_response.status_code != 200:
+            return f"Failed to exchange code for token: {token_response.text}", 502
 
-            # Extract token from the redirect URL
-            from urllib.parse import urlparse, parse_qs
-            parsed = urlparse(redirect_url)
-            token = parse_qs(parsed.query).get('token', [None])[0]
+        token_data = token_response.json()
+        access_token = token_data.get('access_token')
 
-            if token:
+        # Now request JWT from Core by sending the access token
+        core_url = current_app.config['CORE_SERVICE_URL']
+        jwt_response = requests.post(
+            f"{core_url}/api/token/exchange",
+            headers={'Authorization': f'Bearer {access_token}'},
+            json={'access_token': access_token}
+        )
+
+        if jwt_response.status_code == 200:
+            jwt_token = jwt_response.json().get('token')
+            if jwt_token:
                 # Validate and store the token
-                token_data = validate_token(token)
-                if token_data:
-                    session['token'] = token
-                    session['user'] = token_data
+                user_data = validate_token(jwt_token)
+                if user_data:
+                    session['token'] = jwt_token
+                    session['user'] = user_data
+                    session.pop('oauth_state', None)
+                    session.pop('oauth_nonce', None)
                     # Redirect to original destination
                     return redirect(session.pop('next_url', '/'))
 
-            # If no token or invalid, redirect to the URL Core provided
-            return redirect(redirect_url)
-
-        return f"Unexpected response from Core auth: {resp.status_code}", 502
+        return f"Failed to get JWT from Core: {jwt_response.status_code}", 502
 
     except requests.exceptions.RequestException as e:
-        return f"Keycloak callback proxy error: {e}", 502
+        return f"Authentication flow error: {e}", 502
 
 
 
