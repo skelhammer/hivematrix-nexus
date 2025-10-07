@@ -7,31 +7,21 @@ if __name__ == "__main__":
     # Can be overridden via NEXUS_PORT env var (e.g., 443 for production)
     port = int(os.environ.get('NEXUS_PORT', 8000))
     host = os.environ.get('NEXUS_HOST', '0.0.0.0')
+    use_waitress = os.environ.get('USE_WAITRESS', 'false').lower() == 'true'
 
-    # Use SSL if running on port 443
-    if port == 443:
-        cert_dir = os.path.join(os.path.dirname(__file__), 'certs')
-        cert_file = os.path.join(cert_dir, 'nexus.crt')
-        key_file = os.path.join(cert_dir, 'nexus.key')
+    # Use waitress for production (especially for port 443)
+    if use_waitress or port == 443:
+        from waitress import serve
 
-        if os.path.exists(cert_file) and os.path.exists(key_file):
-            # Use Cheroot for production SSL serving
-            from cheroot.wsgi import Server as WSGIServer
-            from cheroot.ssl.builtin import BuiltinSSLAdapter
+        print(f" * Nexus starting on http://{host}:{port}")
+        print(f" * Using Waitress WSGI server (production mode)")
+        if port == 443:
+            print(f" * Note: Running HTTP on port 443")
+            print(f" * For SSL, place nginx/caddy reverse proxy in front")
 
-            print(f" * Running with SSL on https://{host}:{port}")
-            print(f" * Using Cheroot WSGI server")
-
-            server = WSGIServer((host, port), app)
-            server.ssl_adapter = BuiltinSSLAdapter(cert_file, key_file)
-
-            try:
-                server.start()
-            except KeyboardInterrupt:
-                server.stop()
-        else:
-            print(f" * WARNING: SSL certificates not found, falling back to HTTP")
-            app.run(host=host, port=port)
+        serve(app, host=host, port=port, threads=4, channel_timeout=60)
     else:
-        # Development mode on non-privileged port
-        app.run(host=host, port=port)
+        # Development mode with Flask's built-in server
+        print(f" * Nexus starting on http://{host}:{port}")
+        print(f" * Using Flask development server")
+        app.run(host=host, port=port, debug=True)
