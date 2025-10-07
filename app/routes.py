@@ -133,6 +133,7 @@ def keycloak_proxy(path):
     This allows external browsers to access Keycloak through Nexus's HTTPS endpoint.
     """
     import os
+    import re
 
     keycloak_url = os.environ.get('KEYCLOAK_SERVER_URL', 'http://localhost:8080')
     backend_url = f"{keycloak_url}/{path}"
@@ -156,7 +157,31 @@ def keycloak_proxy(path):
         response_headers = [(name, value) for (name, value) in resp.raw.headers.items()
                           if name.lower() not in excluded_headers]
 
-        return Response(resp.content, resp.status_code, response_headers)
+        content = resp.content
+
+        # Rewrite Location headers to go through Nexus proxy
+        if resp.status_code in [301, 302, 303, 307, 308]:
+            location = resp.headers.get('Location', '')
+            if location.startswith(keycloak_url):
+                # Rewrite to go through Nexus proxy
+                new_location = location.replace(keycloak_url, request.host_url.rstrip('/') + '/keycloak')
+                response_headers = [(name, new_location if name.lower() == 'location' else value)
+                                  for (name, value) in response_headers]
+
+        # Rewrite HTML/JS/CSS content to replace Keycloak URLs
+        content_type = resp.headers.get('Content-Type', '')
+        if 'text/html' in content_type or 'application/javascript' in content_type or 'text/css' in content_type:
+            try:
+                text = content.decode('utf-8')
+                # Replace absolute URLs to Keycloak with proxied URLs
+                text = text.replace(keycloak_url, request.host_url.rstrip('/') + '/keycloak')
+                # Replace relative references that might bypass the proxy
+                text = re.sub(r'action="/', f'action="{request.host_url.rstrip("/")}/keycloak/', text)
+                content = text.encode('utf-8')
+            except:
+                pass  # If decode/encode fails, just pass through original content
+
+        return Response(content, resp.status_code, response_headers)
 
     except requests.exceptions.RequestException as e:
         return f"Keycloak proxy error: {e}", 502
