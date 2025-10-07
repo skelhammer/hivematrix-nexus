@@ -125,6 +125,43 @@ def health():
     return {'status': 'healthy', 'service': 'nexus'}, 200
 
 
+@app.route('/keycloak/', defaults={'path': ''})
+@app.route('/keycloak/<path:path>', methods=['GET', 'POST', 'PUT', 'DELETE'])
+def keycloak_proxy(path):
+    """
+    Proxy requests to Keycloak server.
+    This allows external browsers to access Keycloak through Nexus's HTTPS endpoint.
+    """
+    import os
+
+    keycloak_url = os.environ.get('KEYCLOAK_SERVER_URL', 'http://localhost:8080')
+    backend_url = f"{keycloak_url}/{path}"
+
+    # Forward the request to Keycloak
+    headers = {key: value for (key, value) in request.headers if key.lower() != 'host'}
+
+    try:
+        resp = requests.request(
+            method=request.method,
+            url=backend_url,
+            headers=headers,
+            data=request.get_data(),
+            params=request.args,
+            cookies=request.cookies,
+            allow_redirects=False
+        )
+
+        # Build response
+        excluded_headers = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
+        response_headers = [(name, value) for (name, value) in resp.raw.headers.items()
+                          if name.lower() not in excluded_headers]
+
+        return Response(resp.content, resp.status_code, response_headers)
+
+    except requests.exceptions.RequestException as e:
+        return f"Keycloak proxy error: {e}", 502
+
+
 @app.route('/login')
 def login_proxy():
     """
@@ -144,13 +181,17 @@ def login_proxy():
     session['oauth_state'] = state
     session['oauth_nonce'] = nonce
 
-    # Build Keycloak authorization URL manually
-    keycloak_server = os.environ.get('KEYCLOAK_SERVER_URL', 'http://localhost:8080')
+    # Build Keycloak authorization URL using Nexus's proxy
+    # This ensures external browsers can reach Keycloak through Nexus
     keycloak_realm = os.environ.get('KEYCLOAK_REALM', 'hivematrix')
     client_id = os.environ.get('KEYCLOAK_CLIENT_ID', 'core-client')
 
     # Nexus's callback URL (external-facing)
     redirect_uri = url_for('keycloak_callback', _external=True)
+
+    # Build authorization URL using Nexus's /keycloak/ proxy path
+    # This makes Keycloak accessible through the same external HTTPS endpoint
+    nexus_keycloak_url = url_for('keycloak_proxy', path='', _external=True).rstrip('/')
 
     # Build authorization URL
     auth_params = {
@@ -162,7 +203,7 @@ def login_proxy():
         'nonce': nonce
     }
 
-    keycloak_auth_url = f"{keycloak_server}/realms/{keycloak_realm}/protocol/openid-connect/auth"
+    keycloak_auth_url = f"{nexus_keycloak_url}/realms/{keycloak_realm}/protocol/openid-connect/auth"
     auth_url_with_params = f"{keycloak_auth_url}?{urlencode(auth_params)}"
 
     return redirect(auth_url_with_params)
