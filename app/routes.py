@@ -533,14 +533,27 @@ def main_gateway(path):
     # Update session with fresh token data (in case it was decoded again)
     session['user'] = token_data
 
-    # If the path is empty, redirect to the first available service
+    # If the path is empty, redirect to the first accessible service
     if not path:
         services = current_app.config.get('SERVICES', {})
-        if services:
-            first_service = next(iter(services))
-            return redirect(f'/{first_service}/')
+        user_permission = token_data.get('permission_level', 'client')
+
+        # Find first service user has access to
+        first_accessible = None
+        for service_name, service_config in services.items():
+            # Skip if not visible
+            if not service_config.get('visible', True):
+                continue
+            # Skip if admin_only and user is not admin
+            if service_config.get('admin_only', False) and user_permission != 'admin':
+                continue
+            first_accessible = service_name
+            break
+
+        if first_accessible:
+            return redirect(f'/{first_accessible}/')
         else:
-            return "<h1>HiveMatrix Nexus</h1><p>No services configured.</p>", 200
+            return "<h1>HiveMatrix Nexus</h1><p>No services available for your permission level.</p>", 200
 
     # Determine service from the first part of the path
     path_parts = path.split('/')
