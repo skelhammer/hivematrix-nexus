@@ -1,14 +1,18 @@
 {
     "helm": {
-        "url": "http://localhost:5004"
+        "url": "http://localhost:5004",
+        "visible": true
     },
     "core": {
-        "url": "http://localhost:5000"
+        "url": "http://localhost:5000",
+        "visible": false
     },
     "nexus": {
-        "url": "https://localhost:443"
+        "url": "https://localhost:443",
+        "visible": false
     },
     "knowledgetree": {
-        "url": "http://localhost:5020"
+        "url": "http://localhost:5020",
+        "visible": true
     }
 }
