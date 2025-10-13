@@ -1,18 +1,27 @@
 {
+    "keycloak": {
+        "url": "http://localhost:8080",
+        "visible": false,
+        "admin_only": false
+    },
     "helm": {
         "url": "http://localhost:5004",
-        "visible": true
+        "visible": true,
+        "admin_only": true
     },
     "core": {
         "url": "http://localhost:5000",
-        "visible": false
+        "visible": false,
+        "admin_only": false
     },
     "nexus": {
         "url": "https://localhost:443",
-        "visible": false
+        "visible": false,
+        "admin_only": false
     },
     "knowledgetree": {
         "url": "http://localhost:5020",
-        "visible": true
+        "visible": true,
+        "admin_only": false
     }
 }

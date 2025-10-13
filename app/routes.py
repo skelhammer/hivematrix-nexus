@@ -65,9 +65,10 @@ def validate_token(token):
         print(f"Token validation failed: {e}")
         return None
 
-def inject_side_panel(soup, current_service):
+def inject_side_panel(soup, current_service, user_data=None):
     """Injects the side panel navigation into the HTML."""
     services = current_app.config.get('SERVICES', {})
+    user_permission = user_data.get('permission_level', 'client') if user_data else 'client'
 
     # Create side panel HTML
     side_panel_html = '''
@@ -93,10 +94,14 @@ def inject_side_panel(soup, current_service):
         'helm': '⚙️'
     }
 
-    # Add each service as a link (only if visible)
+    # Add each service as a link (only if visible and user has permission)
     for service_name, service_config in services.items():
         # Skip services that are not visible
         if not service_config.get('visible', True):
+            continue
+
+        # Skip admin-only services if user is not admin
+        if service_config.get('admin_only', False) and user_permission != 'admin':
             continue
 
         icon = service_icons.get(service_name, '📦')
@@ -579,8 +584,8 @@ def main_gateway(path):
                 panel_css_link = soup.new_tag('link', rel='stylesheet', href=url_for('static', filename='css/side-panel.css'))
                 head.append(panel_css_link)
 
-            # Inject side panel
-            inject_side_panel(soup, service_name)
+            # Inject side panel with user data
+            inject_side_panel(soup, service_name, token_data)
 
             content = str(soup)
 
