@@ -93,8 +93,12 @@ def inject_side_panel(soup, current_service):
         'helm': '⚙️'
     }
 
-    # Add each service as a link
+    # Add each service as a link (only if visible)
     for service_name, service_config in services.items():
+        # Skip services that are not visible
+        if not service_config.get('visible', True):
+            continue
+
         icon = service_icons.get(service_name, '📦')
         active_class = 'side-panel__item--active' if service_name == current_service else ''
         display_name = service_name.title()
