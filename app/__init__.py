@@ -2,6 +2,12 @@ from flask import Flask
 import json
 import os
 
+# Load .flaskenv before creating the app
+from dotenv import load_dotenv
+import os as _os
+_flaskenv_path = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), '.flaskenv')
+load_dotenv(_flaskenv_path)
+
 app = Flask(__name__)
 
 # Explicitly load the secret key from the environment variables loaded from .flaskenv
