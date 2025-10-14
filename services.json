@@ -2,7 +2,7 @@
     "keycloak": {
         "url": "http://localhost:8080",
         "visible": false,
-        "admin_only": false
+        "admin_only": true
     },
     "helm": {
         "url": "http://localhost:5004",
@@ -17,11 +17,6 @@
     "nexus": {
         "url": "https://localhost:443",
         "visible": false,
-        "admin_only": false
-    },
-    "knowledgetree": {
-        "url": "http://localhost:5020",
-        "visible": true,
         "admin_only": false
     }
 }
