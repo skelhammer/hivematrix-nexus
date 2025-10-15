@@ -583,6 +583,7 @@ def main_gateway(path):
             method=request.method,
             url=backend_url,
             headers=headers,
+            params=request.args,  # Forward query string parameters
             data=request.get_data(),
             cookies=request.cookies,
             allow_redirects=False)
