@@ -568,9 +568,15 @@ def main_gateway(path):
 
     backend_url = f"{service_config['url']}/{service_path}"
 
-    # --- Add Auth Header to Proxied Request ---
+    # --- Add Auth Header and X-Forwarded Headers to Proxied Request ---
     headers = {key: value for (key, value) in request.headers if key != 'Host'}
     headers['Authorization'] = f"Bearer {token}"
+
+    # Add X-Forwarded headers so backend knows it's behind a proxy
+    headers['X-Forwarded-For'] = request.remote_addr
+    headers['X-Forwarded-Proto'] = 'https' if request.is_secure else 'http'
+    headers['X-Forwarded-Host'] = request.host
+    headers['X-Forwarded-Prefix'] = f'/{service_name}'
 
     try:
         resp = requests.request(
