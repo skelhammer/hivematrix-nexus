@@ -18,5 +18,21 @@
         "url": "https://localhost:443",
         "visible": false,
         "admin_only": false
+    },
+    "codex": {
+        "url": "http://localhost:5010",
+        "visible": true,
+        "admin_only": false
+    },
+    "ledger": {
+        "url": "http://localhost:5030",
+        "visible": true,
+        "admin_only": false,
+        "billing_or_admin_only": true
+    },
+    "knowledgetree": {
+        "url": "http://localhost:5020",
+        "visible": true,
+        "admin_only": false
     }
 }

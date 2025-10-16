@@ -104,6 +104,10 @@ def inject_side_panel(soup, current_service, user_data=None):
         if service_config.get('admin_only', False) and user_permission != 'admin':
             continue
 
+        # Skip billing/admin-only services if user is not admin or billing
+        if service_config.get('billing_or_admin_only', False) and user_permission not in ['admin', 'billing']:
+            continue
+
         icon = service_icons.get(service_name, '📦')
         active_class = 'side-panel__item--active' if service_name == current_service else ''
         display_name = service_name.title()
