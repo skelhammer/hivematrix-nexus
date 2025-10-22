@@ -177,3 +177,326 @@ pre code {
 .mb-2 { margin-bottom: 1rem; }
 .mb-3 { margin-bottom: 1.5rem; }
 .mb-4 { margin-bottom: 2rem; }
+
+/* --- Chat Interface Styles (Claude/ChatGPT-like) --- */
+
+/* Chat container - full height, centered, max width like Claude */
+.chat {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 4rem);
+    max-width: 1000px;
+    margin: 0 auto;
+    background-color: #fff;
+}
+
+/* Chat header with history button */
+.chat__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e0e0e0;
+    background-color: #fff;
+}
+
+.chat__title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.chat__header-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Chat messages area - scrollable */
+.chat__messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2rem 0;
+    background-color: #fff;
+}
+
+/* Individual message - alternating backgrounds like Claude */
+.chat__message {
+    padding: 1.5rem 2rem;
+    display: flex;
+    gap: 1.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.chat__message--user {
+    background-color: #fff;
+}
+
+.chat__message--assistant {
+    background-color: #f7f7f8;
+}
+
+.chat__message-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    background-color: #3498db;
+    color: #fff;
+}
+
+.chat__message--assistant .chat__message-avatar {
+    background-color: #1abc9c;
+}
+
+.chat__message-content {
+    flex: 1;
+    line-height: 1.6;
+    color: #2c3e50;
+}
+
+.chat__message-content p {
+    margin: 0 0 1rem 0;
+}
+
+.chat__message-content p:last-child {
+    margin-bottom: 0;
+}
+
+.chat__message-content code {
+    background-color: #f4f7f9;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+.chat__message-content pre {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    padding: 1rem;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+/* Chat input area - fixed at bottom like ChatGPT */
+.chat__input-container {
+    padding: 1.5rem 2rem 2rem;
+    background-color: #fff;
+    border-top: 1px solid #e0e0e0;
+}
+
+.chat__input-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    background-color: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.02), 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.chat__input-wrapper:focus-within {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.chat__textarea {
+    width: 100%;
+    min-height: 52px;
+    max-height: 200px;
+    padding: 14px 50px 14px 16px;
+    border: none;
+    background: transparent;
+    resize: none;
+    font-size: 1rem;
+    line-height: 1.5;
+    font-family: inherit;
+    color: #2c3e50;
+}
+
+.chat__textarea:focus {
+    outline: none;
+}
+
+.chat__send-button {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.chat__send-button:hover:not(:disabled) {
+    background-color: #2980b9;
+}
+
+.chat__send-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Typing indicator */
+.chat__typing {
+    padding: 1.5rem 2rem;
+    background-color: #f7f7f8;
+    display: none;
+}
+
+.chat__typing--visible {
+    display: block;
+}
+
+.chat__typing-dots {
+    display: flex;
+    gap: 0.5rem;
+    padding-left: 48px;
+}
+
+.chat__typing-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #95a5a6;
+    animation: typing 1.4s infinite;
+}
+
+.chat__typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.chat__typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typing {
+    0%, 60%, 100% {
+        opacity: 0.3;
+        transform: translateY(0);
+    }
+    30% {
+        opacity: 1;
+        transform: translateY(-8px);
+    }
+}
+
+/* History sidebar - slides in from left like Claude */
+.chat-history {
+    position: fixed;
+    top: 0;
+    left: 240px; /* After Nexus side panel */
+    width: 320px;
+    height: 100vh;
+    background-color: #fff;
+    border-right: 1px solid #e0e0e0;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-history--open {
+    transform: translateX(0);
+}
+
+.chat-history__header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-history__title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.chat-history__close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #7f8c8d;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+}
+
+.chat-history__search {
+    padding: 0 1.5rem 1rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.chat-history__search-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.chat-history__list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+.chat-history__item {
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px solid #e0e0e0;
+    background-color: #fff;
+    transition: background-color 0.2s;
+}
+
+.chat-history__item:hover {
+    background-color: #f7f7f8;
+}
+
+.chat-history__item-title {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    color: #2c3e50;
+    font-size: 0.95rem;
+}
+
+.chat-history__item-meta {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* New chat button */
+.chat__new-button {
+    padding: 0.75rem 1.5rem;
+    background-color: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 0.95rem;
+}
+
+.chat__new-button:hover {
+    background-color: #f7f7f8;
+}
