@@ -322,12 +322,23 @@ body {
     display: none;
     align-items: center;
     gap: 0.5rem;
-    padding: 1rem;
-    color: #7f849c;
+    padding: 1rem 2rem;
+    background: #313244;
+    border-radius: 12px;
+    margin: 0 2rem 1rem 2rem;
+    color: #89b4fa;
+    font-weight: 500;
+    border: 2px solid #45475a;
 }
 
 .typing-indicator.active {
     display: flex;
+}
+
+.typing-indicator span {
+    flex: 1;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
 }
 
 .dot {
