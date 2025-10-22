@@ -284,6 +284,15 @@ pre code {
     margin: 1rem 0;
 }
 
+.chat__message-content ul {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+}
+
+.chat__message-content li {
+    margin: 0.25rem 0;
+}
+
 /* Chat input area - fixed at bottom like ChatGPT */
 .chat__input-container {
     padding: 1.5rem 2rem 2rem;
