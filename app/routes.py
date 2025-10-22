@@ -583,6 +583,7 @@ def main_gateway(path):
     headers['X-Forwarded-Prefix'] = f'/{service_name}'
 
     try:
+        # Always enable streaming so we can detect SSE responses
         resp = requests.request(
             method=request.method,
             url=backend_url,
@@ -590,11 +591,23 @@ def main_gateway(path):
             params=request.args,  # Forward query string parameters
             data=request.get_data(),
             cookies=request.cookies,
-            allow_redirects=False)
+            allow_redirects=False,
+            stream=True)  # Always stream so we can check content-type
 
         excluded_headers = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
-        headers = [(name, value) for (name, value) in resp.raw.headers.items() if name.lower() not in excluded_headers]
-        content = resp.content
+        response_headers = [(name, value) for (name, value) in resp.raw.headers.items() if name.lower() not in excluded_headers]
+
+        # If streaming response (SSE), stream it back immediately without buffering
+        if 'text/event-stream' in resp.headers.get('Content-Type', ''):
+            def generate():
+                for chunk in resp.iter_content(chunk_size=1024, decode_unicode=False):
+                    if chunk:
+                        yield chunk
+            return Response(generate(), resp.status_code, response_headers)
+
+        # Otherwise, read all content for HTML injection or normal responses
+        # When using stream=True, we must consume the entire response
+        content = b''.join(resp.iter_content(chunk_size=8192))
 
         if 'text/html' in resp.headers.get('Content-Type', ''):
             soup = BeautifulSoup(content, 'html.parser')
@@ -613,7 +626,7 @@ def main_gateway(path):
 
             content = str(soup)
 
-        return Response(content, resp.status_code, headers)
+        return Response(content, resp.status_code, response_headers)
 
     except requests.exceptions.RequestException as e:
         return f"Proxy error: {e}", 502

@@ -39,7 +39,8 @@ if __name__ == "__main__":
             '-m', 'gunicorn',
             '--bind', f'{host}:{port}',
             '--workers', '4',
-            '--timeout', '60',
+            '--worker-class', 'gevent',  # Use gevent for SSE streaming support
+            '--timeout', '300',  # Longer timeout for SSE connections
             '--access-logfile', '-',
             '--error-logfile', '-',
         ]
