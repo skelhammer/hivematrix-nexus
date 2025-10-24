@@ -46,5 +46,11 @@
         "visible": true,
         "admin_only": false,
         "billing_or_admin_only": false
+    },
+    "archive": {
+        "url": "http://localhost:5012",
+        "visible": true,
+        "admin_only": false,
+        "billing_or_admin_only": false
     }
 }
