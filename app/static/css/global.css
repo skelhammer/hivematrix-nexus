@@ -2297,3 +2297,63 @@ table td {
 
 /* Line height utilities */
 .u-lh-2 { line-height: 2; }
+
+/* ===================================================================
+   Approval Modal Styles
+   =================================================================== */
+
+.modal__overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 999;
+}
+
+.modal__content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--background-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    z-index: 1000;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.modal__action {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 1rem 0;
+    color: var(--text-primary);
+}
+
+.modal__details {
+    background: var(--background-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 0.25rem;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.modal__detail {
+    margin: 0.5rem 0;
+    color: var(--text-secondary);
+}
+
+.modal__detail strong {
+    color: var(--text-primary);
+}
+
+.modal__buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+}

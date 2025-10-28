@@ -11,18 +11,6 @@
         "admin_only": true,
         "billing_or_admin_only": false
     },
-    "nexus": {
-        "url": "https://localhost:443",
-        "visible": false,
-        "admin_only": false,
-        "billing_or_admin_only": false
-    },
-    "knowledgetree": {
-        "url": "http://localhost:5020",
-        "visible": true,
-        "admin_only": false,
-        "billing_or_admin_only": false
-    },
     "core": {
         "url": "http://localhost:5000",
         "visible": false,
@@ -38,6 +26,18 @@
     "brainhair": {
         "url": "http://localhost:5050",
         "visible": true,
+        "admin_only": false,
+        "billing_or_admin_only": false
+    },
+    "knowledgetree": {
+        "url": "http://localhost:5020",
+        "visible": true,
+        "admin_only": false,
+        "billing_or_admin_only": false
+    },
+    "nexus": {
+        "url": "https://localhost:443",
+        "visible": false,
         "admin_only": false,
         "billing_or_admin_only": false
     },
