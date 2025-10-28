@@ -147,7 +147,8 @@ def inject_side_panel(soup, current_service, user_data=None):
         'treasury': '💵',
         'core': '🔐',
         'nexus': '🌐',
-        'helm': '⚙️'
+        'helm': '⚙️',
+        'brainhair': '🧠'
     }
 
     # Add each service as a link (only if visible and user has permission)
