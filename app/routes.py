@@ -65,6 +65,62 @@ def validate_token(token):
         print(f"Token validation failed: {e}")
         return None
 
+
+def get_user_theme(token_data):
+    """
+    Fetch user's theme preference from Codex.
+    Falls back to 'light' if Codex is unavailable or user not found.
+
+    Args:
+        token_data: Decoded JWT token containing user info
+
+    Returns:
+        str: 'light' or 'dark'
+    """
+    user_email = token_data.get('email')
+
+    print(f"[DEBUG] get_user_theme called for email: {user_email}")
+
+    if not user_email:
+        print("[DEBUG] No email in token, defaulting to light")
+        return 'light'  # Default if no email in token
+
+    try:
+        # Call Codex API using proper service-to-service authentication
+        from app.service_client import call_service
+
+        print(f"[DEBUG] Calling Codex API for user theme: {user_email}")
+
+        response = call_service(
+            'codex',
+            '/api/public/user/theme',
+            params={'email': user_email},
+            timeout=2  # Quick timeout to avoid slowing down page loads
+        )
+
+        print(f"[DEBUG] Codex API response status: {response.status_code}")
+        print(f"[DEBUG] Codex API response body: {response.text}")
+
+        if response.status_code == 200:
+            data = response.json()
+            theme = data.get('theme', 'light')
+
+            print(f"[DEBUG] Theme from Codex: {theme}")
+
+            # Validate theme value
+            if theme in ['light', 'dark']:
+                return theme
+
+    except Exception as e:
+        # Log error but don't fail the page load
+        print(f"[DEBUG] Exception fetching theme: {e}")
+        current_app.logger.warning(f"Failed to fetch user theme from Codex: {e}")
+
+    # Default to light theme if anything goes wrong
+    print("[DEBUG] Defaulting to light theme")
+    return 'light'
+
+
 def inject_side_panel(soup, current_service, user_data=None):
     """Injects the side panel navigation into the HTML."""
     services = current_app.config.get('SERVICES', {})
@@ -125,6 +181,15 @@ def inject_side_panel(soup, current_service, user_data=None):
             </ul>
         </nav>
         <div class="side-panel__footer">
+            <div style="padding: 0.75rem 1rem; border-top: 1px solid var(--color-border-light);">
+                <button class="btn btn--small" id="theme-toggle-btn" style="width: 100%; margin-bottom: 0.5rem;">
+                    <span class="btn__label" id="theme-toggle-text">🌙 Dark Mode</span>
+                </button>
+            </div>
+            <a href="/codex/settings" class="side-panel__link">
+                <span class="side-panel__icon">⚙️</span>
+                <span class="side-panel__label">Settings</span>
+            </a>
             <a href="/logout" class="side-panel__link">
                 <span class="side-panel__icon">🚪</span>
                 <span class="side-panel__label">Logout</span>
@@ -155,6 +220,107 @@ def inject_side_panel(soup, current_service, user_data=None):
         ''', 'html.parser')
 
         body.append(layout_wrapper)
+
+        # Inject theme toggle script at end of body (separate from HTML to avoid BeautifulSoup mangling)
+        theme_script = soup.new_tag('script')
+        theme_script.string = '''
+console.log('[Theme Toggle] Script loaded');
+
+// Theme toggle functionality
+function getCurrentTheme() {
+    return document.documentElement.getAttribute('data-theme') || 'light';
+}
+
+function updateThemeButton() {
+    const currentTheme = getCurrentTheme();
+    const btn = document.getElementById('theme-toggle-text');
+    if (btn) {
+        btn.textContent = currentTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    }
+}
+
+async function toggleTheme() {
+    console.log('[Theme Toggle] toggleTheme() called');
+    const currentTheme = getCurrentTheme();
+    console.log('[Theme Toggle] Current theme:', currentTheme);
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    console.log('[Theme Toggle] New theme:', newTheme);
+
+    // Apply theme immediately
+    document.documentElement.setAttribute('data-theme', newTheme);
+    console.log('[Theme Toggle] data-theme attribute set to:', newTheme);
+    updateThemeButton();
+
+    // Save to Codex with proper authentication
+    try {
+        console.log('[Theme Toggle] Sending request to /codex/api/my/settings');
+        const response = await fetch('/codex/api/my/settings', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({ theme_preference: newTheme })
+        });
+
+        console.log('[Theme Toggle] Response status:', response.status);
+
+        if (!response.ok) {
+            // Try to parse error response
+            let errorMessage = 'Unknown error';
+            let isAgentNotSynced = false;
+
+            try {
+                const result = await response.json();
+                errorMessage = result.error || errorMessage;
+                isAgentNotSynced = result.error && result.error.includes('Agent not found');
+            } catch (parseError) {
+                // Response wasn't JSON - likely an authentication error
+                console.error('Non-JSON error response:', parseError);
+                errorMessage = 'Authentication failed - please refresh the page and try again';
+            }
+
+            console.error('Failed to save theme preference:', response.status, errorMessage);
+
+            if (response.status === 404 && isAgentNotSynced) {
+                alert('Theme changed locally but not saved:\\n\\nYour account needs to be synced from Keycloak.\\nAsk an admin to sync agents in Codex Settings.');
+            } else if (response.status === 401 || response.status === 403) {
+                alert('Theme changed locally but not saved:\\n\\nAuthentication error. Please refresh the page and try again.');
+            } else {
+                console.error('Theme save error:', response.status, errorMessage);
+                // Show a less intrusive message for other errors
+                console.warn('Theme applied locally but may not persist across sessions');
+            }
+        } else {
+            const result = await response.json();
+            console.log('Theme saved successfully:', newTheme);
+        }
+    } catch (error) {
+        console.error('Error saving theme:', error);
+        alert('Theme changed locally but not saved:\\n\\nNetwork error: ' + error.message + '\\n\\nPlease check your connection and try again.');
+    }
+}
+
+// Update button text on page load and attach event listener
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('[Theme Toggle] DOMContentLoaded fired');
+    updateThemeButton();
+
+    // Attach click handler to theme toggle button
+    const themeBtn = document.getElementById('theme-toggle-btn');
+    if (themeBtn) {
+        console.log('[Theme Toggle] Button found, attaching listener');
+        themeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('[Theme Toggle] Button clicked');
+            toggleTheme();
+        });
+    } else {
+        console.error('[Theme Toggle] Button not found!');
+    }
+});
+'''
+        body.append(theme_script)
 
 @app.route('/health')
 def health():
@@ -611,6 +777,14 @@ def main_gateway(path):
 
         if 'text/html' in resp.headers.get('Content-Type', ''):
             soup = BeautifulSoup(content, 'html.parser')
+
+            # Add data-theme attribute to html tag
+            # Fetch user's theme preference from Codex
+            html_tag = soup.find('html')
+            if html_tag:
+                theme = get_user_theme(token_data)
+                html_tag['data-theme'] = theme
+
             head = soup.find('head')
             if head:
                 # Inject global CSS
