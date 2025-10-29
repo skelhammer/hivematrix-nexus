@@ -888,6 +888,39 @@ table td {
 }
 
 /* ========================================
+   Input Group Component (Attached Inputs)
+   ======================================== */
+
+.input-group {
+    display: flex;
+    align-items: stretch;
+}
+
+.input-group > .form-group__input,
+.input-group > select {
+    margin: 0;
+}
+
+.input-group > .form-group__input:first-child,
+.input-group > select:first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.input-group > .form-group__input:last-child,
+.input-group > select:last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: none;
+}
+
+.input-group > .form-group__input:not(:first-child):not(:last-child),
+.input-group > select:not(:first-child):not(:last-child) {
+    border-radius: 0;
+    border-left: none;
+}
+
+/* ========================================
    Results Header Component
    ======================================== */
 
