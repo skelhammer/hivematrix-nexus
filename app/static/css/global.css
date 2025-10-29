@@ -241,9 +241,14 @@ a:hover {
     border: 1px solid var(--color-border-medium);
 }
 
-/* Light mode - medium grey for better contrast */
+/* Light mode - darker grey for better contrast */
 [data-theme="light"] .btn {
-    background: #d1d5db;
+    background: #e9ecef;
+}
+
+/* Dark mode - lighter grey for better contrast */
+[data-theme="dark"] .btn {
+    background: #45475a;
 }
 
 .btn:hover {
