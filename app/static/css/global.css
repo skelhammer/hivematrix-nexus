@@ -2769,6 +2769,8 @@ table td {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 1.5rem;
     padding: 1rem;
+    min-height: 300px;
+    padding-bottom: 100px;
 }
 
 .file-item {
@@ -2799,7 +2801,9 @@ table td {
 }
 
 .file-item--selected {
-    background-color: var(--color-muted);
+    background-color: var(--color-hover-bg);
+    border: 2px solid var(--color-primary);
+    box-sizing: border-box;
 }
 
 .file-item--read-only {
@@ -2810,6 +2814,8 @@ table td {
 .file-browser--tree {
     display: block;
     padding: 0;
+    min-height: 300px;
+    padding-bottom: 100px;
 }
 
 .file-browser--tree .file-item {
@@ -2820,6 +2826,9 @@ table td {
     padding: 0.75rem 1rem;
     border-radius: 4px;
     border-bottom: 1px solid var(--color-border-light);
+    max-width: 600px;
+    width: fit-content;
+    min-width: 300px;
 }
 
 .file-browser--tree .file-item:last-child {
@@ -2841,6 +2850,8 @@ table td {
 .file-browser--hierarchy {
     display: block;
     padding: 0;
+    min-height: 300px;
+    padding-bottom: 100px;
 }
 
 .file-browser--hierarchy .hierarchy-item {
@@ -2850,10 +2861,20 @@ table td {
     cursor: pointer;
     border-radius: 4px;
     transition: background-color 0.2s;
+    max-width: 600px;
+    width: fit-content;
+    min-width: 300px;
 }
 
 .file-browser--hierarchy .hierarchy-item:hover {
     background-color: var(--color-hover-bg);
+}
+
+.file-browser--hierarchy .hierarchy-item--selected {
+    background-color: var(--color-hover-bg);
+    border: 2px solid var(--color-primary);
+    padding: calc(0.5rem - 2px) calc(0.75rem - 2px);
+    box-sizing: border-box;
 }
 
 .file-browser--hierarchy .hierarchy-item__toggle {
@@ -2903,6 +2924,7 @@ table td {
     display: flex;
     align-items: center;
     justify-content: center;
+    color: var(--color-text-primary);
 }
 
 .view-switcher__button:hover {
@@ -2919,6 +2941,7 @@ table td {
 .view-switcher__button svg {
     width: 20px;
     height: 20px;
+    stroke: currentColor;
 }
 
 /* ========================================
