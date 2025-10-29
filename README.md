@@ -1,6 +1,13 @@
 # HiveMatrix Nexus
 
-Integration hub and message routing service for HiveMatrix.
+Frontend gateway and single pane of glass for all HiveMatrix services.
+
+Nexus is the unified entry point that:
+- **Proxies all backend services** through a single HTTPS port (443)
+- **Injects global CSS** and navigation into all service pages
+- **Handles authentication** flow with Keycloak
+- **Manages user sessions** and JWT tokens
+- **Provides unified UI** combining multiple service interfaces
 
 ## Documentation
 
