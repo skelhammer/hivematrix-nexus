@@ -2434,6 +2434,27 @@ table td {
     }
 }
 
+.dashboard-grid--two-col {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.dashboard-grid--two-col .dashboard-card {
+    flex: 0 1 calc(50% - 1rem);
+    min-width: 280px;
+    max-width: 400px;
+}
+
+@media (max-width: 640px) {
+    .dashboard-grid--two-col .dashboard-card {
+        flex: 0 1 100%;
+        max-width: 100%;
+    }
+}
+
 .dashboard-card {
     display: flex;
     flex-direction: column;
