@@ -241,9 +241,9 @@ a:hover {
     border: 1px solid var(--color-border-medium);
 }
 
-/* Light mode - darker grey for better contrast */
+/* Light mode - medium grey for better contrast */
 [data-theme="light"] .btn {
-    background: #e9ecef;
+    background: #d1d5db;
 }
 
 .btn:hover {
