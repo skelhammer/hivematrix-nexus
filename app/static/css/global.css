@@ -2817,6 +2817,55 @@ table td {
     word-break: normal;
 }
 
+/* Hierarchy View Styles */
+.file-browser--hierarchy {
+    display: block;
+    padding: 0;
+}
+
+.file-browser--hierarchy .hierarchy-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.file-browser--hierarchy .hierarchy-item:hover {
+    background-color: var(--color-hover-bg);
+}
+
+.file-browser--hierarchy .hierarchy-item__toggle {
+    display: inline-block;
+    width: 20px;
+    text-align: center;
+    margin-right: 0.25rem;
+    font-size: 12px;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.file-browser--hierarchy .hierarchy-item__icon {
+    margin-right: 0.75rem;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.file-browser--hierarchy .hierarchy-item__name {
+    flex: 1;
+}
+
+.file-browser--hierarchy .hierarchy-children {
+    padding-left: 2rem;
+    display: none;
+}
+
+.file-browser--hierarchy .hierarchy-children--expanded {
+    display: block;
+}
+
 /* View Switcher */
 .view-switcher {
     display: flex;
