@@ -2407,6 +2407,33 @@ table td {
     margin: 1.5rem 0;
 }
 
+.dashboard-grid--three-col {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.dashboard-grid--three-col .dashboard-card {
+    flex: 0 1 calc(33.333% - 1rem);
+    min-width: 280px;
+    max-width: 350px;
+}
+
+@media (max-width: 1024px) {
+    .dashboard-grid--three-col .dashboard-card {
+        flex: 0 1 calc(50% - 1rem);
+    }
+}
+
+@media (max-width: 640px) {
+    .dashboard-grid--three-col .dashboard-card {
+        flex: 0 1 100%;
+        max-width: 100%;
+    }
+}
+
 .dashboard-card {
     display: flex;
     flex-direction: column;
@@ -2475,6 +2502,23 @@ table td {
     font-size: 0.9rem;
     color: var(--color-text-secondary);
     margin: 0;
+}
+
+.dashboard-card__meta {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 0.75rem;
+    flex-wrap: wrap;
+}
+
+/* Dark mode border fix for dashboard cards */
+[data-theme="dark"] .dashboard-card {
+    border-color: var(--color-border-medium);
+}
+
+[data-theme="dark"] .dashboard-card:hover {
+    border-color: var(--color-primary);
 }
 
 /* ========================================
