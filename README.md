@@ -1,8 +1,29 @@
 # HiveMatrix Nexus
 
-**HTTPS Gateway & UI Composition Layer**
+**The HTTPS Gateway & UI Composition Layer for HiveMatrix**
 
-Nexus is the user-facing gateway for the entire HiveMatrix platform. It provides a unified HTTPS entry point, handles OAuth2 authentication via Keycloak, and composes UIs from multiple backend services.
+Nexus is the user-facing gateway for the entire HiveMatrix platform. It provides a unified HTTPS entry point, handles OAuth2 authentication via Keycloak, composes UIs from multiple backend services, and applies consistent styling and navigation across all modules.
+
+**Port:** 443 (HTTPS, production) / 8000 (HTTP, development)
+
+---
+
+## Table of Contents
+
+- [Quick Start](#quick-start)
+- [What Nexus Does](#what-nexus-does)
+- [Features](#features)
+- [Architecture](#architecture)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [How It Works](#how-it-works)
+- [Static Assets](#static-assets)
+- [API Endpoints](#api-endpoints)
+- [Development](#development)
+- [Security](#security)
+- [Troubleshooting](#troubleshooting)
+- [Configuration Reference](#configuration-reference)
+- [Service Integration](#service-integration)
 
 ---
 
@@ -20,14 +41,76 @@ Helm is the orchestration center that will guide you through setting up Keycloak
 
 ## What Nexus Does
 
-- **HTTPS Gateway**: Runs on port 443 with SSL/TLS for secure external access
-- **Smart Reverse Proxy**: Routes requests to backend services based on URL paths
-- **OAuth2 Authentication**: Integrates with Keycloak for user authentication
-- **Session Management**: Maintains revokable user sessions with JWT tokens
-- **UI Composition**: Injects global CSS, side panel navigation, and theme preferences
-- **Keycloak Proxy**: Proxies `/keycloak/` requests to allow external Keycloak access
-- **Service Discovery**: Automatically discovers backend services via `services.json`
-- **Theme Management**: Fetches and applies user theme preferences (light/dark mode)
+Nexus serves as the single point of entry for all HiveMatrix services:
+
+### Core Functions
+
+1. **HTTPS Gateway** - Runs on port 443 with SSL/TLS for secure external access to all services
+2. **Smart Reverse Proxy** - Routes requests to backend services based on URL paths (e.g., `/codex/` → Codex service)
+3. **OAuth2 Authentication** - Integrates with Keycloak for enterprise-grade user authentication
+4. **Session Management** - Maintains revokable JWT-based sessions across all services
+5. **UI Composition** - Injects global CSS, side panel navigation, and branding into all service pages
+6. **Keycloak Proxy** - Proxies `/keycloak/` requests to allow external access to login pages
+7. **Service Discovery** - Automatically discovers backend services via `services.json`
+8. **Theme Management** - Fetches and applies user theme preferences (light/dark mode)
+9. **SSE Streaming Support** - Passes through Server-Sent Events for real-time AI responses (Brainhair)
+10. **Service-to-Service Auth** - Provides authenticated API calls between services
+
+### Why Nexus Exists
+
+Without Nexus:
+- Each service would need its own SSL certificate and authentication
+- Users would have to log in to each service separately
+- Each service would need to implement its own CSS and navigation
+- Services would be exposed directly to the internet (security risk)
+
+With Nexus:
+- ✅ Single HTTPS endpoint for all services
+- ✅ Single sign-on across entire platform
+- ✅ Consistent UI/UX across all modules
+- ✅ Backend services run on localhost only (secure)
+- ✅ Centralized authentication and authorization
+
+---
+
+## Features
+
+### 🔐 Authentication & Security
+- **OAuth2 Integration**: Keycloak-based authentication with PKCE flow
+- **JWT Sessions**: Cryptographically signed, revokable session tokens
+- **Single Sign-On**: Login once, access all services
+- **Session Revocation**: Immediate logout across all services
+- **HTTPS Only**: SSL/TLS encryption for all external traffic
+- **Localhost Backend**: Services run on 127.0.0.1 (not accessible externally)
+
+### 🎨 UI Composition
+- **Global CSS Injection**: Consistent styling via global.css
+- **BEM Methodology**: Reusable component classes across all services
+- **Side Panel Navigation**: Auto-generated from services.json
+- **Theme Management**: Light/dark mode with user preference persistence
+- **Responsive Design**: Mobile-friendly layouts
+- **Lucide Icons**: Modern iconography system
+
+### 🔀 Routing & Proxying
+- **Path-Based Routing**: `/codex/` → Codex, `/helm/` → Helm
+- **Prefix Stripping**: Services receive clean paths without service name
+- **Query String Forwarding**: Preserves URL parameters
+- **POST/PUT/DELETE Support**: All HTTP methods proxied correctly
+- **SSE Streaming**: Pass-through for Server-Sent Events (Brainhair AI)
+- **X-Forwarded Headers**: Backend services know they're proxied
+
+### 🔧 Service Management
+- **Auto-Discovery**: Services loaded from services.json
+- **Permission Filtering**: Admin-only services hidden from regular users
+- **Service Icons**: Visual identification in navigation
+- **Health Checks**: Monitor service availability
+- **Service-to-Service Auth**: Authenticated inter-service API calls
+
+### 🖥️ Keycloak Integration
+- **Keycloak Proxy**: External access to Keycloak through Nexus
+- **URL Rewriting**: Transparent proxying for login pages
+- **Cookie Handling**: Proper session cookie management
+- **State Validation**: CSRF protection via OAuth2 state parameter
 
 ---
 
@@ -697,15 +780,99 @@ pip install gunicorn gevent
 
 ---
 
+## Service Integration
+
+### Service-to-Service Authentication
+
+Nexus provides a helper for making authenticated calls between services:
+
+```python
+from app.service_client import call_service
+
+# Call another service's API
+response = call_service(
+    'codex',
+    '/api/companies',
+    method='GET',
+    params={'filter': 'active'}
+)
+
+companies = response.json()
+```
+
+**How it works:**
+1. Nexus requests a service token from Core
+2. Core mints a JWT for service-to-service auth
+3. Request is made with Authorization header
+4. Target service validates token with Core
+
+**Example use cases:**
+- Fetching user theme from Codex (see `get_user_theme()` in routes.py)
+- Cross-service data queries
+- Centralized logging to Helm
+
+### Adding Service Icons
+
+Service icons appear in the side panel navigation. To add an icon for a new service:
+
+**Edit `app/routes.py`:**
+```python
+service_icons = {
+    'codex': '📚',
+    'helm': '⚙️',
+    'brainhair': '🧠',
+    'knowledgetree': '🌳',
+    'ledger': '💰',
+    'myservice': '🎯',  # Add your service here
+}
+```
+
+Available emoji categories for HiveMatrix services:
+- 📚 Documentation/Data
+- ⚙️ Management/Configuration
+- 🧠 AI/Intelligence
+- 🌳 Organization/Structure
+- 💰 Finance/Billing
+- 🎫 Ticketing/Support
+- 🏗️ Planning/Architecture
+- 🔐 Security/Auth
+
+---
+
 ## Related Documentation
 
 - **[HiveMatrix Helm](../hivematrix-helm/README.md)** - Service orchestration and automated setup
 - **[Architecture Guide](../hivematrix-helm/ARCHITECTURE.md)** - **READ THIS FIRST** - Complete system architecture
 - **[HiveMatrix Core](../hivematrix-core/README.md)** - Authentication and session management
-- **[HiveMatrix Codex](../hivematrix-codex/README.md)** - MSP data hub and agent management
+- **[HiveMatrix Codex](../hivematrix-codex/README.md)** - Data platform for companies, tickets, assets, and users
+- **[HiveMatrix Brainhair](../hivematrix-brainhair/README.md)** - AI technical support assistant
+- **[HiveMatrix Ledger](../hivematrix-ledger/README.md)** - Billing and contract management
 
 ---
 
 ## License
 
 See main HiveMatrix LICENSE file
+
+---
+
+## Contributing
+
+When modifying Nexus:
+1. Follow the HiveMatrix architecture patterns in ARCHITECTURE.md
+2. Never bypass authentication for user-facing routes
+3. Test all authentication flows (login, logout, token expiration)
+4. Ensure new services appear in sidebar navigation
+5. Test theme switching and persistence
+6. Verify SSL certificates work for production deployment
+7. Check that SSE streaming still works for Brainhair
+8. Ensure service-to-service auth helper works with new services
+
+For questions, refer to `ARCHITECTURE.md` in the main HiveMatrix repository.
+
+---
+
+**Port**: 443 (HTTPS, production) / 8000 (HTTP, development)
+**Version**: 2.1.0
+**Status**: Production Ready
+**Last Updated**: 2025-10-28
