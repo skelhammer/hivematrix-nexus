@@ -2786,6 +2786,72 @@ table td {
     /* Read-only items appear normal, functionality is restricted in JavaScript */
 }
 
+/* Tree View Styles */
+.file-browser--tree {
+    display: block;
+    padding: 0;
+}
+
+.file-browser--tree .file-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+.file-browser--tree .file-item:last-child {
+    border-bottom: none;
+}
+
+.file-browser--tree .file-item__icon {
+    font-size: 24px;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.file-browser--tree .file-item__name {
+    margin-top: 0;
+    word-break: normal;
+}
+
+/* View Switcher */
+.view-switcher {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.view-switcher__button {
+    padding: 0.5rem;
+    background: var(--color-surface);
+    border: 2px solid var(--color-border-medium);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.view-switcher__button:hover {
+    background-color: var(--color-hover-bg);
+    border-color: var(--color-primary);
+}
+
+.view-switcher__button--active {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-primary-text);
+}
+
+.view-switcher__button svg {
+    width: 20px;
+    height: 20px;
+}
+
 /* ========================================
    Context Menu Component
    ======================================== */
