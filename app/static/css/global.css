@@ -2750,8 +2750,7 @@ table td {
 }
 
 .file-item--read-only {
-    opacity: 0.6;
-    cursor: not-allowed;
+    /* Read-only items appear normal, functionality is restricted in JavaScript */
 }
 
 /* ========================================
