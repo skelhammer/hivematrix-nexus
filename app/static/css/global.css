@@ -236,9 +236,14 @@ a:hover {
     font-size: 0.95rem;
     transition: all 0.2s;
     text-decoration: none;
-    background: var(--color-bg-tertiary);
+    background: var(--color-surface);
     color: var(--color-text-primary);
     border: 1px solid var(--color-border-medium);
+}
+
+/* Light mode - darker grey for better contrast */
+[data-theme="light"] .btn {
+    background: #e9ecef;
 }
 
 .btn:hover {
