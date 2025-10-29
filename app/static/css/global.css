@@ -2704,3 +2704,195 @@ table td {
     font-size: 14px;
     font-weight: bold;
 }
+
+/* ========================================
+   File Browser Component
+   ======================================== */
+
+.file-browser {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem;
+}
+
+.file-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.file-item:hover {
+    background-color: var(--color-surface);
+    border-color: var(--color-border-medium);
+}
+
+.file-item__icon {
+    font-size: 48px;
+}
+
+.file-item__name {
+    word-break: break-all;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.file-item--selected {
+    background-color: var(--color-muted);
+}
+
+.file-item--read-only {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ========================================
+   Context Menu Component
+   ======================================== */
+
+.context-menu {
+    display: none;
+    position: absolute;
+    background: var(--color-background);
+    border: 1px solid var(--color-border-medium);
+    border-radius: 6px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 8px 0;
+    z-index: 1000;
+}
+
+.context-menu__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.context-menu__item {
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.context-menu__item:hover {
+    background-color: var(--color-surface);
+}
+
+.context-menu__separator {
+    margin: 5px 0;
+    border: none;
+    border-top: 1px solid var(--color-border-medium);
+}
+
+/* ========================================
+   Breadcrumb Component
+   ======================================== */
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.breadcrumb__link {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.breadcrumb__link:hover {
+    text-decoration: underline;
+}
+
+.breadcrumb__separator {
+    margin: 0 0.5rem;
+    color: var(--color-text-muted);
+}
+
+/* ========================================
+   Dropdown Component
+   ======================================== */
+
+.dropdown {
+    display: none;
+    position: absolute;
+    background: var(--color-background);
+    border: 1px solid var(--color-border-medium);
+    border-radius: 6px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.dropdown--visible {
+    display: block;
+}
+
+.dropdown__item {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--color-border-medium);
+    transition: background-color 0.2s;
+}
+
+.dropdown__item:last-child {
+    border-bottom: none;
+}
+
+.dropdown__item:hover {
+    background-color: var(--color-surface);
+}
+
+.dropdown__item-title {
+    font-weight: bold;
+}
+
+.dropdown__item-subtitle {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+}
+
+.dropdown__empty {
+    padding: 10px;
+    color: var(--color-text-muted);
+    font-style: italic;
+}
+
+/* ========================================
+   Header Toolbar Component
+   ======================================== */
+
+.header-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.header-toolbar--space-between {
+    justify-content: space-between;
+}
+
+/* ========================================
+   Checkbox List Component
+   ======================================== */
+
+.checkbox-list {
+    list-style: none;
+    padding: 0;
+}
+
+.checkbox-list__item {
+    padding: 0.5rem 0;
+}
+
+.checkbox-list__label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
