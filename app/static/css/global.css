@@ -2332,6 +2332,8 @@ table td {
 .u-flex-gap-1 { gap: 0.5rem; }
 .u-flex-gap-2 { gap: 1rem; }
 
+.u-hidden { display: none; }
+
 .u-text-center { text-align: center; }
 .u-text-left { text-align: left; }
 .u-text-right { text-align: right; }
@@ -2729,7 +2731,7 @@ table td {
 }
 
 .file-item:hover {
-    background-color: var(--color-surface);
+    background-color: var(--color-hover-bg);
     border-color: var(--color-border-medium);
 }
 
@@ -2759,7 +2761,7 @@ table td {
 .context-menu {
     display: none;
     position: absolute;
-    background: var(--color-background);
+    background: var(--color-surface);
     border: 1px solid var(--color-border-medium);
     border-radius: 6px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
@@ -2780,13 +2782,17 @@ table td {
 }
 
 .context-menu__item:hover {
-    background-color: var(--color-surface);
+    background-color: var(--color-hover-bg);
 }
 
 .context-menu__separator {
     margin: 5px 0;
     border: none;
     border-top: 1px solid var(--color-border-medium);
+}
+
+.context-menu__item--hidden {
+    display: none;
 }
 
 /* ========================================
@@ -2797,6 +2803,27 @@ table td {
     display: flex;
     align-items: center;
     flex-grow: 1;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    max-width: 100%;
+}
+
+.breadcrumb::-webkit-scrollbar {
+    height: 6px;
+}
+
+.breadcrumb::-webkit-scrollbar-track {
+    background: var(--color-surface);
+}
+
+.breadcrumb::-webkit-scrollbar-thumb {
+    background: var(--color-border-medium);
+    border-radius: 3px;
+}
+
+.breadcrumb::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-muted);
 }
 
 .breadcrumb__link {
@@ -2820,7 +2847,7 @@ table td {
 .dropdown {
     display: none;
     position: absolute;
-    background: var(--color-background);
+    background: var(--color-surface);
     border: 1px solid var(--color-border-medium);
     border-radius: 6px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
@@ -2895,4 +2922,79 @@ table td {
     align-items: center;
     gap: 8px;
     cursor: pointer;
+}
+
+/* ========================================
+   Folder Tree Component (for move modal)
+   ======================================== */
+
+#folder-list {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid var(--color-border-medium);
+    border-radius: 6px;
+    padding: 0.5rem;
+    background: var(--color-bg-primary);
+}
+
+.folder-tree {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.folder-tree__item {
+    margin: 0;
+    padding: 0;
+}
+
+.folder-tree__node {
+    display: flex;
+    align-items: center;
+    padding: 0.4rem 0.5rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    user-select: none;
+}
+
+.folder-tree__node:hover {
+    background-color: var(--color-hover-bg);
+}
+
+.folder-tree__node--selected {
+    background-color: var(--color-primary);
+    color: var(--color-primary-text);
+}
+
+.folder-tree__node--selected:hover {
+    background-color: var(--color-primary);
+}
+
+.folder-tree__toggle {
+    display: inline-block;
+    width: 16px;
+    text-align: center;
+    margin-right: 0.25rem;
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.folder-tree__icon {
+    margin-right: 0.5rem;
+    font-size: 16px;
+}
+
+.folder-tree__name {
+    flex: 1;
+}
+
+.folder-tree__children {
+    list-style: none;
+    padding-left: 1.5rem;
+    margin: 0;
+}
+
+.folder-tree__children--collapsed {
+    display: none;
 }
