@@ -251,6 +251,11 @@ a:hover {
     background: #45475a;
 }
 
+/* Ensure primary buttons keep their color in dark mode */
+[data-theme="dark"] .btn--primary {
+    background: var(--color-primary);
+}
+
 .btn:hover {
     background: var(--color-hover-bg);
     transform: translateY(-1px);
