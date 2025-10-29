@@ -246,6 +246,11 @@ a:hover {
     background: #e9ecef;
 }
 
+/* Ensure primary buttons keep their color in light mode */
+[data-theme="light"] .btn--primary {
+    background: var(--color-primary);
+}
+
 /* Dark mode - lighter grey for better contrast */
 [data-theme="dark"] .btn {
     background: #45475a;
