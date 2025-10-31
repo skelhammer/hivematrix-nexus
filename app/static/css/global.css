@@ -2472,6 +2472,7 @@ table td {
 .u-flex-gap { gap: 0.75rem; }
 .u-flex-gap-1 { gap: 0.5rem; }
 .u-flex-gap-2 { gap: 1rem; }
+.u-items-center { align-items: center; }
 
 .u-hidden { display: none; }
 
