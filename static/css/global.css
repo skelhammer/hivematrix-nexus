@@ -560,6 +560,11 @@ body {
     color: #1e1e2e;
 }
 
+.badge--warning {
+    background: #f9e2af;
+    color: #1e1e2e;
+}
+
 /* Empty State */
 .empty-state {
     padding: 3rem 1rem;
@@ -629,6 +634,15 @@ body {
 
 .btn--danger:hover {
     background: #eba0ac;
+}
+
+.btn--success {
+    background: #a6e3a1;
+    color: #1e1e2e;
+}
+
+.btn--success:hover {
+    background: #94e2d5;
 }
 
 .btn--small {
