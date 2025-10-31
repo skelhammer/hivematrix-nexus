@@ -673,11 +673,6 @@ a:hover {
     display: flex;
     gap: 1rem;
     align-items: center;
-    padding: 1rem 2rem;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border-light);
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
 }
 
 .log-type-selector a {
