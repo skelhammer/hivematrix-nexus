@@ -762,6 +762,10 @@ input, select, textarea {
     font-family: inherit;
 }
 
+textarea {
+    resize: vertical;
+}
+
 input:focus, select:focus, textarea:focus {
     outline: none;
     border-color: var(--color-primary);
@@ -1571,7 +1575,7 @@ table td {
    Section Dividers & Actions
    ======================================== */
 
-.section-divider {
+.section-divider:not(th):not(td) {
     height: 2px;
     background: var(--color-border-light);
     margin: 2rem 0;
@@ -3187,4 +3191,335 @@ table td {
 
 .folder-tree__children--collapsed {
     display: none;
+}
+
+/* ========================================
+   Agent Card Component
+   ======================================== */
+
+.agent-card {
+    border: 1px solid var(--color-border-light);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--color-surface);
+}
+
+.agent-card:hover {
+    background: var(--color-hover-bg);
+    transform: translateX(4px);
+}
+
+.agent-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 0.75rem;
+}
+
+.agent-card__name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin: 0;
+}
+
+.agent-card__info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.agent-card__info-item {
+    color: var(--color-text-secondary);
+}
+
+.agent-card__info-item strong {
+    color: var(--color-text-primary);
+}
+
+/* ========================================
+   Location Item Component
+   ======================================== */
+
+.location-item {
+    border: 1px solid var(--color-border-light);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: var(--color-surface);
+}
+
+.location-item__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.location-item__name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+.location-item__address {
+    display: flex;
+    align-items: start;
+    gap: 0.5rem;
+    margin: 0;
+    color: var(--color-text-secondary);
+}
+
+.location-item__address i {
+    margin-top: 0.25rem;
+    flex-shrink: 0;
+}
+
+.location-item__address a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.location-item__address a:hover {
+    text-decoration: underline;
+}
+
+/* ========================================
+   Billing Plans Styles
+   ======================================== */
+
+.tabs {
+    display: flex;
+    gap: 0.5rem;
+    border-bottom: 2px solid var(--color-border);
+    margin-bottom: 1.5rem;
+}
+
+.tabs__tab {
+    padding: 0.75rem 1.5rem;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.tabs__tab:hover {
+    color: var(--color-text);
+    background: var(--color-bg-secondary);
+}
+
+.tabs__tab--active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content--active {
+    display: block;
+}
+
+.plan-card {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+
+.plan-card__header {
+    padding: 1rem 1.5rem;
+    background: var(--color-bg-secondary);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.plan-card__title {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.plan-card__body {
+    padding: 1.5rem;
+}
+
+.compact-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.compact-table th {
+    background: var(--color-bg-tertiary);
+    padding: 0.5rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    border-bottom: 2px solid var(--color-border);
+    white-space: nowrap;
+}
+
+.compact-table td {
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.compact-table input[type="number"],
+.compact-table select {
+    width: 100%;
+    min-width: 80px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+.compact-table tbody tr:hover {
+    background: var(--color-bg-secondary);
+}
+
+.term-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: var(--color-primary-alpha);
+    color: var(--color-primary);
+    border-radius: var(--border-radius-sm);
+    font-weight: 600;
+    font-size: 0.75rem;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.feature-card {
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    background: var(--color-bg);
+}
+
+.feature-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.feature-card__title {
+    margin: 0;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.feature-list__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+.feature-list__item:last-child {
+    border-bottom: none;
+}
+
+.feature-list__name {
+    font-size: 0.875rem;
+}
+
+.feature-list__actions {
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
+}
+
+.feature-list__actions .btn {
+    padding: 0.375rem;
+    min-width: 30px;
+    min-height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feature-list__actions form {
+    margin: 0;
+    display: inline-flex;
+}
+
+.section-divider {
+    border-left: 3px solid var(--color-border);
+    padding-left: 0.5rem;
+}
+
+.table-scroll {
+    overflow-x: auto;
+    margin: 0 -1.5rem;
+    padding: 0 1.5rem;
+}
+
+.term-row--collapsed {
+    display: none;
+}
+
+.expand-toggle {
+    cursor: pointer;
+    user-select: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius-sm);
+    transition: background 0.2s;
+    display: inline-flex;
+    align-items: center;
+}
+
+.expand-toggle:hover {
+    background: var(--color-bg-secondary);
+}
+
+.expand-toggle i,
+.expand-toggle svg {
+    transition: transform 0.2s;
+    display: inline-block;
+}
+
+.expand-toggle.collapsed i,
+.expand-toggle.collapsed svg {
+    transform: rotate(-90deg);
+}
+
+.price-diff {
+    font-size: 0.75rem;
+    color: var(--color-success);
+    display: block;
+    margin-top: 0.25rem;
+}
+
+.price-diff--negative {
+    color: var(--color-danger);
 }
