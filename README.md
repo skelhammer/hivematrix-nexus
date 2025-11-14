@@ -13,7 +13,7 @@ Nexus is the unified entry point that:
 
 For installation, configuration, and architecture documentation, please visit:
 
-**[HiveMatrix Documentation](https://Troy Pound.github.io/hivematrix-docs/ARCHITECTURE/)**
+**[HiveMatrix Documentation](https://skelhammer.github.io/hivematrix-docs/ARCHITECTURE/)**
 
 ## Quick Start
 
