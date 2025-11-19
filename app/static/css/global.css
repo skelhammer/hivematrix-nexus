@@ -439,7 +439,8 @@ a:hover {
     margin-bottom: 1.5rem;
 }
 
-.tab {
+.tab,
+.tabs__tab {
     padding: 0.75rem 1.25rem;
     background: transparent;
     border: none;
@@ -452,12 +453,14 @@ a:hover {
     margin-bottom: -1px;
 }
 
-.tab:hover {
+.tab:hover,
+.tabs__tab:hover {
     color: var(--color-text-primary);
     background: var(--color-hover-bg);
 }
 
-.tab--active {
+.tab--active,
+.tabs__tab--active {
     color: var(--color-primary);
     border-bottom-color: var(--color-primary);
 }
@@ -1083,6 +1086,18 @@ table td {
     padding: 1rem 1.25rem;
     color: var(--color-text-primary);
     font-size: 0.875rem;
+}
+
+/* Table links - consistent grey, purple on hover */
+.data-table td a,
+table td a {
+    color: var(--color-text-primary);
+    text-decoration: none;
+}
+
+.data-table td a:hover,
+table td a:hover {
+    color: var(--color-primary);
 }
 
 /* ========================================

@@ -151,7 +151,7 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.625rem 0.875rem;
+    padding: 0.75rem;
     color: var(--color-text-secondary);
     text-decoration: none;
     border-radius: 8px;
