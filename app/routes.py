@@ -1,7 +1,13 @@
+import os
+import re
 import requests
+import secrets
 import time
-from flask import request, Response, url_for, session, redirect, current_app
+from urllib.parse import urlencode
+
+from flask import request, Response, url_for, session, redirect, current_app, make_response
 from app import app
+from app.service_client import call_service
 from bs4 import BeautifulSoup
 import jwt
 
@@ -25,8 +31,6 @@ def validate_token(token):
     This ensures the session hasn't been revoked.
     Returns the decoded data if valid, None otherwise.
     """
-    import requests
-
     try:
         # First verify signature locally
         client = get_jwks_client()
@@ -96,8 +100,6 @@ def get_user_theme(token_data):
 
     try:
         # Call Codex API using proper service-to-service authentication
-        from app.service_client import call_service
-
         response = call_service(
             'codex',
             '/api/public/user/theme',
@@ -156,8 +158,6 @@ def get_user_home_page(token_data):
 
     try:
         # Call Codex API using proper service-to-service authentication
-        from app.service_client import call_service
-
         response = call_service(
             'codex',
             '/api/public/user/home-page',
@@ -460,9 +460,6 @@ def keycloak_proxy(path):
     Proxy requests to Keycloak server.
     This allows external browsers to access Keycloak through Nexus's HTTPS endpoint.
     """
-    import os
-    import re
-
     # Use backend URL for proxy connection (always localhost:8080)
     # KEYCLOAK_SERVER_URL is the frontend URL that clients use
     keycloak_backend = os.environ.get('KEYCLOAK_BACKEND_URL', 'http://localhost:8080')
@@ -546,10 +543,6 @@ def login_proxy():
     Initiates Keycloak login by building the authorization URL directly.
     This ensures external-facing URLs are used instead of localhost.
     """
-    import os
-    import secrets
-    from urllib.parse import urlencode
-
     # Save where the user wanted to go
     session['next_url'] = request.args.get('next', '/')
 
@@ -593,8 +586,6 @@ def keycloak_callback():
     Keycloak redirects here after authentication.
     Exchange authorization code for tokens, then request JWT from Core.
     """
-    import os
-
     # Check for errors from Keycloak
     error = request.args.get('error')
     if error:
@@ -675,9 +666,6 @@ def logout():
     """
     Logout: revokes token at Core, clears session, and redirects to login.
     """
-    from flask import make_response
-    import requests
-
     # Get the token before clearing session
     token = session.get('token')
 
@@ -776,7 +764,6 @@ def main_gateway(path):
     # Proxy Keycloak paths directly without authentication
     # These are needed for the login flow to work
     if path.startswith('realms/') or path.startswith('resources/'):
-        import os
         keycloak_url = os.environ.get('KEYCLOAK_SERVER_URL', 'http://localhost:8080')
         backend_url = f"{keycloak_url}/{path}"
 
