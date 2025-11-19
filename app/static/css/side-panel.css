@@ -105,9 +105,10 @@
     overflow: hidden;
 }
 
-/* Header keeps same padding so toggle button stays in place */
+/* Header left padding reduced to align toggle icon with nav icons */
+/* Toggle button is 36px with 20px icon (8px internal padding), nav icons are 20px */
 .hivematrix-side-panel.collapsed .side-panel__header {
-    padding: 1rem 0.75rem;
+    padding: 1rem 1rem 1rem 0.25rem;
 }
 
 /* Links keep same padding so icons stay anchored - NO centering */
