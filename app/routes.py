@@ -1,8 +1,12 @@
 import requests
+import time
 from flask import request, Response, url_for, session, redirect, current_app
 from app import app
 from bs4 import BeautifulSoup
 import jwt
+
+# Cache TTL for user preferences (5 minutes)
+PREFERENCE_CACHE_TTL = 300
 
 # Cache for Core's public key to avoid fetching it on every request
 jwks_client = None
@@ -66,7 +70,7 @@ def validate_token(token):
 
 def get_user_theme(token_data):
     """
-    Fetch user's theme preference from Codex.
+    Fetch user's theme preference from Codex with session caching.
     Falls back to 'light' if Codex is unavailable or user not found.
 
     Args:
@@ -81,6 +85,14 @@ def get_user_theme(token_data):
     if not user_email:
         current_app.logger.debug("No email in token, defaulting to light theme")
         return 'light'  # Default if no email in token
+
+    # Check session cache first
+    cached_theme = session.get('cached_theme')
+    cache_time = session.get('cached_theme_time', 0)
+
+    if cached_theme and (time.time() - cache_time) < PREFERENCE_CACHE_TTL:
+        current_app.logger.debug(f"Using cached theme: {cached_theme}")
+        return cached_theme
 
     try:
         # Call Codex API using proper service-to-service authentication
@@ -102,6 +114,9 @@ def get_user_theme(token_data):
 
             # Validate theme value
             if theme in ['light', 'dark']:
+                # Cache in session
+                session['cached_theme'] = theme
+                session['cached_theme_time'] = time.time()
                 return theme
 
     except Exception as e:
@@ -115,7 +130,7 @@ def get_user_theme(token_data):
 
 def get_user_home_page(token_data):
     """
-    Fetch user's home page preference from Codex.
+    Fetch user's home page preference from Codex with session caching.
     Falls back to 'helm' if Codex is unavailable or user not found.
 
     Args:
@@ -130,6 +145,14 @@ def get_user_home_page(token_data):
     if not user_email:
         current_app.logger.debug("No email in token, defaulting to helm")
         return 'helm'  # Default if no email in token
+
+    # Check session cache first
+    cached_home = session.get('cached_home_page')
+    cache_time = session.get('cached_home_page_time', 0)
+
+    if cached_home and (time.time() - cache_time) < PREFERENCE_CACHE_TTL:
+        current_app.logger.debug(f"Using cached home page: {cached_home}")
+        return cached_home
 
     try:
         # Call Codex API using proper service-to-service authentication
@@ -152,6 +175,9 @@ def get_user_home_page(token_data):
             # Validate home page value
             valid_pages = ['helm', 'codex', 'beacon', 'ledger', 'brainhair']
             if home_page in valid_pages:
+                # Cache in session
+                session['cached_home_page'] = home_page
+                session['cached_home_page_time'] = time.time()
                 return home_page
 
     except Exception as e:
@@ -161,6 +187,16 @@ def get_user_home_page(token_data):
     # Default to helm if anything goes wrong
     current_app.logger.debug("Defaulting to helm")
     return 'helm'
+
+
+def invalidate_preference_cache():
+    """
+    Clear cached user preferences. Call this when user updates their settings.
+    """
+    session.pop('cached_theme', None)
+    session.pop('cached_theme_time', None)
+    session.pop('cached_home_page', None)
+    session.pop('cached_home_page_time', None)
 
 
 def inject_side_panel(soup, current_service, user_data=None):
@@ -451,7 +487,8 @@ def keycloak_proxy(path):
             data=request.get_data(),
             params=request.args,
             cookies=request.cookies,
-            allow_redirects=False
+            allow_redirects=False,
+            timeout=30
         )
 
         # Build response
@@ -494,8 +531,8 @@ def keycloak_proxy(path):
                 # Replace relative references that might bypass the proxy
                 text = re.sub(r'action="/', f'action="{request.host_url.rstrip("/")}/keycloak/', text)
                 content = text.encode('utf-8')
-            except:
-                pass  # If decode/encode fails, just pass through original content
+            except (UnicodeDecodeError, UnicodeEncodeError) as e:
+                current_app.logger.debug(f"Could not rewrite Keycloak response content: {e}")
 
         return Response(content, resp.status_code, response_headers)
 
@@ -758,7 +795,8 @@ def main_gateway(path):
                 data=request.get_data(),
                 params=request.args,
                 cookies=request.cookies,
-                allow_redirects=False
+                allow_redirects=False,
+                timeout=30
             )
 
             excluded_headers = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
@@ -861,7 +899,8 @@ def main_gateway(path):
             data=request.get_data(),
             cookies=request.cookies,
             allow_redirects=False,
-            stream=True)  # Always stream so we can check content-type
+            stream=True,  # Always stream so we can check content-type
+            timeout=30)  # Prevent hanging requests
 
         excluded_headers = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
         response_headers = [(name, value) for (name, value) in resp.raw.headers.items() if name.lower() not in excluded_headers]
