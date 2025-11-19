@@ -128,27 +128,30 @@ def inject_side_panel(soup, current_service, user_data=None):
 
     # Create side panel HTML
     side_panel_html = '''
-    <div class="hivematrix-side-panel">
+    <div class="hivematrix-side-panel" id="side-panel">
         <div class="side-panel__header">
+            <button class="side-panel__toggle" id="sidebar-toggle" aria-label="Toggle sidebar">
+                <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
             <h3 class="side-panel__title">HiveMatrix</h3>
         </div>
         <nav class="side-panel__nav">
             <ul class="side-panel__list">
     '''
 
-    # Service icons mapping
+    # Service icons mapping - Lucide icons to match Helm dashboard
     service_icons = {
-        'template': '📝',
-        'codex': '📚',
-        'knowledgetree': '🌳',
-        'ledger': '💰',
-        'resolve': '🎫',
-        'architect': '🏗️',
-        'treasury': '💵',
-        'core': '🔐',
-        'nexus': '🌐',
-        'helm': '⚙️',
-        'brainhair': '🧠'
+        'template': '<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>',
+        'codex': '<svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>',
+        'knowledgetree': '<svg viewBox="0 0 24 24"><path d="M10 10v.2A3 3 0 0 1 8.9 16v0H5v0h0a3 3 0 0 1-1-5.8V10a3 3 0 0 1 6 0Z"/><path d="M7 16v6"/><path d="M13 19v3"/><path d="M12 19h8.3a1 1 0 0 0 .7-1.7L18 14h.3a1 1 0 0 0 .7-1.7L16 9h.2a1 1 0 0 0 .8-1.7L13 3l-1.1 1.7"/></svg>',
+        'ledger': '<svg viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1-2-1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 17V7"/></svg>',
+        'resolve': '<svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
+        'architect': '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
+        'treasury': '<svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>',
+        'core': '<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+        'nexus': '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><path d="M10.4 21.9a10 10 0 0 0 9.941-15.416"/><path d="M13.5 2.1a10 10 0 0 0-9.841 15.416"/></svg>',
+        'helm': '<svg viewBox="0 0 24 24"><path d="M12 6v16"/><path d="m19 13 2-1a9 9 0 0 1-18 0l2 1"/><path d="M9 11h6"/><circle cx="12" cy="4" r="2"/></svg>',
+        'brainhair': '<svg viewBox="0 0 24 24"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"/><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"/><path d="M3.477 10.896a4 4 0 0 1 .585-.396"/><path d="M19.938 10.5a4 4 0 0 1 .585.396"/><path d="M6 18a4 4 0 0 1-1.967-.516"/><path d="M19.967 17.484A4 4 0 0 1 18 18"/></svg>'
     }
 
     # Add each service as a link (only if visible and user has permission)
@@ -182,19 +185,22 @@ def inject_side_panel(soup, current_service, user_data=None):
             </ul>
         </nav>
         <div class="side-panel__footer">
-            <div style="padding: 0.75rem 1rem; border-top: 1px solid var(--color-border-light);">
-                <button class="btn btn--small" id="theme-toggle-btn" style="width: 100%; margin-bottom: 0.5rem;">
-                    <span class="btn__label" id="theme-toggle-text">🌙 Dark Mode</span>
-                </button>
-            </div>
             <a href="/codex/settings" class="side-panel__link">
-                <span class="side-panel__icon">⚙️</span>
+                <span class="side-panel__icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
                 <span class="side-panel__label">Settings</span>
             </a>
             <a href="/logout" class="side-panel__link">
-                <span class="side-panel__icon">🚪</span>
+                <span class="side-panel__icon"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
                 <span class="side-panel__label">Logout</span>
             </a>
+            <button class="theme-toggle" id="theme-toggle-btn" aria-label="Toggle theme">
+                <span class="theme-toggle__track">
+                    <span class="theme-toggle__thumb">
+                        <svg viewBox="0 0 24 24" class="theme-icon-moon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                        <svg viewBox="0 0 24 24" class="theme-icon-sun"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                    </span>
+                </span>
+            </button>
         </div>
     </div>
     '''
@@ -232,14 +238,6 @@ function getCurrentTheme() {
     return document.documentElement.getAttribute('data-theme') || 'light';
 }
 
-function updateThemeButton() {
-    const currentTheme = getCurrentTheme();
-    const btn = document.getElementById('theme-toggle-text');
-    if (btn) {
-        btn.textContent = currentTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
-    }
-}
-
 async function toggleTheme() {
     console.log('[Theme Toggle] toggleTheme() called');
     const currentTheme = getCurrentTheme();
@@ -250,7 +248,6 @@ async function toggleTheme() {
     // Apply theme immediately
     document.documentElement.setAttribute('data-theme', newTheme);
     console.log('[Theme Toggle] data-theme attribute set to:', newTheme);
-    updateThemeButton();
 
     // Save to Codex with proper authentication
     try {
@@ -302,22 +299,53 @@ async function toggleTheme() {
     }
 }
 
-// Update button text on page load and attach event listener
+// Sidebar toggle functionality
+function toggleSidebar() {
+    const sidePanel = document.getElementById('side-panel');
+    if (sidePanel) {
+        sidePanel.classList.toggle('collapsed');
+        const isCollapsed = sidePanel.classList.contains('collapsed');
+        localStorage.setItem('sidebar-collapsed', isCollapsed);
+        console.log('[Sidebar] Toggled, collapsed:', isCollapsed);
+    }
+}
+
+function initSidebar() {
+    const sidePanel = document.getElementById('side-panel');
+    const savedState = localStorage.getItem('sidebar-collapsed');
+    if (savedState === 'true' && sidePanel) {
+        sidePanel.classList.add('collapsed');
+    }
+}
+
+// Attach event listeners on page load
 document.addEventListener('DOMContentLoaded', function() {
     console.log('[Theme Toggle] DOMContentLoaded fired');
-    updateThemeButton();
 
-    // Attach click handler to theme toggle button
+    // Initialize sidebar state from localStorage
+    initSidebar();
+
+    // Attach click handler to theme toggle
     const themeBtn = document.getElementById('theme-toggle-btn');
     if (themeBtn) {
-        console.log('[Theme Toggle] Button found, attaching listener');
+        console.log('[Theme Toggle] Toggle found, attaching listener');
         themeBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('[Theme Toggle] Button clicked');
+            console.log('[Theme Toggle] Toggle clicked');
             toggleTheme();
         });
     } else {
-        console.error('[Theme Toggle] Button not found!');
+        console.error('[Theme Toggle] Toggle not found!');
+    }
+
+    // Attach click handler to sidebar toggle
+    const sidebarBtn = document.getElementById('sidebar-toggle');
+    if (sidebarBtn) {
+        console.log('[Sidebar] Toggle found, attaching listener');
+        sidebarBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            toggleSidebar();
+        });
     }
 });
 '''
