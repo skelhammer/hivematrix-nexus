@@ -21,6 +21,11 @@ app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['PERMANENT_SESSION_LIFETIME'] = 3600  # 1 hour
 
+# Configure logging level from environment
+import logging
+log_level = os.environ.get('LOG_LEVEL', 'INFO').upper()
+app.logger.setLevel(getattr(logging, log_level, logging.INFO))
+
 # Load other configuration variables
 app.config['CORE_SERVICE_URL'] = os.environ.get('CORE_SERVICE_URL')
 app.config['NEXUS_SERVICE_URL'] = os.environ.get('NEXUS_SERVICE_URL', 'http://localhost:8000')
