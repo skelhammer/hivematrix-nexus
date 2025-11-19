@@ -121,6 +121,62 @@ def get_user_theme(token_data):
     return 'light'
 
 
+def get_user_home_page(token_data):
+    """
+    Fetch user's home page preference from Codex.
+    Falls back to 'helm' if Codex is unavailable or user not found.
+
+    Args:
+        token_data: Decoded JWT token containing user info
+
+    Returns:
+        str: Service slug (e.g., 'helm', 'codex', 'beacon', 'ledger', 'brainhair')
+    """
+    user_email = token_data.get('email')
+
+    print(f"[DEBUG] get_user_home_page called for email: {user_email}")
+
+    if not user_email:
+        print("[DEBUG] No email in token, defaulting to helm")
+        return 'helm'  # Default if no email in token
+
+    try:
+        # Call Codex API using proper service-to-service authentication
+        from app.service_client import call_service
+
+        print(f"[DEBUG] Calling Codex API for user home page: {user_email}")
+
+        response = call_service(
+            'codex',
+            '/api/public/user/home-page',
+            params={'email': user_email},
+            timeout=2  # Quick timeout to avoid slowing down redirects
+        )
+
+        print(f"[DEBUG] Codex API response status: {response.status_code}")
+        print(f"[DEBUG] Codex API response body: {response.text}")
+
+        if response.status_code == 200:
+            data = response.json()
+            home_page = data.get('home_page', 'helm')
+
+            print(f"[DEBUG] Home page from Codex: {home_page}")
+
+            # Validate home page value
+            valid_pages = ['helm', 'codex', 'beacon', 'ledger', 'brainhair']
+            if home_page in valid_pages:
+                return home_page
+
+    except Exception as e:
+        # Log error but don't fail the redirect
+        print(f"[DEBUG] Exception fetching home page: {e}")
+        current_app.logger.warning(f"Failed to fetch user home page from Codex: {e}")
+
+    # Default to helm if anything goes wrong
+    print("[DEBUG] Defaulting to helm")
+    return 'helm'
+
+
 def inject_side_panel(soup, current_service, user_data=None):
     """Injects the side panel navigation into the HTML."""
     services = current_app.config.get('SERVICES', {})
@@ -747,12 +803,32 @@ def main_gateway(path):
     # Update session with fresh token data (in case it was decoded again)
     session['user'] = token_data
 
-    # If the path is empty, redirect to the first accessible service
+    # If the path is empty, redirect to the user's preferred home page
     if not path:
         services = current_app.config.get('SERVICES', {})
         user_permission = token_data.get('permission_level', 'client')
 
-        # Find first service user has access to
+        # Get user's preferred home page from Codex
+        preferred_home = get_user_home_page(token_data)
+
+        # Check if user has access to their preferred home page
+        if preferred_home in services:
+            service_config = services[preferred_home]
+            # Check if user has permission
+            if service_config.get('admin_only', False) and user_permission != 'admin':
+                preferred_home = None  # Fall back to first accessible
+            elif service_config.get('billing_or_admin_only', False) and user_permission not in ['admin', 'billing']:
+                preferred_home = None  # Fall back to first accessible
+            elif not service_config.get('visible', True):
+                preferred_home = None  # Fall back to first accessible
+        else:
+            preferred_home = None  # Invalid service, fall back
+
+        # If preferred home is valid and accessible, use it
+        if preferred_home:
+            return redirect(f'/{preferred_home}/')
+
+        # Fall back to first accessible service
         first_accessible = None
         for service_name, service_config in services.items():
             # Skip if not visible
