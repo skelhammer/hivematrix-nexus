@@ -105,14 +105,19 @@
     overflow: hidden;
 }
 
-/* Keep same padding so nothing moves - only width changes */
-/* No header padding override needed */
+/* Center icons in collapsed state */
+.hivematrix-side-panel.collapsed .side-panel__header {
+    padding: 1rem 0.75rem 1rem 1.25rem;
+}
 
-/* No link padding override needed - icons stay anchored */
+.hivematrix-side-panel.collapsed .side-panel__link {
+    padding: 0.75rem 0.75rem 0.75rem 1.5rem;
+}
 
 /* Footer stays left-aligned */
 .hivematrix-side-panel.collapsed .side-panel__footer {
     align-items: stretch;
+    padding: 0.75rem 0.75rem 0.75rem 1rem;
 }
 
 .hivematrix-side-panel.collapsed .side-panel__footer .side-panel__link {
