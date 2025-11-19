@@ -3504,3 +3504,294 @@ textarea:focus-visible {
         display: none;
     }
 }
+
+/* ========================================
+   Beacon Ticket Dashboard Styles
+   ======================================== */
+
+/* Priority Badge Colors */
+.priority-badge {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.85em;
+}
+
+.priority-badge--low {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: var(--color-success);
+}
+
+.priority-badge--medium {
+    background-color: rgba(245, 158, 11, 0.15);
+    color: var(--color-warning);
+}
+
+.priority-badge--high {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: var(--color-danger);
+    font-weight: 700;
+}
+
+.priority-badge--urgent {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: var(--color-danger);
+    font-weight: 700;
+    animation: blink-animation 1.2s steps(5, start) infinite alternate;
+}
+
+/* SLA Status Colors */
+.sla-status {
+    font-weight: 500;
+}
+
+.sla-normal {
+    color: var(--color-success);
+}
+
+.sla-warning {
+    color: var(--color-warning);
+    font-weight: 600;
+}
+
+.sla-critical {
+    color: var(--color-danger);
+    font-weight: 600;
+}
+
+.sla-overdue {
+    color: var(--color-danger);
+    font-weight: 700;
+    animation: blink-animation 1.2s steps(5, start) infinite;
+}
+
+.sla-none {
+    color: var(--color-text-secondary);
+}
+
+.sla-responded,
+.sla-in-progress {
+    color: var(--color-text-secondary);
+    font-style: italic;
+}
+
+/* Animations */
+@keyframes blink-animation {
+    to {
+        visibility: hidden;
+    }
+}
+
+/* Pulse red for high ticket counts (100+) */
+.pulse-red {
+    animation: pulse-red 1s infinite;
+}
+
+@keyframes pulse-red {
+    0% {
+        color: inherit;
+    }
+    50% {
+        color: var(--color-danger);
+    }
+    100% {
+        color: inherit;
+    }
+}
+
+/* Sortable Header Indicators */
+.sortable-header {
+    cursor: pointer;
+    user-select: none;
+}
+
+.sortable-header:hover {
+    background-color: var(--color-hover-bg);
+}
+
+.sortable-header::after {
+    content: '';
+    display: inline-block;
+    width: 1em;
+    text-align: right;
+    margin-left: 5px;
+    opacity: 0.5;
+}
+
+.sortable-header.sort-asc::after {
+    content: '▲';
+    opacity: 1;
+}
+
+.sortable-header.sort-desc::after {
+    content: '▼';
+    opacity: 1;
+}
+
+/* Modal Details Grid */
+#modal-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.modal__detail-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.modal__detail-label {
+    font-weight: 600;
+    font-size: 0.85em;
+    color: var(--color-text-secondary);
+}
+
+.modal__detail-value {
+    word-break: break-word;
+}
+
+/* Modal Description Styling */
+#modal-description {
+    background-color: var(--color-bg-secondary);
+    border-radius: 8px;
+    padding: 1rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: monospace;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* SLA Detail Text */
+.datetime-container small {
+    display: block;
+    font-size: 0.8em;
+    color: var(--color-text-secondary);
+    margin-top: 4px;
+}
+
+/* Ticket Count Display - Centered prominent count */
+.ticket-count-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    text-align: center;
+}
+
+.ticket-count-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-secondary);
+    font-weight: 600;
+}
+
+.ticket-count-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ticket-count-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-text-primary);
+    transition: color 0.3s ease;
+}
+
+/* Warning states for ticket count */
+.ticket-count-number.count-warning {
+    color: var(--color-warning);
+}
+
+.ticket-count-number.count-danger {
+    color: var(--color-danger);
+}
+
+.ticket-count-number.count-critical {
+    color: var(--color-danger);
+    animation: blink-animation 1s steps(5, start) infinite;
+}
+
+.ticket-count-number.count-emergency {
+    color: var(--color-danger);
+    animation: blink-animation 0.5s steps(5, start) infinite;
+}
+
+/* Police light bar for emergency state */
+.siren {
+    display: none;
+    width: 40px;
+    height: 16px;
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+    background: #1a1a1a;
+    border: 1px solid #333;
+}
+
+.siren.active {
+    display: inline-block;
+}
+
+.siren::before,
+.siren::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    width: 16px;
+    height: 10px;
+    border-radius: 2px;
+}
+
+/* Left siren - red on left, blue on right */
+.siren--left::before {
+    left: 2px;
+    background: #dc3545;
+    animation: police-flash-red 0.4s ease-in-out infinite;
+}
+
+.siren--left::after {
+    right: 2px;
+    background: #007bff;
+    animation: police-flash-blue 0.4s ease-in-out infinite;
+}
+
+/* Right siren - blue on left, red on right */
+.siren--right::before {
+    left: 2px;
+    background: #007bff;
+    animation: police-flash-blue 0.4s ease-in-out infinite;
+}
+
+.siren--right::after {
+    right: 2px;
+    background: #dc3545;
+    animation: police-flash-red 0.4s ease-in-out infinite;
+}
+
+@keyframes police-flash-red {
+    0%, 49% {
+        opacity: 1;
+        box-shadow: 0 0 8px #dc3545, 0 0 16px #dc3545, 0 0 24px #dc3545;
+    }
+    50%, 100% {
+        opacity: 0.2;
+        box-shadow: none;
+    }
+}
+
+@keyframes police-flash-blue {
+    0%, 49% {
+        opacity: 0.2;
+        box-shadow: none;
+    }
+    50%, 100% {
+        opacity: 1;
+        box-shadow: 0 0 8px #007bff, 0 0 16px #007bff, 0 0 24px #007bff;
+    }
+}
