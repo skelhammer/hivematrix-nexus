@@ -76,8 +76,10 @@ def get_user_theme(token_data):
         str: 'light' or 'dark'
     """
     user_email = token_data.get('email')
+    current_app.logger.debug(f"get_user_theme called for email: {user_email}")
 
     if not user_email:
+        current_app.logger.debug("No email in token, defaulting to light theme")
         return 'light'  # Default if no email in token
 
     try:
@@ -91,9 +93,12 @@ def get_user_theme(token_data):
             timeout=2  # Quick timeout to avoid slowing down page loads
         )
 
+        current_app.logger.debug(f"Codex theme API response: {response.status_code}")
+
         if response.status_code == 200:
             data = response.json()
             theme = data.get('theme', 'light')
+            current_app.logger.debug(f"Theme from Codex: {theme}")
 
             # Validate theme value
             if theme in ['light', 'dark']:
@@ -104,6 +109,7 @@ def get_user_theme(token_data):
         current_app.logger.warning(f"Failed to fetch user theme from Codex: {e}")
 
     # Default to light theme if anything goes wrong
+    current_app.logger.debug("Defaulting to light theme")
     return 'light'
 
 
@@ -119,8 +125,10 @@ def get_user_home_page(token_data):
         str: Service slug (e.g., 'helm', 'codex', 'beacon', 'ledger', 'brainhair')
     """
     user_email = token_data.get('email')
+    current_app.logger.debug(f"get_user_home_page called for email: {user_email}")
 
     if not user_email:
+        current_app.logger.debug("No email in token, defaulting to helm")
         return 'helm'  # Default if no email in token
 
     try:
@@ -134,9 +142,12 @@ def get_user_home_page(token_data):
             timeout=2  # Quick timeout to avoid slowing down redirects
         )
 
+        current_app.logger.debug(f"Codex home page API response: {response.status_code}")
+
         if response.status_code == 200:
             data = response.json()
             home_page = data.get('home_page', 'helm')
+            current_app.logger.debug(f"Home page from Codex: {home_page}")
 
             # Validate home page value
             valid_pages = ['helm', 'codex', 'beacon', 'ledger', 'brainhair']
@@ -148,6 +159,7 @@ def get_user_home_page(token_data):
         current_app.logger.warning(f"Failed to fetch user home page from Codex: {e}")
 
     # Default to helm if anything goes wrong
+    current_app.logger.debug("Defaulting to helm")
     return 'helm'
 
 
