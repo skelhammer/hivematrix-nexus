@@ -33,7 +33,7 @@
 
 /* Side Panel Header */
 .side-panel__header {
-    padding: 1rem 0.75rem;
+    padding: 1rem 0.75rem 1rem 1.25rem;
     border-bottom: 1px solid var(--color-border-light);
     display: flex;
     align-items: center;
@@ -105,19 +105,11 @@
     overflow: hidden;
 }
 
-/* Center icons in collapsed state */
-.hivematrix-side-panel.collapsed .side-panel__header {
-    padding: 1rem 0.75rem 1rem 1.25rem;
-}
+/* No padding overrides needed - same padding in both states keeps icons stationary */
 
-.hivematrix-side-panel.collapsed .side-panel__link {
-    padding: 0.75rem 0.75rem 0.75rem 1.5rem;
-}
-
-/* Footer stays left-aligned */
+/* Footer alignment */
 .hivematrix-side-panel.collapsed .side-panel__footer {
     align-items: stretch;
-    padding: 0.75rem 0.75rem 0.75rem 1rem;
 }
 
 .hivematrix-side-panel.collapsed .side-panel__footer .side-panel__link {
@@ -149,7 +141,7 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.75rem;
+    padding: 0.75rem 0.75rem 0.75rem 1rem;
     color: var(--color-text-secondary);
     text-decoration: none;
     border-radius: 8px;
