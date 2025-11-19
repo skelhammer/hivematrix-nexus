@@ -82,13 +82,13 @@
                 width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Collapsed State - Smooth animation with anchored icons */
+/* Collapsed State - Smooth animation with stationary icons */
 .hivematrix-side-panel.collapsed {
-    width: 72px;
+    width: 60px;
 }
 
 .hivematrix-side-panel.collapsed + .hivematrix-content {
-    margin-left: 72px;
+    margin-left: 60px;
 }
 
 /* Title fades out smoothly */
@@ -105,16 +105,10 @@
     overflow: hidden;
 }
 
-/* Header left padding reduced to align toggle icon with nav icons */
-/* Toggle button is 36px with 20px icon (8px internal padding), nav icons are 20px */
-.hivematrix-side-panel.collapsed .side-panel__header {
-    padding: 1rem 1rem 1rem 0.25rem;
-}
+/* Keep same padding so nothing moves - only width changes */
+/* No header padding override needed */
 
-/* Links keep same padding so icons stay anchored - NO centering */
-.hivematrix-side-panel.collapsed .side-panel__link {
-    padding: 0.75rem 1rem 0.75rem 0.75rem;
-}
+/* No link padding override needed - icons stay anchored */
 
 /* Footer stays left-aligned */
 .hivematrix-side-panel.collapsed .side-panel__footer {
@@ -297,7 +291,7 @@
     background: transparent;
     border: none;
     cursor: pointer;
-    padding: 0.5rem;
+    padding: 0.5rem 0.5rem 0.5rem 0.25rem;
     margin: 0;
     flex-shrink: 0;
     overflow: visible;
