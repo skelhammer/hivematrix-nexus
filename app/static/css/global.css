@@ -3600,30 +3600,34 @@ textarea:focus-visible {
 }
 
 /* Sortable Header Indicators */
-.sortable-header {
+.data-table .sortable-header {
     cursor: pointer;
     user-select: none;
+    vertical-align: middle;
+    white-space: nowrap;
 }
 
-.sortable-header:hover {
+.data-table .sortable-header:hover {
     background-color: var(--color-hover-bg);
 }
 
-.sortable-header::after {
+.data-table .sortable-header::after {
     content: '';
     display: inline-block;
-    width: 1em;
-    text-align: right;
-    margin-left: 5px;
-    opacity: 0.5;
+    width: 0.8em;
+    text-align: center;
+    margin-left: 4px;
+    opacity: 0.3;
+    vertical-align: middle;
+    font-size: 0.7em;
 }
 
-.sortable-header.sort-asc::after {
+.data-table .sortable-header.sort-asc::after {
     content: '▲';
     opacity: 1;
 }
 
-.sortable-header.sort-desc::after {
+.data-table .sortable-header.sort-desc::after {
     content: '▼';
     opacity: 1;
 }
