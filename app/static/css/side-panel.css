@@ -84,11 +84,11 @@
 
 /* Collapsed State - Smooth animation with stationary icons */
 .hivematrix-side-panel.collapsed {
-    width: 60px;
+    width: 76px;
 }
 
 .hivematrix-side-panel.collapsed + .hivematrix-content {
-    margin-left: 60px;
+    margin-left: 76px;
 }
 
 /* Title fades out smoothly */
