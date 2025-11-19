@@ -49,20 +49,18 @@ def validate_token(token):
                 return data
             else:
                 # Session revoked or invalid
-                print(f"Token validation failed at Core: {validation_response.status_code}")
+                current_app.logger.warning(f"Token validation failed at Core: {validation_response.status_code}")
                 return None
         except requests.exceptions.RequestException as e:
             # If Core is unreachable, fall back to local validation
             # This ensures the system keeps working even if Core is down
-            print(f"Warning: Could not reach Core for validation: {e}")
-            print("Falling back to local JWT validation")
+            current_app.logger.warning(f"Could not reach Core for validation: {e}, falling back to local validation")
             return data
 
     except jwt.ExpiredSignatureError:
-        print("Token validation failed: Token expired")
         return None
     except jwt.PyJWTError as e:
-        print(f"Token validation failed: {e}")
+        current_app.logger.warning(f"Token validation failed: {e}")
         return None
 
 
@@ -79,17 +77,12 @@ def get_user_theme(token_data):
     """
     user_email = token_data.get('email')
 
-    print(f"[DEBUG] get_user_theme called for email: {user_email}")
-
     if not user_email:
-        print("[DEBUG] No email in token, defaulting to light")
         return 'light'  # Default if no email in token
 
     try:
         # Call Codex API using proper service-to-service authentication
         from app.service_client import call_service
-
-        print(f"[DEBUG] Calling Codex API for user theme: {user_email}")
 
         response = call_service(
             'codex',
@@ -98,14 +91,9 @@ def get_user_theme(token_data):
             timeout=2  # Quick timeout to avoid slowing down page loads
         )
 
-        print(f"[DEBUG] Codex API response status: {response.status_code}")
-        print(f"[DEBUG] Codex API response body: {response.text}")
-
         if response.status_code == 200:
             data = response.json()
             theme = data.get('theme', 'light')
-
-            print(f"[DEBUG] Theme from Codex: {theme}")
 
             # Validate theme value
             if theme in ['light', 'dark']:
@@ -113,11 +101,9 @@ def get_user_theme(token_data):
 
     except Exception as e:
         # Log error but don't fail the page load
-        print(f"[DEBUG] Exception fetching theme: {e}")
         current_app.logger.warning(f"Failed to fetch user theme from Codex: {e}")
 
     # Default to light theme if anything goes wrong
-    print("[DEBUG] Defaulting to light theme")
     return 'light'
 
 
@@ -134,17 +120,12 @@ def get_user_home_page(token_data):
     """
     user_email = token_data.get('email')
 
-    print(f"[DEBUG] get_user_home_page called for email: {user_email}")
-
     if not user_email:
-        print("[DEBUG] No email in token, defaulting to helm")
         return 'helm'  # Default if no email in token
 
     try:
         # Call Codex API using proper service-to-service authentication
         from app.service_client import call_service
-
-        print(f"[DEBUG] Calling Codex API for user home page: {user_email}")
 
         response = call_service(
             'codex',
@@ -153,14 +134,9 @@ def get_user_home_page(token_data):
             timeout=2  # Quick timeout to avoid slowing down redirects
         )
 
-        print(f"[DEBUG] Codex API response status: {response.status_code}")
-        print(f"[DEBUG] Codex API response body: {response.text}")
-
         if response.status_code == 200:
             data = response.json()
             home_page = data.get('home_page', 'helm')
-
-            print(f"[DEBUG] Home page from Codex: {home_page}")
 
             # Validate home page value
             valid_pages = ['helm', 'codex', 'beacon', 'ledger', 'brainhair']
@@ -169,11 +145,9 @@ def get_user_home_page(token_data):
 
     except Exception as e:
         # Log error but don't fail the redirect
-        print(f"[DEBUG] Exception fetching home page: {e}")
         current_app.logger.warning(f"Failed to fetch user home page from Codex: {e}")
 
     # Default to helm if anything goes wrong
-    print("[DEBUG] Defaulting to helm")
     return 'helm'
 
 
@@ -667,12 +641,10 @@ def logout():
                 json={'token': token},
                 timeout=5
             )
-            if revoke_response.status_code == 200:
-                print("Token revoked successfully at Core")
-            else:
-                print(f"Token revocation failed: {revoke_response.status_code}")
+            if revoke_response.status_code != 200:
+                current_app.logger.warning(f"Token revocation failed: {revoke_response.status_code}")
         except Exception as e:
-            print(f"Error revoking token: {e}")
+            current_app.logger.warning(f"Error revoking token: {e}")
 
     # Clear the Nexus session
     session.clear()
@@ -796,7 +768,6 @@ def main_gateway(path):
 
     if not token_data:
         # Token is expired or invalid - clear session and redirect to login
-        print(f"Token validation failed for path: {request.full_path}")
         session.clear()
         return redirect(url_for('login_proxy', next=request.full_path))
 
