@@ -16,6 +16,11 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 if not app.config['SECRET_KEY']:
     raise ValueError("A SECRET_KEY must be set in the .flaskenv file.")
 
+# Session cookie security settings
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['PERMANENT_SESSION_LIFETIME'] = 3600  # 1 hour
+
 # Load other configuration variables
 app.config['CORE_SERVICE_URL'] = os.environ.get('CORE_SERVICE_URL')
 app.config['NEXUS_SERVICE_URL'] = os.environ.get('NEXUS_SERVICE_URL', 'http://localhost:8000')
