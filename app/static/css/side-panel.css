@@ -91,6 +91,25 @@
     margin-left: 76px;
 }
 
+/* Initial collapsed state from localStorage (no transition to prevent flash) */
+html.sidebar-collapsed .hivematrix-side-panel {
+    width: 76px;
+    transition: none;
+}
+
+html.sidebar-collapsed .hivematrix-content {
+    margin-left: 76px;
+    transition: none;
+}
+
+html.sidebar-collapsed .side-panel__title,
+html.sidebar-collapsed .side-panel__label {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+    transition: none;
+}
+
 /* Title fades out smoothly */
 .hivematrix-side-panel.collapsed .side-panel__title {
     opacity: 0;
