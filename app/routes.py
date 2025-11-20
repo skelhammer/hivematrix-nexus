@@ -199,6 +199,16 @@ def invalidate_preference_cache():
     session.pop('cached_home_page_time', None)
 
 
+@app.route('/api/invalidate-cache', methods=['POST'])
+def invalidate_cache_endpoint():
+    """
+    Endpoint to invalidate user preference cache.
+    Called by the theme toggle after saving to Codex.
+    """
+    invalidate_preference_cache()
+    return jsonify({'success': True, 'message': 'Cache invalidated'})
+
+
 def inject_side_panel(soup, current_service, user_data=None):
     """Injects the side panel navigation into the HTML."""
     services = current_app.config.get('SERVICES', {})
@@ -371,6 +381,17 @@ async function toggleTheme() {
         } else {
             const result = await response.json();
             console.log('Theme saved successfully:', newTheme);
+
+            // Invalidate Nexus cache so next page load uses new theme
+            try {
+                await fetch('/api/invalidate-cache', {
+                    method: 'POST',
+                    credentials: 'same-origin'
+                });
+                console.log('Nexus cache invalidated');
+            } catch (cacheError) {
+                console.warn('Failed to invalidate cache:', cacheError);
+            }
         }
     } catch (error) {
         console.error('Error saving theme:', error);
