@@ -413,9 +413,17 @@ function toggleSidebar() {
 function initSidebar() {
     const sidePanel = document.getElementById('side-panel');
     const savedState = localStorage.getItem('sidebar-collapsed');
+
     if (savedState === 'true' && sidePanel) {
+        // Add collapsed class to sidebar for future toggles
         sidePanel.classList.add('collapsed');
     }
+
+    // Remove the initial no-transition class and re-enable transitions
+    // Use requestAnimationFrame to ensure styles are applied first
+    requestAnimationFrame(() => {
+        document.documentElement.classList.remove('sidebar-collapsed');
+    });
 }
 
 // Attach event listeners on page load
@@ -944,6 +952,18 @@ def main_gateway(path):
                 # Inject side panel CSS
                 panel_css_link = soup.new_tag('link', rel='stylesheet', href=url_for('static', filename='css/side-panel.css'))
                 head.append(panel_css_link)
+
+                # Inject inline script to prevent sidebar flash on page load
+                # This runs immediately before render to set collapsed state
+                sidebar_init_script = soup.new_tag('script')
+                sidebar_init_script.string = '''
+                    (function() {
+                        if (localStorage.getItem('sidebar-collapsed') === 'true') {
+                            document.documentElement.classList.add('sidebar-collapsed');
+                        }
+                    })();
+                '''
+                head.append(sidebar_init_script)
 
             # Inject side panel with user data
             inject_side_panel(soup, service_name, token_data)

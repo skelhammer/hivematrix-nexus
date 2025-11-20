@@ -3899,3 +3899,32 @@ textarea:focus-visible {
         margin-bottom: 0.5rem;
     }
 }
+
+/* ========================================
+   Version Footer
+   ======================================== */
+
+.version-footer {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 0.5rem 1rem;
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    background: var(--color-bg-primary);
+    border-top: 1px solid var(--color-border-light);
+    border-left: 1px solid var(--color-border-light);
+    border-top-left-radius: 0.375rem;
+    z-index: 100;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.version-footer:hover {
+    opacity: 1;
+}
+
+.version-footer__text {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: 0.025em;
+}
