@@ -947,12 +947,13 @@ def main_gateway(path):
 
             head = soup.find('head')
             if head:
-                # Inject global CSS
-                css_link = soup.new_tag('link', rel='stylesheet', href=url_for('static', filename='css/global.css'))
+                # Inject global CSS with cache-busting
+                from app.version import VERSION
+                css_link = soup.new_tag('link', rel='stylesheet', href=f"{url_for('static', filename='css/global.css')}?v={VERSION}")
                 head.append(css_link)
 
-                # Inject side panel CSS
-                panel_css_link = soup.new_tag('link', rel='stylesheet', href=url_for('static', filename='css/side-panel.css'))
+                # Inject side panel CSS with cache-busting
+                panel_css_link = soup.new_tag('link', rel='stylesheet', href=f"{url_for('static', filename='css/side-panel.css')}?v={VERSION}")
                 head.append(panel_css_link)
 
                 # Inject inline script to prevent sidebar flash on page load
