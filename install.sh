@@ -90,6 +90,9 @@ KEYCLOAK_CLIENT_ID=core-client
 
 # Session
 SECRET_KEY=$(openssl rand -base64 32 | tr -d "=+/" | cut -c1-32)
+
+# SSL Configuration (disable for self-signed certs)
+VERIFY_SSL=False
 EOF
 
 echo -e "${GREEN}✓ Configuration files created${NC}"
