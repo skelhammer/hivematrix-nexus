@@ -10,6 +10,17 @@ load_dotenv(_flaskenv_path)
 
 app = Flask(__name__)
 
+# Configure rate limiting (higher limits for gateway service)
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
+limiter = Limiter(
+    app=app,
+    key_func=get_remote_address,
+    default_limits=["1000 per hour", "200 per minute"],  # Higher limits for gateway
+    storage_uri="memory://"
+)
+
 # Explicitly load the secret key from the environment variables loaded from .flaskenv
 # This is crucial for session management.
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')

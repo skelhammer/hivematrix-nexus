@@ -7,6 +7,7 @@ Usage:
     response = call_service('codex', '/api/companies')
 """
 
+import os
 import requests
 from flask import current_app
 
@@ -71,11 +72,16 @@ def call_service(service_name, path, method='GET', **kwargs):
     headers = kwargs.pop('headers', {})
     headers['Authorization'] = f'Bearer {token}'
 
+    # SSL verification: only disable in development environments
+    # In production, proper SSL certificates should be used
+    environment = os.environ.get('ENVIRONMENT', 'production').lower()
+    verify_ssl = environment == 'production'
+
     response = requests.request(
         method=method,
         url=url,
         headers=headers,
-        verify=False,  # For self-signed certs in dev
+        verify=verify_ssl,
         **kwargs
     )
 
