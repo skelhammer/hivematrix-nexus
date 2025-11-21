@@ -11,6 +11,7 @@ import requests
 import threading
 import time
 import queue
+import jwt
 from datetime import datetime
 from typing import Optional, Dict, Any
 from flask import has_request_context, request, g
@@ -67,16 +68,23 @@ class HelmLogger:
         self.log_queue = queue.Queue()
         self.stop_event = threading.Event()
         self.token = None
+        self.token_expires_at = 0  # Unix timestamp when token expires
 
         # Start background thread for sending logs
         self.sender_thread = threading.Thread(target=self._send_loop, daemon=True)
         self.sender_thread.start()
 
     def _get_service_token(self) -> Optional[str]:
-        """Get a service token from Core for authenticating with Helm"""
-        if self.token:
+        """
+        Get a service token from Core for authenticating with Helm.
+        Implements proactive token refresh before expiration.
+        """
+        # Check if we have a valid token that won't expire soon (5 minute buffer)
+        current_time = time.time()
+        if self.token and current_time < (self.token_expires_at - 300):
             return self.token
 
+        # Token is missing, expired, or expiring soon - fetch a new one
         core_url = os.environ.get('CORE_SERVICE_URL', 'http://localhost:5000')
         try:
             response = requests.post(
@@ -89,6 +97,16 @@ class HelmLogger:
             )
             if response.status_code == 200:
                 self.token = response.json().get('token')
+
+                # Decode token to get expiration time
+                try:
+                    decoded = jwt.decode(self.token, options={"verify_signature": False})
+                    self.token_expires_at = decoded.get('exp', 0)
+                except Exception as e:
+                    logging.error(f"Failed to decode service token for expiration: {e}")
+                    # Set a default expiration of 1 hour if we can't decode
+                    self.token_expires_at = current_time + 3600
+
                 return self.token
         except Exception as e:
             logging.error(f"Failed to get service token: {e}")

@@ -6,7 +6,7 @@ import time
 from urllib.parse import urlencode
 
 from flask import request, Response, url_for, session, redirect, current_app, make_response
-from app import app
+from app import app, limiter
 from app.service_client import call_service
 from bs4 import BeautifulSoup
 import jwt
@@ -460,6 +460,7 @@ document.addEventListener('DOMContentLoaded', function() {
         body.append(theme_script)
 
 @app.route('/health')
+@limiter.exempt
 def health():
     """
     Health check endpoint for monitoring.
