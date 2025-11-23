@@ -467,6 +467,41 @@ body {
     font-weight: 600;
     transition: all var(--transition-base);
     text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Ripple effect on click */
+.btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.btn:active::after {
+    animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+    to {
+        width: 300px;
+        height: 300px;
+        opacity: 0;
+    }
+}
+
+/* Enhanced disabled state */
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: grayscale(40%);
 }
 
 .btn-approve {
@@ -516,6 +551,16 @@ body {
 .input-field:focus {
     outline: none;
     border-color: var(--color-primary);
+    box-shadow:
+        0 0 0 3px rgba(137, 180, 250, 0.2),
+        0 0 8px rgba(137, 180, 250, 0.4);
+    transition: all var(--transition-base);
+}
+
+/* Hover state for inputs */
+.input-field:hover:not(:focus) {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(137, 180, 250, 0.1);
 }
 
 .send-btn {
@@ -629,6 +674,14 @@ body {
 .search-form__input:focus {
     outline: none;
     border-color: var(--color-primary);
+    box-shadow:
+        0 0 0 3px rgba(137, 180, 250, 0.2),
+        0 0 8px rgba(137, 180, 250, 0.4);
+}
+
+.search-form__input:hover:not(:focus) {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(137, 180, 250, 0.1);
 }
 
 .search-form__input::placeholder {
@@ -916,22 +969,56 @@ body {
     margin-top: var(--space-md);
 }
 
-/* Pagination */
+/* Pagination - Enhanced */
 .pagination {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.5rem;
     flex-wrap: wrap;
     margin: 1.5rem 0;
 }
 
+.pagination__button,
+.pagination .btn {
+    padding: 0.5rem 0.75rem;
+    background: var(--color-surface-1);
+    border: 2px solid transparent;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--color-text);
+    transition: all var(--transition-fast);
+    min-width: auto;
+}
+
+.pagination__button:hover,
+.pagination .btn:hover {
+    border-color: var(--color-primary);
+    background: var(--color-surface-2);
+    transform: translateY(-1px);
+}
+
+.pagination__button--active,
+.pagination .btn--active {
+    background: var(--color-primary);
+    color: var(--color-base);
+    border-color: var(--color-primary);
+    font-weight: 700;
+    box-shadow: 0 2px 4px rgba(137, 180, 250, 0.3);
+}
+
 .pagination__info {
     padding: 0.75rem var(--space-md);
-    background: var(--color-surface-1);
+    background: linear-gradient(
+        135deg,
+        var(--color-surface-1),
+        var(--color-surface-2)
+    );
     border-radius: var(--radius-md);
     color: var(--color-text);
     font-weight: 600;
+    border: 2px solid var(--color-surface-2);
 }
 
 /* Action Footer */
@@ -1513,6 +1600,95 @@ p strong {
     display: flex;
     gap: 0.75rem;
     align-items: center;
+}
+
+/* ==========================================================================
+   Modal Dialogs - Enhanced
+   ========================================================================== */
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(30, 30, 46, 0.85);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: var(--z-modal);
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition-base);
+}
+
+.modal.active,
+.modal--active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal__dialog {
+    background: var(--color-surface-0);
+    border-radius: var(--radius-lg);
+    box-shadow:
+        0 10px 40px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(137, 180, 250, 0.15);
+    max-width: 500px;
+    width: 90%;
+    max-height: 85vh;
+    overflow-y: auto;
+    border-left: 4px solid var(--color-primary);
+    transform: scale(0.95) translateY(20px);
+    transition: transform var(--transition-slow);
+}
+
+.modal.active .modal__dialog,
+.modal--active .modal__dialog {
+    transform: scale(1) translateY(0);
+}
+
+.modal__header {
+    padding: var(--space-lg) var(--space-xl);
+    border-bottom: 2px solid var(--color-surface-1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal__title {
+    color: var(--color-primary);
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    margin: 0;
+}
+
+.modal__close {
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+}
+
+.modal__close:hover {
+    background: var(--color-surface-2);
+    color: var(--color-text);
+}
+
+.modal__body {
+    padding: var(--space-xl);
+}
+
+.modal__footer {
+    padding: var(--space-lg) var(--space-xl);
+    border-top: 2px solid var(--color-surface-1);
+    display: flex;
+    gap: var(--space-md);
+    justify-content: flex-end;
 }
 
 /* ==========================================================================
@@ -2212,12 +2388,36 @@ textarea:valid:not(:placeholder-shown) {
     background: linear-gradient(
         90deg,
         var(--color-surface-1) 0%,
-        var(--color-surface-2) 50%,
+        var(--color-surface-2) 20%,
+        var(--color-surface-1) 40%,
         var(--color-surface-1) 100%
     );
     background-size: 200% 100%;
-    animation: shimmer 1.5s ease-in-out infinite;
-    border-radius: var(--radius-sm);
+    animation: shimmerEnhanced 2s ease-in-out infinite;
+    border-radius: var(--radius-md);
+}
+
+@keyframes shimmerEnhanced {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Skeleton pulse variant for larger elements */
+.skeleton--pulse {
+    animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeletonPulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
 }
 
 /* Skeleton text line */
