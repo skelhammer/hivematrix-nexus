@@ -1870,25 +1870,6 @@ button:focus:not(:focus-visible),
     outline: none;
 }
 
-/* Skip to main content link (for screen readers and keyboard users) */
-.skip-link {
-    position: absolute;
-    top: -40px;
-    left: 0;
-    background: var(--color-primary);
-    color: var(--color-base);
-    padding: var(--space-sm) var(--space-md);
-    text-decoration: none;
-    border-radius: var(--radius-md);
-    z-index: var(--z-modal);
-    font-weight: 600;
-}
-
-.skip-link:focus {
-    top: var(--space-sm);
-    left: var(--space-sm);
-}
-
 /* Screen reader only content */
 .sr-only {
     position: absolute;
@@ -2326,7 +2307,6 @@ textarea:valid:not(:placeholder-shown) {
     }
 
     /* Hide non-essential elements */
-    .skip-link,
     .btn,
     .button,
     button,
