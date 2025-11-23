@@ -716,11 +716,6 @@ body {
     background: transparent;
 }
 
-/* Zebra striping for readability */
-.data-table tbody tr:nth-child(even) {
-    background: rgba(137, 180, 250, 0.02);
-}
-
 /* Enhanced hover state with left border accent */
 .data-table tbody tr:hover {
     background: var(--color-surface-2);
