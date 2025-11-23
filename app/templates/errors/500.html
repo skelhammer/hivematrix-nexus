@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 - Server Error | HiveMatrix</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="card" style="margin-top: 10vh;">
+        <div class="card__body" style="text-align: center; padding: 4rem 2rem;">
+            <div style="margin-bottom: 2rem;">
+                <i data-lucide="server-crash" style="width: 80px; height: 80px; color: var(--color-danger);"></i>
+            </div>
+
+            <h1 class="card__title" style="font-size: 4rem; margin-bottom: 1rem;">500</h1>
+            <h2 style="color: var(--color-danger); font-size: 1.5rem; margin-bottom: 1rem;">Internal Server Error</h2>
+
+            <p class="u-text-muted" style="max-width: 500px; margin: 0 auto 2rem auto; line-height: 1.6;">
+                Something went wrong on our end. We're working to fix it.
+                Please try again later or contact support if the problem persists.
+            </p>
+
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="/" class="btn btn--primary">
+                    <span class="btn__label">
+                        <i data-lucide="home" class="btn__icon"></i>
+                        Go Home
+                    </span>
+                </a>
+                <button onclick="location.reload()" class="btn">
+                    <span class="btn__label">
+                        <i data-lucide="refresh-cw" class="btn__icon"></i>
+                        Try Again
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="version-footer">
+        <span class="version-footer__text">HiveMatrix Nexus</span>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
