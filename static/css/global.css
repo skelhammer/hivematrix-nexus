@@ -687,6 +687,9 @@ body {
 .data-table {
     width: 100%;
     border-collapse: collapse;
+    background: var(--color-surface-0);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
 }
 
 .data-table thead {
@@ -708,11 +711,23 @@ body {
 
 .data-table tbody tr {
     border-bottom: 1px solid var(--color-surface-1);
-    transition: background-color var(--transition-base);
+    position: relative;
+    transition: all var(--transition-fast) ease;
+    background: transparent;
 }
 
+/* Zebra striping for readability */
+.data-table tbody tr:nth-child(even) {
+    background: rgba(137, 180, 250, 0.02);
+}
+
+/* Enhanced hover state with left border accent */
 .data-table tbody tr:hover {
-    background: var(--color-surface-3);
+    background: var(--color-surface-2);
+    box-shadow:
+        inset 3px 0 0 var(--color-primary),
+        0 2px 4px rgba(0, 0, 0, 0.1);
+    transform: scale(1.001);
 }
 
 .data-table td {
@@ -734,11 +749,29 @@ body {
 .data-table a {
     color: var(--color-primary);
     text-decoration: none;
-    transition: color var(--transition-base);
+    position: relative;
+    font-weight: 500;
+    transition: color var(--transition-fast);
+}
+
+/* Animated underline for table links */
+.data-table a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--color-primary);
+    transition: width var(--transition-fast);
 }
 
 .data-table a:hover {
     color: var(--color-primary-hover);
+}
+
+.data-table a:hover::after {
+    width: 100%;
 }
 
 .sortable-header {
@@ -757,38 +790,135 @@ body {
     color: var(--color-primary-hover);
 }
 
-/* Badge Styles */
+/* Badge Styles - Enhanced */
 .badge {
-    display: inline-block;
-    padding: 0.4rem 0.75rem;
-    border-radius: var(--radius-md);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--radius-sm);
     font-size: var(--font-size-sm);
     font-weight: 600;
     background: var(--color-surface-1);
     color: var(--color-text);
+    transition: all var(--transition-fast);
+    position: relative;
 }
 
+/* Success badge with glow */
 .badge--success {
-    background: var(--color-success);
+    background: linear-gradient(
+        135deg,
+        var(--color-success) 0%,
+        rgba(166, 227, 161, 0.8) 100%
+    );
     color: var(--color-base);
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.1),
+        0 0 12px rgba(166, 227, 161, 0.3);
 }
 
+.badge--success:hover {
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.15),
+        0 0 16px rgba(166, 227, 161, 0.5);
+}
+
+/* Danger badge with pulsing glow */
 .badge--danger {
-    background: var(--color-danger);
+    background: linear-gradient(
+        135deg,
+        var(--color-danger) 0%,
+        rgba(243, 139, 168, 0.8) 100%
+    );
     color: var(--color-base);
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.1),
+        0 0 12px rgba(243, 139, 168, 0.3);
+    animation: dangerPulse 2s ease-in-out infinite;
 }
 
+@keyframes dangerPulse {
+    0%, 100% {
+        box-shadow:
+            0 2px 4px rgba(0, 0, 0, 0.1),
+            0 0 12px rgba(243, 139, 168, 0.3);
+    }
+    50% {
+        box-shadow:
+            0 2px 4px rgba(0, 0, 0, 0.1),
+            0 0 20px rgba(243, 139, 168, 0.5);
+    }
+}
+
+/* Warning badge with glow */
 .badge--warning {
-    background: var(--color-warning);
+    background: linear-gradient(
+        135deg,
+        var(--color-warning) 0%,
+        rgba(249, 226, 175, 0.8) 100%
+    );
     color: var(--color-base);
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.1),
+        0 0 12px rgba(249, 226, 175, 0.2);
 }
 
-/* Empty State */
+.badge--warning:hover {
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.15),
+        0 0 16px rgba(249, 226, 175, 0.4);
+}
+
+/* Empty State - Enhanced */
 .empty-state {
-    padding: var(--space-2xl) var(--space-md);
+    padding: var(--space-2xl) var(--space-lg);
     text-align: center;
     color: var(--color-text-muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-lg);
+    min-height: 200px;
+    justify-content: center;
+    background: linear-gradient(
+        135deg,
+        rgba(137, 180, 250, 0.03) 0%,
+        rgba(166, 227, 161, 0.03) 100%
+    );
+    border-radius: var(--radius-lg);
+    border: 2px dashed var(--color-surface-2);
+    margin: var(--space-xl) 0;
+}
+
+.empty-state__icon {
+    font-size: 3rem;
+    opacity: 0.3;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.empty-state__title {
+    font-size: var(--font-size-xl);
+    color: var(--color-text);
+    margin: 0;
+    font-style: normal;
+}
+
+.empty-state__message {
+    max-width: 400px;
+    font-size: var(--font-size-base);
+    margin: 0;
+    line-height: 1.6;
     font-style: italic;
+}
+
+.empty-state__action {
+    margin-top: var(--space-md);
 }
 
 /* Pagination */
@@ -874,29 +1004,58 @@ body {
 
 /* Alert/Flash Messages */
 .alert {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
     padding: var(--space-md) var(--space-lg);
     border-radius: var(--radius-md);
     margin-bottom: var(--space-lg);
     border-left: 4px solid;
-    animation: slideIn var(--transition-slow) ease-out;
+    animation: slideInRight var(--transition-slow) ease-out;
+    position: relative;
+    overflow: hidden;
 }
 
 .alert--success {
-    background: var(--color-success-bg);
+    background: linear-gradient(
+        135deg,
+        var(--color-success-bg) 0%,
+        rgba(166, 227, 161, 0.08) 100%
+    );
     border-left-color: var(--color-success);
     color: var(--color-success);
 }
 
 .alert--error {
-    background: var(--color-danger-bg);
+    background: linear-gradient(
+        135deg,
+        var(--color-danger-bg) 0%,
+        rgba(243, 139, 168, 0.08) 100%
+    );
     border-left-color: var(--color-danger);
     color: var(--color-danger);
 }
 
 .alert--warning {
-    background: var(--color-warning-bg);
+    background: linear-gradient(
+        135deg,
+        var(--color-warning-bg) 0%,
+        rgba(249, 226, 175, 0.08) 100%
+    );
     border-left-color: var(--color-warning);
     color: var(--color-warning);
+}
+
+/* Alert content styling */
+.alert__message {
+    flex: 1;
+    color: var(--color-text);
+    line-height: 1.6;
+}
+
+.alert__title {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
 }
 
 /* Info Grid for Details Pages */
@@ -1120,7 +1279,11 @@ p strong {
 }
 
 .dashboard-card {
-    background: var(--color-surface-1);
+    background: linear-gradient(
+        135deg,
+        var(--color-surface-1) 0%,
+        var(--color-surface-2) 100%
+    );
     border-radius: var(--radius-lg);
     padding: var(--space-lg);
     display: flex;
@@ -1129,12 +1292,46 @@ p strong {
     transition: all var(--transition-base);
     text-decoration: none;
     border: 2px solid var(--color-surface-2);
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.12),
+        0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Shine effect on hover */
+.dashboard-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
+    transition: left 0.5s ease;
+}
+
+.dashboard-card:hover::before {
+    left: 100%;
 }
 
 .dashboard-card:hover {
-    background: var(--color-surface-2);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+    border-color: var(--color-primary);
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.16),
+        0 8px 16px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(137, 180, 250, 0.3);
+    background: linear-gradient(
+        135deg,
+        var(--color-surface-2) 0%,
+        var(--color-surface-1) 100%
+    );
 }
 
 .dashboard-card__icon {
@@ -1248,9 +1445,23 @@ p strong {
    Badge Variants
    ========================================================================== */
 
+/* Info badge with glow */
 .badge--info {
-    background: var(--color-primary);
+    background: linear-gradient(
+        135deg,
+        var(--color-primary) 0%,
+        rgba(137, 180, 250, 0.8) 100%
+    );
     color: var(--color-base);
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.1),
+        0 0 12px rgba(137, 180, 250, 0.3);
+}
+
+.badge--info:hover {
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.15),
+        0 0 16px rgba(137, 180, 250, 0.5);
 }
 
 .badge--secondary {
@@ -1277,7 +1488,11 @@ p strong {
    ========================================================================== */
 
 .alert--info {
-    background: var(--color-info-bg);
+    background: linear-gradient(
+        135deg,
+        var(--color-info-bg) 0%,
+        rgba(137, 180, 250, 0.08) 100%
+    );
     border-left-color: var(--color-primary);
     color: var(--color-primary);
 }
