@@ -840,3 +840,316 @@ p {
 p strong {
     color: #f9e2af;
 }
+
+/* ==========================================================================
+   Utility Classes
+   ========================================================================== */
+
+/* Margin utilities */
+.u-mb-0 { margin-bottom: 0 !important; }
+.u-mb-1 { margin-bottom: 0.5rem !important; }
+.u-mb-2 { margin-bottom: 1rem !important; }
+.u-mb-3 { margin-bottom: 1.5rem !important; }
+.u-mt-0 { margin-top: 0 !important; }
+.u-mt-1 { margin-top: 0.5rem !important; }
+.u-mt-2 { margin-top: 1rem !important; }
+.u-mt-3 { margin-top: 1.5rem !important; }
+.u-ml-2 { margin-left: 1rem !important; }
+.u-my-2 { margin-top: 1rem !important; margin-bottom: 1rem !important; }
+
+/* Text utilities */
+.u-text-muted {
+    color: #7f849c !important;
+}
+
+.u-text-sm {
+    font-size: 0.875rem !important;
+}
+
+.u-text-small {
+    font-size: 0.875rem !important;
+}
+
+.u-text-secondary {
+    color: #7f849c !important;
+}
+
+.u-text-error {
+    color: #f38ba8 !important;
+}
+
+/* Flex utilities */
+.u-items-center {
+    align-items: center !important;
+}
+
+.u-flex-gap-2 {
+    gap: 1rem !important;
+}
+
+/* ==========================================================================
+   Dashboard Components
+   ========================================================================== */
+
+.dashboard-grid {
+    display: grid;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.dashboard-grid--three-col {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.dashboard-card {
+    background: #313244;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    transition: all 0.2s;
+    text-decoration: none;
+    border: 2px solid #45475a;
+}
+
+.dashboard-card:hover {
+    background: #45475a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard-card__icon {
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    background: #89b4fa;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1e1e2e;
+}
+
+.dashboard-card__icon i {
+    width: 32px;
+    height: 32px;
+}
+
+.dashboard-card__content {
+    flex: 1;
+}
+
+.dashboard-card__title {
+    color: #89b4fa;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+}
+
+.dashboard-card__count {
+    color: #cdd6f4;
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.dashboard-card__description {
+    color: #7f849c;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* ==========================================================================
+   Stats Grid (for Archive page)
+   ========================================================================== */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.stat-card {
+    background: #313244;
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    border: 2px solid #45475a;
+}
+
+.stat-card__label {
+    color: #7f849c;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.05em;
+}
+
+.stat-card__value {
+    color: #a6e3a1;
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+/* ==========================================================================
+   Button Groups & Button Icons
+   ========================================================================== */
+
+.btn-group {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.btn__icon {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    margin-right: 0.35rem;
+}
+
+.btn--sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+.btn--outline {
+    background: transparent;
+    border: 2px solid #45475a;
+    color: #cdd6f4;
+}
+
+.btn--outline:hover {
+    background: #313244;
+    border-color: #89b4fa;
+}
+
+/* ==========================================================================
+   Badge Variants
+   ========================================================================== */
+
+.badge--info {
+    background: #89b4fa;
+    color: #1e1e2e;
+}
+
+.badge--secondary {
+    background: #6c7086;
+    color: #cdd6f4;
+}
+
+.badge--platinum {
+    background: linear-gradient(135deg, #e5e7eb 0%, #c7d2fe 50%, #e0e7ff 100%);
+    color: #1e1e2e;
+    font-weight: 700;
+    border: 1px solid #9ca3af;
+}
+
+.badge--gold {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #fcd34d 100%);
+    color: #78350f;
+    font-weight: 700;
+    border: 1px solid #f59e0b;
+}
+
+/* ==========================================================================
+   Alert Variants
+   ========================================================================== */
+
+.alert--info {
+    background: rgba(137, 180, 250, 0.15);
+    border-left-color: #89b4fa;
+    color: #89b4fa;
+}
+
+/* ==========================================================================
+   Card Header Enhancements
+   ========================================================================== */
+
+.card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.card__header-left {
+    display: flex;
+    gap: 1rem;
+}
+
+.card__header-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+/* ==========================================================================
+   Version Footer
+   ========================================================================== */
+
+.version-footer {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 0.5rem 1rem;
+    background: rgba(17, 17, 27, 0.8);
+    border-top-left-radius: 8px;
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+}
+
+.version-footer__text {
+    color: #7f849c;
+    font-size: 0.75rem;
+    font-family: monospace;
+}
+
+/* ==========================================================================
+   Contract Status Styles
+   ========================================================================== */
+
+.contract-expired {
+    color: #f38ba8 !important;
+    font-weight: bold;
+}
+
+/* ==========================================================================
+   Code Block Styling
+   ========================================================================== */
+
+.code-block {
+    background: #181825;
+    color: #cdd6f4;
+    padding: 0.75rem;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* ==========================================================================
+   Info Box
+   ========================================================================== */
+
+.info-box {
+    background: #262636;
+    border: 2px solid #313244;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+/* ==========================================================================
+   Sortable Headers
+   ========================================================================== */
+
+.sort-indicator {
+    margin-left: 5px;
+    font-size: 0.8em;
+    color: #89b4fa;
+}
