@@ -1,6 +1,138 @@
 /* HiveMatrix Global Styles - Catppuccin Mocha Theme */
 
 /* ==========================================================================
+   TABLE OF CONTENTS
+   ==========================================================================
+
+   This file contains all CSS for HiveMatrix services. Services do NOT have
+   their own CSS files - Nexus injects this global.css into all pages.
+
+   ARCHITECTURE RULES:
+   - Services are forbidden from containing their own styling
+   - All CSS is handled exclusively by Nexus (this file)
+   - Use BEM naming convention for all classes
+   - Reuse existing classes before creating new ones
+
+   FILE STRUCTURE (2301 lines):
+
+   1. Design Tokens ........................... Line 20
+      - CSS Custom Properties
+      - Colors, spacing, typography, shadows
+      - Design system variables
+
+   2. Base Styles ............................. Line 85
+      - Global resets
+      - Body, html, typography
+      - Base element styles
+
+   3. Layout Components ....................... Line 100+
+      - Container, card, sidebar
+      - Grid systems, flex utilities
+
+   4. Form Components ......................... Line 300+
+      - Inputs, selects, checkboxes
+      - Form groups, validation states
+
+   5. Button Components ....................... Line 500+
+      - Button variants (primary, secondary, danger)
+      - Button sizes, states, groups
+      - Icon buttons
+
+   6. Navigation Components ................... Line 600+
+      - Side panel, tabs
+      - Breadcrumbs, pagination
+
+   7. Data Display Components ................. Line 700+
+      - Tables, lists
+      - Info grids, stat cards
+      - Dashboard components
+
+   8. Feedback Components ..................... Line 900+
+      - Alerts, badges, toasts
+      - Status indicators
+      - Loading states, skeletons
+
+   9. Utility Classes ......................... Line 930
+      - Spacing (margins, padding)
+      - Typography (text alignment, colors)
+      - Display, flexbox, layout utilities
+
+   10. Dashboard Components ................... Line 976
+       - Dashboard grid, cards
+       - Service status indicators
+
+   11. Stats Grid ............................. Line 1049
+       - Archive page statistics
+
+   12. Button Groups & Icons .................. Line 1082
+       - Button grouping styles
+       - Icon sizing and alignment
+
+   13. Badge Variants ......................... Line 1115
+       - Color-coded badges
+       - Status badges, labels
+
+   14. Alert Variants ......................... Line 1143
+       - Success, warning, error alerts
+
+   15. Card Header Enhancements ............... Line 1153
+       - Card header actions
+       - Header layouts
+
+   16. Version Footer ......................... Line 1176
+       - Footer positioning and styling
+
+   17. Contract Status ........................ Line 1197
+       - Contract-specific status badges
+
+   18. Code Blocks ............................ Line 1206
+       - Syntax highlighting styles
+       - Code containers
+
+   19. Info Box ............................... Line 1222
+       - Information display boxes
+
+   20. Sortable Headers ....................... Line 1233
+       - Table sorting indicators
+
+   21. Responsive Design ...................... Line 1243
+       - Mobile-first breakpoints
+       - Responsive utilities
+
+   22. Service-Specific Components ............ Line 1415
+       - Admin grid (Ledger)
+       - Tab active states
+       - Log viewer (Helm)
+       - Location-specific styles
+
+   23. Animations & Keyframes ................. Line 1491
+       - Fade in/out, slide animations
+       - Loading spinners, pulse effects
+       - Transition utilities
+
+   24. Accessibility .......................... Line 1705
+       - Skip links, focus indicators
+       - Screen reader utilities
+       - WCAG 2.1 Level AA compliance
+
+   25. Loading States & Skeletons ............. Line 1883
+       - Skeleton loaders
+       - Loading indicators
+
+   26. Print Styles ........................... Line 2152
+       - Print-optimized layouts
+       - Hide/show for printing
+
+   QUICK REFERENCE:
+   - Need spacing? → See Utility Classes (Line 930)
+   - Need a button? → See Button Components (Line 500)
+   - Need a form? → See Form Components (Line 300)
+   - Need a table? → See Data Display (Line 700)
+   - Need an alert? → See Feedback Components (Line 900)
+
+   ========================================================================== */
+
+/* ==========================================================================
    CSS Custom Properties (Design Tokens)
    ========================================================================== */
 
