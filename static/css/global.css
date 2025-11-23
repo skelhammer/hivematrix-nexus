@@ -75,6 +75,11 @@
     --z-sticky: 200;
     --z-overlay: 500;
     --z-modal: 1000;
+
+    /* Responsive Breakpoints */
+    --breakpoint-sm: 640px;
+    --breakpoint-md: 1024px;
+    --breakpoint-lg: 1280px;
 }
 
 * {
@@ -1229,4 +1234,837 @@ p strong {
     margin-left: 5px;
     font-size: 0.8em;
     color: var(--color-primary);
+}
+
+/* ==========================================================================
+   Responsive Design - Mobile First
+   ========================================================================== */
+
+/* Mobile adjustments (default styles above are mobile-first) */
+@media (max-width: 640px) {
+    /* Reduce padding on cards for mobile */
+    .card {
+        margin: var(--space-md) var(--space-sm);
+        border-radius: var(--radius-md);
+    }
+
+    .card__header {
+        padding: var(--space-md);
+    }
+
+    .card__body {
+        padding: var(--space-md);
+    }
+
+    /* Stack dashboard grid on mobile */
+    .dashboard-grid--three-col {
+        grid-template-columns: 1fr;
+    }
+
+    /* Reduce dashboard card size */
+    .dashboard-card {
+        padding: var(--space-md);
+        gap: var(--space-md);
+    }
+
+    .dashboard-card__icon {
+        width: 48px;
+        height: 48px;
+    }
+
+    .dashboard-card__icon i {
+        width: 24px;
+        height: 24px;
+    }
+
+    .dashboard-card__count {
+        font-size: var(--font-size-2xl);
+    }
+
+    /* Stack stats grid on mobile */
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Reduce header padding */
+    .header {
+        padding: var(--space-md);
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+
+    .header h1 {
+        font-size: var(--font-size-lg);
+    }
+
+    /* Hide sidebar on mobile or make it overlay */
+    .sidebar {
+        display: none; /* Can be toggled with JS if needed */
+    }
+
+    /* Adjust search form for mobile */
+    .search-form__controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-form__input {
+        min-width: auto;
+        width: 100%;
+    }
+
+    /* Make buttons full width on mobile */
+    .btn-group {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn-group .btn {
+        width: 100%;
+    }
+
+    /* Reduce font sizes slightly */
+    .card__title {
+        font-size: var(--font-size-xl);
+    }
+
+    h2 {
+        font-size: var(--font-size-lg);
+    }
+
+    h3 {
+        font-size: var(--font-size-base);
+    }
+
+    /* Table wrapper with horizontal scroll */
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Context info stack on mobile */
+    .context-info {
+        flex-direction: column;
+        gap: var(--space-sm);
+        align-items: flex-start;
+    }
+
+    /* Input container adjustments */
+    .input-container {
+        padding: var(--space-md);
+    }
+
+    .input-wrapper {
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+
+    .send-btn {
+        width: 100%;
+    }
+}
+
+/* Tablet and up (640px+) */
+@media (min-width: 640px) {
+    /* Dashboard grid: 2 columns on tablets */
+    .dashboard-grid--three-col {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+
+    /* Stats grid: 2-3 columns on tablets */
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+}
+
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
+    /* Full 3-column layout on desktop */
+    .dashboard-grid--three-col {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    /* Larger cards on desktop */
+    .card {
+        margin: var(--space-xl) auto;
+    }
+
+    /* Larger dashboard cards */
+    .dashboard-card:hover {
+        transform: translateY(-4px);
+    }
+}
+
+/* Large desktop (1280px+) */
+@media (min-width: 1280px) {
+    /* Max width containers for very large screens */
+    .card {
+        max-width: 1400px;
+    }
+
+    /* Larger spacing on big screens */
+    .dashboard-grid {
+        gap: var(--space-xl);
+    }
+}
+
+/* ==========================================================================
+   Modern Animations & Keyframes
+   ========================================================================== */
+
+/* Fade in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Slide in from bottom */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Slide in from right */
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Shimmer effect for loading states */
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+/* Pulse animation for attention */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+/* Spin animation for loaders */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Scale up on hover */
+@keyframes scaleUp {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.05);
+    }
+}
+
+/* Shake animation for errors */
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(5px);
+    }
+}
+
+/* Apply smooth animations to interactive elements */
+.btn,
+.dashboard-card,
+.user-item,
+.data-table tbody tr,
+.quick-action,
+.badge,
+.alert {
+    animation: fadeIn var(--transition-slow) ease-out;
+}
+
+/* Enhanced hover states with smooth transitions */
+.btn,
+.dashboard-card,
+.data-table a,
+.sortable-header a,
+.user-item__name {
+    transition: all var(--transition-base) ease;
+}
+
+.btn:hover,
+.dashboard-card:hover {
+    transition: all var(--transition-fast) ease;
+}
+
+/* Smooth focus transitions */
+.input-field,
+.search-form__input,
+.form-inline__select {
+    transition: border-color var(--transition-base) ease,
+                box-shadow var(--transition-base) ease;
+}
+
+.input-field:focus,
+.search-form__input:focus,
+.form-inline__select:focus {
+    box-shadow: 0 0 0 3px var(--color-info-bg);
+}
+
+/* Card entrance animation */
+.card {
+    animation: slideInUp 0.4s ease-out;
+}
+
+/* Stagger animation for dashboard cards */
+.dashboard-card:nth-child(1) {
+    animation: slideInUp 0.3s ease-out;
+}
+
+.dashboard-card:nth-child(2) {
+    animation: slideInUp 0.4s ease-out;
+}
+
+.dashboard-card:nth-child(3) {
+    animation: slideInUp 0.5s ease-out;
+}
+
+.dashboard-card:nth-child(4) {
+    animation: slideInUp 0.6s ease-out;
+}
+
+.dashboard-card:nth-child(5) {
+    animation: slideInUp 0.7s ease-out;
+}
+
+.dashboard-card:nth-child(6) {
+    animation: slideInUp 0.8s ease-out;
+}
+
+/* Smooth alert entrance */
+.alert {
+    animation: slideInRight var(--transition-slow) ease-out;
+}
+
+/* Hover effect enhancements */
+.btn:hover {
+    box-shadow: var(--shadow-sm);
+}
+
+.btn--primary:hover,
+.btn--success:hover,
+.btn--danger:hover {
+    box-shadow: var(--shadow-md);
+}
+
+/* Table row hover animation */
+.data-table tbody tr {
+    transition: background-color var(--transition-fast) ease,
+                transform var(--transition-fast) ease;
+}
+
+.data-table tbody tr:hover {
+    transform: translateX(2px);
+}
+
+/* Smooth badge transitions */
+.badge {
+    transition: transform var(--transition-fast) ease,
+                box-shadow var(--transition-fast) ease;
+}
+
+.badge:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Loading spinner */
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ==========================================================================
+   Accessibility Enhancements (WCAG 2.1 Level AA)
+   ========================================================================== */
+
+/* Enhanced focus states for keyboard navigation */
+a:focus,
+button:focus,
+input:focus,
+select:focus,
+textarea:focus,
+.btn:focus,
+.dashboard-card:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px var(--color-info-bg);
+}
+
+/* Focus visible (modern browsers) */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+.btn:focus-visible,
+.dashboard-card:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Remove outline when clicking (mouse users) */
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible),
+.btn:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Skip to main content link (for screen readers and keyboard users) */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--color-primary);
+    color: var(--color-base);
+    padding: var(--space-sm) var(--space-md);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    z-index: var(--z-modal);
+    font-weight: 600;
+}
+
+.skip-link:focus {
+    top: var(--space-sm);
+    left: var(--space-sm);
+}
+
+/* Screen reader only content */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Not screen reader only on focus */
+.sr-only-focusable:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: inherit;
+    margin: inherit;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .btn,
+    .dashboard-card,
+    .data-table,
+    .badge,
+    .alert {
+        border: 2px solid currentColor;
+    }
+
+    a {
+        text-decoration: underline;
+    }
+}
+
+/* Focus within for containers */
+.card:focus-within,
+.search-form:focus-within,
+.user-item:focus-within {
+    box-shadow: 0 0 0 2px var(--color-info-bg);
+}
+
+/* Keyboard-only hover effects */
+.dashboard-card:focus,
+.btn:focus {
+    transform: translateY(-2px);
+}
+
+/* Ensure sufficient color contrast for links */
+a {
+    text-decoration-skip-ink: auto;
+}
+
+/* Better link focus in tables */
+.data-table a:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    background: var(--color-info-bg);
+    border-radius: var(--radius-sm);
+    padding: 2px 4px;
+    margin: -2px -4px;
+}
+
+/* Disabled state accessibility */
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled,
+.btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+button:disabled:focus,
+input:disabled:focus,
+.btn:disabled:focus {
+    outline: 2px solid var(--color-text-muted);
+}
+
+/* Error states for forms */
+input:invalid,
+select:invalid,
+textarea:invalid {
+    border-color: var(--color-danger);
+}
+
+input:invalid:focus,
+select:invalid:focus,
+textarea:invalid:focus {
+    outline-color: var(--color-danger);
+    box-shadow: 0 0 0 3px var(--color-danger-bg);
+}
+
+/* Success states for forms */
+input:valid:not(:placeholder-shown),
+select:valid:not(:placeholder-shown),
+textarea:valid:not(:placeholder-shown) {
+    border-color: var(--color-success);
+}
+
+/* Keyboard navigation helper */
+*:focus {
+    scroll-margin: var(--space-xl);
+}
+
+/* Better table keyboard navigation */
+.data-table tbody tr:focus-within {
+    background: var(--color-surface-2);
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
+}
+
+/* Badge focus states */
+.badge:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Loading States & Skeletons
+   ========================================================================== */
+
+/* Skeleton loader base */
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        var(--color-surface-1) 0%,
+        var(--color-surface-2) 50%,
+        var(--color-surface-1) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+    border-radius: var(--radius-sm);
+}
+
+/* Skeleton text line */
+.skeleton-text {
+    height: 1rem;
+    margin-bottom: var(--space-sm);
+    border-radius: var(--radius-sm);
+}
+
+.skeleton-text--title {
+    height: 2rem;
+    width: 60%;
+}
+
+.skeleton-text--subtitle {
+    height: 1.25rem;
+    width: 40%;
+}
+
+.skeleton-text--full {
+    width: 100%;
+}
+
+.skeleton-text--half {
+    width: 50%;
+}
+
+/* Skeleton card */
+.skeleton-card {
+    background: var(--color-surface-0);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    margin: var(--space-xl) auto;
+    max-width: 1400px;
+}
+
+.skeleton-card__header {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.skeleton-card__avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-lg);
+    flex-shrink: 0;
+}
+
+.skeleton-card__content {
+    flex: 1;
+}
+
+/* Skeleton dashboard card */
+.skeleton-dashboard-card {
+    background: var(--color-surface-1);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    border: 2px solid var(--color-surface-2);
+}
+
+.skeleton-dashboard-card__icon {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-lg);
+    flex-shrink: 0;
+}
+
+.skeleton-dashboard-card__content {
+    flex: 1;
+}
+
+/* Skeleton table row */
+.skeleton-table-row {
+    display: flex;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    border-bottom: 1px solid var(--color-surface-1);
+}
+
+.skeleton-table-row__cell {
+    height: 1rem;
+    flex: 1;
+}
+
+/* Loading spinner */
+.loading-spinner {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--color-surface-2);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.loading-spinner--small {
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+}
+
+.loading-spinner--large {
+    width: 60px;
+    height: 60px;
+    border-width: 6px;
+}
+
+/* Loading overlay */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(30, 30, 46, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: var(--z-overlay);
+    backdrop-filter: blur(4px);
+}
+
+.loading-overlay__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.loading-overlay__text {
+    color: var(--color-text);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+}
+
+/* Loading state for buttons */
+.btn--loading {
+    position: relative;
+    color: transparent;
+    pointer-events: none;
+}
+
+.btn--loading::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 2px solid transparent;
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+.btn--primary.btn--loading::after,
+.btn--success.btn--loading::after,
+.btn--danger.btn--loading::after {
+    border-top-color: var(--color-base);
+}
+
+/* Pulse loading animation for "Loading..." text */
+.loading-text {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Loading dots animation */
+.loading-dots::after {
+    content: '';
+    animation: loadingDots 1.5s steps(4, end) infinite;
+}
+
+@keyframes loadingDots {
+    0%, 20% {
+        content: '';
+    }
+    40% {
+        content: '.';
+    }
+    60% {
+        content: '..';
+    }
+    80%, 100% {
+        content: '...';
+    }
+}
+
+/* Skeleton grid (for dashboard) */
+.skeleton-grid {
+    display: grid;
+    gap: var(--space-lg);
+    margin: var(--space-lg) 0;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* Loading state class for cards */
+.card--loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.card--loading::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(137, 180, 250, 0.1) 50%,
+        transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s ease-in-out infinite;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Indeterminate progress bar */
+.progress-bar {
+    height: 4px;
+    background: var(--color-surface-1);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar__fill {
+    height: 100%;
+    background: var(--color-primary);
+    border-radius: var(--radius-sm);
+}
+
+.progress-bar--indeterminate .progress-bar__fill {
+    width: 30%;
+    animation: indeterminateProgress 1.5s ease-in-out infinite;
+}
+
+@keyframes indeterminateProgress {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(400%);
+    }
 }
