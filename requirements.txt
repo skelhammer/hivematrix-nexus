@@ -7,3 +7,4 @@ PyJWT==2.8.0
 cryptography>=3.4.7
 gunicorn==21.2.0
 gevent==25.9.1
+flasgger==0.9.7.1
