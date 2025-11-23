@@ -2072,3 +2072,154 @@ textarea:valid:not(:placeholder-shown) {
         transform: translateX(400%);
     }
 }
+
+/* ==========================================================================
+   Print Styles
+   ========================================================================== */
+
+@media print {
+    /* Reset colors for print - save ink */
+    * {
+        background: transparent !important;
+        color: #000 !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    /* Set page margins */
+    @page {
+        margin: 1.5cm;
+    }
+
+    /* Optimize typography for print */
+    body {
+        font-size: 12pt;
+        line-height: 1.5;
+    }
+
+    h1 {
+        font-size: 18pt;
+        page-break-after: avoid;
+    }
+
+    h2 {
+        font-size: 16pt;
+        page-break-after: avoid;
+    }
+
+    h3 {
+        font-size: 14pt;
+        page-break-after: avoid;
+    }
+
+    /* Avoid page breaks inside elements */
+    p, blockquote, pre, tr, img, .card {
+        page-break-inside: avoid;
+    }
+
+    /* Hide non-essential elements */
+    .skip-link,
+    .btn,
+    .button,
+    button,
+    nav,
+    .nav,
+    .navigation,
+    .sidebar,
+    .header__actions,
+    .version-footer,
+    .search-form,
+    .filter-bar,
+    .pagination,
+    .modal,
+    .toast,
+    .dropdown,
+    .tooltip,
+    iframe,
+    video,
+    audio {
+        display: none !important;
+    }
+
+    /* Show links with URLs */
+    a[href]:after {
+        content: " (" attr(href) ")";
+        font-size: 10pt;
+        color: #666;
+    }
+
+    /* Don't show URLs for internal links or anchors */
+    a[href^="#"]:after,
+    a[href^="javascript:"]:after {
+        content: "";
+    }
+
+    /* Optimize tables for print */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        border: 1px solid #000;
+        padding: 8pt;
+    }
+
+    thead {
+        display: table-header-group;
+    }
+
+    /* Optimize images */
+    img {
+        max-width: 100% !important;
+        page-break-inside: avoid;
+    }
+
+    /* Remove animations and transitions */
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+
+    /* Optimize cards for print */
+    .card {
+        border: 1px solid #000;
+        margin-bottom: 1cm;
+    }
+
+    .card__header {
+        border-bottom: 1px solid #000;
+        padding: 8pt;
+    }
+
+    .card__body {
+        padding: 8pt;
+    }
+
+    /* Show main content clearly */
+    main,
+    .main-content {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Optimize dashboard grids */
+    .dashboard-grid {
+        display: block !important;
+    }
+
+    .dashboard-card {
+        border: 1px solid #000;
+        margin-bottom: 0.5cm;
+        padding: 8pt;
+        page-break-inside: avoid;
+    }
+
+    /* Remove skeleton loaders (they're for loading states) */
+    .skeleton {
+        display: none !important;
+    }
+}
