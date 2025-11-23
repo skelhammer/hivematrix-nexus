@@ -3,6 +3,7 @@ import re
 import requests
 import secrets
 import time
+import sys
 from urllib.parse import urlencode
 
 from flask import request, Response, url_for, session, redirect, current_app, make_response
@@ -10,6 +11,10 @@ from app import app, limiter
 from app.service_client import call_service
 from bs4 import BeautifulSoup
 import jwt
+
+# Health check library
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from health_check import HealthChecker
 
 # Cache TTL for user preferences (5 minutes)
 PREFERENCE_CACHE_TTL = 300
@@ -464,10 +469,26 @@ document.addEventListener('DOMContentLoaded', function() {
 @limiter.exempt
 def health():
     """
-    Health check endpoint for monitoring.
-    Returns 200 if service is running.
+    Comprehensive health check endpoint.
+
+    Checks:
+    - Disk space
+    - Core service availability
+    - Keycloak availability
+
+    Returns:
+        JSON: Detailed health status with HTTP 200 (healthy) or 503 (unhealthy/degraded)
     """
-    return {'status': 'healthy', 'service': 'nexus'}, 200
+    # Initialize health checker with dependencies
+    health_checker = HealthChecker(
+        service_name='nexus',
+        dependencies=[
+            ('core', 'http://localhost:5000'),
+            ('keycloak', current_app.config.get('KEYCLOAK_SERVER_URL', 'http://localhost:8080'))
+        ]
+    )
+
+    return health_checker.get_health()
 
 
 @app.route('/helpdesk')
