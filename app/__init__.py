@@ -12,11 +12,11 @@ app = Flask(__name__)
 
 # Configure rate limiting (higher limits for gateway service)
 from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
+from app.rate_limit_key import get_user_id_or_ip
 
 limiter = Limiter(
     app=app,
-    key_func=get_remote_address,
+    key_func=get_user_id_or_ip,  # Per-user rate limiting
     default_limits=["20000 per hour", "1000 per minute"],  # Higher limits for gateway on local LAN
     storage_uri="memory://"
 )
