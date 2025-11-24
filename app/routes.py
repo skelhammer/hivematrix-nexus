@@ -124,7 +124,7 @@ def get_user_theme(token_data):
             current_app.logger.debug(f"Themes from Codex: {theme}, {color_theme}")
 
             # Validate theme values
-            if theme in ['light', 'dark'] and color_theme in ['purple', 'blue', 'green', 'orange', 'gold', 'red', 'yellow', 'matrix']:
+            if theme in ['light', 'dark'] and color_theme in ['purple', 'blue', 'green', 'orange', 'gold', 'red', 'yellow', 'matrix', 'bee']:
                 # Cache in session
                 session['cached_theme'] = theme
                 session['cached_color_theme'] = color_theme
@@ -1081,6 +1081,115 @@ def main_gateway(path):
                     });
                 '''
                 head.append(matrix_rain_script)
+
+                # Inject Bee Easter egg animation
+                bee_flight_script = soup.new_tag('script')
+                bee_flight_script.string = '''
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // Create bee container
+                        const beeContainer = document.createElement('div');
+                        beeContainer.id = 'bee-container';
+                        document.body.insertBefore(beeContainer, document.body.firstChild);
+
+                        let activeBees = 0;
+                        const maxBees = 5;
+                        const beeEmoji = '🐝';
+
+                        function createBee() {
+                            // Check if bee theme is active
+                            const isBeeTheme = document.documentElement.getAttribute('data-color-theme') === 'bee';
+                            if (!isBeeTheme || activeBees >= maxBees) {
+                                return;
+                            }
+
+                            activeBees++;
+                            const bee = document.createElement('div');
+                            bee.className = 'bee';
+                            bee.textContent = beeEmoji;
+
+                            // Random size (20px to 32px)
+                            const size = 20 + Math.random() * 12;
+                            bee.style.fontSize = size + 'px';
+
+                            // Random starting position (top third of screen)
+                            const startY = Math.random() * (window.innerHeight / 3);
+                            const startX = Math.random() < 0.5 ? -50 : window.innerWidth + 50;
+                            const endX = startX < 0 ? window.innerWidth + 50 : -50;
+
+                            // Random end position (different height)
+                            const endY = startY + (Math.random() - 0.5) * 200;
+
+                            // Random duration (3-6 seconds)
+                            const duration = 3000 + Math.random() * 3000;
+
+                            bee.style.left = startX + 'px';
+                            bee.style.top = startY + 'px';
+
+                            beeContainer.appendChild(bee);
+
+                            // Animate bee
+                            let startTime = Date.now();
+                            let rotation = 0;
+
+                            function animateBee() {
+                                const elapsed = Date.now() - startTime;
+                                const progress = Math.min(elapsed / duration, 1);
+
+                                if (progress >= 1) {
+                                    bee.remove();
+                                    activeBees--;
+                                    return;
+                                }
+
+                                // Ease in-out progress
+                                const easeProgress = progress < 0.5
+                                    ? 2 * progress * progress
+                                    : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+                                // Calculate position with sine wave for curved path
+                                const currentX = startX + (endX - startX) * easeProgress;
+                                const currentY = startY + (endY - startY) * easeProgress +
+                                                Math.sin(easeProgress * Math.PI * 2) * 30;
+
+                                // Fade in/out at edges
+                                let opacity = 1;
+                                if (progress < 0.1) {
+                                    opacity = progress / 0.1;
+                                } else if (progress > 0.9) {
+                                    opacity = (1 - progress) / 0.1;
+                                }
+
+                                // Rotate bee slightly as it flies
+                                rotation += 2;
+
+                                bee.style.left = currentX + 'px';
+                                bee.style.top = currentY + 'px';
+                                bee.style.opacity = opacity;
+                                bee.style.transform = `rotate(${rotation}deg)`;
+
+                                requestAnimationFrame(animateBee);
+                            }
+
+                            requestAnimationFrame(animateBee);
+                        }
+
+                        // Spawn bees at random intervals (10-15 seconds)
+                        function scheduleBee() {
+                            const delay = 10000 + Math.random() * 5000;
+                            setTimeout(() => {
+                                createBee();
+                                scheduleBee();
+                            }, delay);
+                        }
+
+                        // Start with a small delay
+                        setTimeout(() => {
+                            createBee();
+                            scheduleBee();
+                        }, 2000);
+                    });
+                '''
+                head.append(bee_flight_script)
 
             # Inject side panel with user data
             inject_side_panel(soup, service_name, token_data)

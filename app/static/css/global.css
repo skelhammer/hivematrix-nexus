@@ -274,6 +274,65 @@
     background-color: transparent;
 }
 
+/* Bee Theme - Honey & Hive */
+[data-color-theme="bee"] {
+    --color-primary: #FFB300;
+    --color-primary-hover: #FFA000;
+    --color-primary-text: #1a1a1a;
+    --color-primary-bg: rgba(255, 179, 0, 0.1);
+    --color-active-bg: #FFB300;
+    --color-focus-ring: rgba(255, 179, 0, 0.3);
+    --gradient-primary: linear-gradient(135deg, #FFB300 0%, #FFC107 100%);
+}
+
+[data-theme="dark"][data-color-theme="bee"] {
+    --color-primary: #FFC107;
+    --color-primary-hover: #FFD54F;
+    --color-primary-text: #1a1a1a;
+    --color-primary-bg: rgba(255, 193, 7, 0.15);
+    --color-active-bg: #FFC107;
+    --gradient-primary: linear-gradient(135deg, #FFC107 0%, #FFD54F 100%);
+}
+
+/* Bee Easter Egg - Flying bees animation */
+#bee-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+[data-color-theme="bee"] #bee-container {
+    opacity: 1;
+}
+
+/* Honeycomb background pattern */
+[data-color-theme="bee"] body {
+    background-image:
+        repeating-linear-gradient(30deg, transparent, transparent 50px, rgba(255, 179, 0, 0.02) 50px, rgba(255, 179, 0, 0.02) 100px),
+        repeating-linear-gradient(150deg, transparent, transparent 50px, rgba(255, 193, 7, 0.02) 50px, rgba(255, 193, 7, 0.02) 100px),
+        repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(255, 152, 0, 0.01) 50px, rgba(255, 152, 0, 0.01) 100px);
+}
+
+[data-color-theme="bee"] .hivematrix-content {
+    background-color: transparent;
+}
+
+/* Bee element styling */
+.bee {
+    position: absolute;
+    font-size: 24px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
 /* ========================================
    Base Styles
    ======================================== */
