@@ -1071,21 +1071,23 @@ label {
     width: 100%;
 }
 
-.sortable-header {
+/* Sortable table headers - grey text, no purple links */
+a.sortable-header {
     cursor: pointer;
     user-select: none;
-}
-
-.sortable-header a {
     color: var(--color-text-secondary);
     text-decoration: none;
     display: flex;
     align-items: center;
     gap: 0.5rem;
     transition: color 0.2s ease;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
-.sortable-header a:hover {
+a.sortable-header:hover {
     color: var(--color-primary);
 }
 
