@@ -996,6 +996,72 @@ def main_gateway(path):
                 '''
                 head.append(sidebar_init_script)
 
+                # Inject Matrix rain Easter egg animation
+                matrix_rain_script = soup.new_tag('script')
+                matrix_rain_script.string = '''
+                    (function() {
+                        // Create canvas for Matrix rain
+                        const canvas = document.createElement('canvas');
+                        canvas.id = 'matrix-rain';
+                        document.body.insertBefore(canvas, document.body.firstChild);
+
+                        const ctx = canvas.getContext('2d');
+
+                        // Set canvas size
+                        function resizeCanvas() {
+                            canvas.width = window.innerWidth;
+                            canvas.height = window.innerHeight;
+                        }
+                        resizeCanvas();
+                        window.addEventListener('resize', resizeCanvas);
+
+                        // Matrix characters - Katakana + Latin + numbers
+                        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ';
+                        const fontSize = 14;
+                        const columns = Math.floor(canvas.width / fontSize);
+                        const drops = Array(columns).fill(1);
+
+                        function drawMatrixRain() {
+                            // Check if Matrix theme is active
+                            const isMatrixTheme = document.documentElement.getAttribute('data-color-theme') === 'matrix';
+                            if (!isMatrixTheme) {
+                                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                                requestAnimationFrame(drawMatrixRain);
+                                return;
+                            }
+
+                            // Semi-transparent black to create fade effect
+                            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                            // Matrix green text
+                            ctx.fillStyle = '#00ff41';
+                            ctx.font = fontSize + 'px monospace';
+
+                            for (let i = 0; i < drops.length; i++) {
+                                const char = chars[Math.floor(Math.random() * chars.length)];
+                                const x = i * fontSize;
+                                const y = drops[i] * fontSize;
+
+                                ctx.fillText(char, x, y);
+
+                                // Reset drop to top randomly after it falls off screen
+                                if (y > canvas.height && Math.random() > 0.975) {
+                                    drops[i] = 0;
+                                }
+
+                                drops[i]++;
+                            }
+
+                            requestAnimationFrame(drawMatrixRain);
+                        }
+
+                        // Start animation
+                        drawMatrixRain();
+                    })();
+                '''
+                head.append(matrix_rain_script)
+
             # Inject side panel with user data
             inject_side_panel(soup, service_name, token_data)
 

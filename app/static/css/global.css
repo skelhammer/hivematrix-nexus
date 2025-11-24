@@ -246,6 +246,23 @@
     --gradient-primary: linear-gradient(135deg, #39ff14 0%, #5aff40 100%);
 }
 
+/* Matrix Rain Easter Egg - Background animation */
+#matrix-rain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+[data-color-theme="matrix"] #matrix-rain {
+    opacity: 1;
+}
+
 /* ========================================
    Base Styles
    ======================================== */
