@@ -594,7 +594,20 @@ a:hover {
     box-shadow: var(--shadow-md);
     border: 1px solid var(--color-border-light);
     overflow: hidden;
+    position: relative;
     /* animation: fadeInUp 0.4s ease-out; */ /* DISABLED - caused content flash */
+}
+
+/* Accent line on top of all cards */
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--gradient-primary);
+    z-index: 1;
 }
 
 @keyframes fadeInUp {
@@ -618,16 +631,7 @@ a:hover {
     position: relative;
 }
 
-/* Accent line on card header */
-.card__header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: var(--gradient-primary);
-}
+/* Accent line moved to .card::before - no longer needed here */
 
 .card__header-actions {
     display: flex;
@@ -639,7 +643,8 @@ a:hover {
     color: #ffffff;
 }
 
-.card__header--success::before {
+/* Override card accent line for success headers */
+.card:has(.card__header--success)::before {
     background: var(--gradient-success);
 }
 
