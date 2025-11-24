@@ -135,24 +135,6 @@ body.u-no-scroll {
     height: 100vh;
 }
 
-/* Main content container - constrained width for readability */
-main {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 2rem;
-}
-
-/* Wider container for dashboard/list views that need more space */
-main.main--wide {
-    max-width: 1800px;
-}
-
-/* Full width for special layouts like chat */
-main.main--full {
-    max-width: none;
-    padding: 0;
-}
-
 /* ========================================
    Typography
    ======================================== */
