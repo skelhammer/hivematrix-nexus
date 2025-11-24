@@ -3934,12 +3934,12 @@ textarea:focus-visible {
 }
 
 .data-table .sortable-header.sort-asc::after {
-    content: '▲';
+    content: '↑';
     opacity: 1;
 }
 
 .data-table .sortable-header.sort-desc::after {
-    content: '▼';
+    content: '↓';
     opacity: 1;
 }
 
