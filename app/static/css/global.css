@@ -4841,3 +4841,444 @@ textarea:focus-visible {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     letter-spacing: 0.025em;
 }
+
+/* ==========================================================================
+   PHASE 3: DELIGHT - Premium UX Enhancements
+   ========================================================================== */
+
+/* ========================================
+   3.1 Tooltips System
+   ======================================== */
+
+/* CSS-only tooltip using data-tooltip attribute */
+[data-tooltip] {
+    position: relative;
+    cursor: help;
+}
+
+[data-tooltip]::before,
+[data-tooltip]::after {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 1000;
+}
+
+/* Tooltip bubble */
+[data-tooltip]::before {
+    content: attr(data-tooltip);
+    background: var(--color-bg-tooltip, rgba(30, 30, 30, 0.95));
+    color: var(--color-text-tooltip, #ffffff);
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    white-space: nowrap;
+    max-width: 250px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-4px);
+    margin-bottom: 8px;
+}
+
+/* Tooltip arrow */
+[data-tooltip]::after {
+    content: '';
+    border: 6px solid transparent;
+    border-top-color: var(--color-bg-tooltip, rgba(30, 30, 30, 0.95));
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-4px);
+    margin-bottom: 2px;
+}
+
+/* Show on hover */
+[data-tooltip]:hover::before,
+[data-tooltip]:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Tooltip positions */
+[data-tooltip-position="top"]::before {
+    bottom: 100%;
+    margin-bottom: 8px;
+    transform: translateX(-50%) translateY(-4px);
+}
+
+[data-tooltip-position="bottom"]::before {
+    top: 100%;
+    bottom: auto;
+    margin-top: 8px;
+    transform: translateX(-50%) translateY(4px);
+}
+
+[data-tooltip-position="bottom"]::after {
+    top: 100%;
+    bottom: auto;
+    border-top-color: transparent;
+    border-bottom-color: var(--color-bg-tooltip, rgba(30, 30, 30, 0.95));
+    margin-top: 2px;
+}
+
+[data-tooltip-position="left"]::before {
+    right: 100%;
+    left: auto;
+    bottom: 50%;
+    margin-right: 8px;
+    transform: translateY(50%) translateX(-4px);
+}
+
+[data-tooltip-position="left"]::after {
+    right: 100%;
+    left: auto;
+    bottom: 50%;
+    transform: translateY(50%) translateX(-4px);
+    border-top-color: transparent;
+    border-left-color: var(--color-bg-tooltip, rgba(30, 30, 30, 0.95));
+    margin-right: 2px;
+}
+
+[data-tooltip-position="right"]::before {
+    left: 100%;
+    right: auto;
+    bottom: 50%;
+    margin-left: 8px;
+    transform: translateY(50%) translateX(4px);
+}
+
+[data-tooltip-position="right"]::after {
+    left: 100%;
+    right: auto;
+    bottom: 50%;
+    transform: translateY(50%) translateX(4px);
+    border-top-color: transparent;
+    border-right-color: var(--color-bg-tooltip, rgba(30, 30, 30, 0.95));
+    margin-left: 2px;
+}
+
+/* Dark mode tooltips */
+[data-theme="dark"] [data-tooltip]::before {
+    background: rgba(240, 240, 240, 0.95);
+    color: #1a1a1a;
+}
+
+[data-theme="dark"] [data-tooltip]::after {
+    border-top-color: rgba(240, 240, 240, 0.95);
+}
+
+[data-theme="dark"] [data-tooltip-position="bottom"]::after {
+    border-bottom-color: rgba(240, 240, 240, 0.95);
+}
+
+[data-theme="dark"] [data-tooltip-position="left"]::after {
+    border-left-color: rgba(240, 240, 240, 0.95);
+}
+
+[data-theme="dark"] [data-tooltip-position="right"]::after {
+    border-right-color: rgba(240, 240, 240, 0.95);
+}
+
+/* ========================================
+   3.2 Breadcrumb Animations
+   ======================================== */
+
+.breadcrumb {
+    animation: breadcrumb-fade-in 0.4s ease;
+}
+
+.breadcrumb__item {
+    animation: breadcrumb-slide-in 0.3s ease backwards;
+}
+
+.breadcrumb__item:nth-child(1) { animation-delay: 0.05s; }
+.breadcrumb__item:nth-child(2) { animation-delay: 0.1s; }
+.breadcrumb__item:nth-child(3) { animation-delay: 0.15s; }
+.breadcrumb__item:nth-child(4) { animation-delay: 0.2s; }
+.breadcrumb__item:nth-child(5) { animation-delay: 0.25s; }
+
+@keyframes breadcrumb-fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes breadcrumb-slide-in {
+    from {
+        opacity: 0;
+        transform: translateX(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Breadcrumb separator animation */
+.breadcrumb__separator {
+    animation: breadcrumb-separator-fade 0.4s ease 0.2s backwards;
+}
+
+@keyframes breadcrumb-separator-fade {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 0.5;
+    }
+}
+
+/* ========================================
+   3.3 Dropdown Enhancements
+   ======================================== */
+
+/* Smooth dropdown opening */
+.dropdown-menu,
+select,
+.select-wrapper select {
+    animation: dropdown-slide-in 0.2s ease;
+}
+
+@keyframes dropdown-slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Enhanced dropdown hover states */
+select:hover,
+.select-wrapper select:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-focus-ring);
+}
+
+/* Dropdown option hover (where supported) */
+select option:hover {
+    background: var(--color-primary-bg);
+}
+
+/* Custom dropdown indicators with animation */
+.select-wrapper {
+    position: relative;
+}
+
+.select-wrapper::after {
+    content: '▼';
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--color-text-secondary);
+    font-size: 0.75rem;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.select-wrapper:hover::after {
+    color: var(--color-primary);
+}
+
+.select-wrapper select:focus + .select-wrapper::after {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+/* ========================================
+   3.4 Page Transitions
+   ======================================== */
+
+/* Fade-in animation for page content */
+body {
+    animation: page-fade-in 0.3s ease;
+}
+
+@keyframes page-fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Content area slide-in */
+.hivematrix-content {
+    animation: content-slide-in 0.4s ease;
+}
+
+@keyframes content-slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Page header fade-in */
+.page-header,
+h1:first-of-type,
+.dashboard-header {
+    animation: header-fade-in 0.4s ease 0.1s backwards;
+}
+
+@keyframes header-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========================================
+   3.5 Staggered List Animations
+   ======================================== */
+
+/* Apply to list items for cascade effect */
+.staggered-list > *,
+.table tbody tr,
+.card-grid > *,
+.dashboard-grid > * {
+    animation: item-fade-in 0.3s ease backwards;
+}
+
+/* Stagger delays for first 20 items */
+.staggered-list > *:nth-child(1),
+.table tbody tr:nth-child(1),
+.card-grid > *:nth-child(1),
+.dashboard-grid > *:nth-child(1) { animation-delay: 0.05s; }
+
+.staggered-list > *:nth-child(2),
+.table tbody tr:nth-child(2),
+.card-grid > *:nth-child(2),
+.dashboard-grid > *:nth-child(2) { animation-delay: 0.08s; }
+
+.staggered-list > *:nth-child(3),
+.table tbody tr:nth-child(3),
+.card-grid > *:nth-child(3),
+.dashboard-grid > *:nth-child(3) { animation-delay: 0.11s; }
+
+.staggered-list > *:nth-child(4),
+.table tbody tr:nth-child(4),
+.card-grid > *:nth-child(4),
+.dashboard-grid > *:nth-child(4) { animation-delay: 0.14s; }
+
+.staggered-list > *:nth-child(5),
+.table tbody tr:nth-child(5),
+.card-grid > *:nth-child(5),
+.dashboard-grid > *:nth-child(5) { animation-delay: 0.17s; }
+
+.staggered-list > *:nth-child(6),
+.table tbody tr:nth-child(6),
+.card-grid > *:nth-child(6),
+.dashboard-grid > *:nth-child(6) { animation-delay: 0.2s; }
+
+.staggered-list > *:nth-child(7),
+.table tbody tr:nth-child(7),
+.card-grid > *:nth-child(7),
+.dashboard-grid > *:nth-child(7) { animation-delay: 0.23s; }
+
+.staggered-list > *:nth-child(8),
+.table tbody tr:nth-child(8),
+.card-grid > *:nth-child(8),
+.dashboard-grid > *:nth-child(8) { animation-delay: 0.26s; }
+
+.staggered-list > *:nth-child(9),
+.table tbody tr:nth-child(9),
+.card-grid > *:nth-child(9),
+.dashboard-grid > *:nth-child(9) { animation-delay: 0.29s; }
+
+.staggered-list > *:nth-child(10),
+.table tbody tr:nth-child(10),
+.card-grid > *:nth-child(10),
+.dashboard-grid > *:nth-child(10) { animation-delay: 0.32s; }
+
+.staggered-list > *:nth-child(n+11),
+.table tbody tr:nth-child(n+11),
+.card-grid > *:nth-child(n+11),
+.dashboard-grid > *:nth-child(n+11) { animation-delay: 0.35s; }
+
+@keyframes item-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Disable animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ========================================
+   Phase 3 Utility Classes
+   ======================================== */
+
+/* Explicit staggered list class for opt-in */
+.u-stagger {
+    /* Applied to container - children get stagger effect */
+}
+
+/* Disable animations on specific elements */
+.u-no-animation {
+    animation: none !important;
+}
+
+/* Quick fade-in utility */
+.u-fade-in {
+    animation: item-fade-in 0.3s ease;
+}
+
+/* Slide-in utilities */
+.u-slide-in-left {
+    animation: slide-in-left 0.3s ease;
+}
+
+.u-slide-in-right {
+    animation: slide-in-right 0.3s ease;
+}
+
+@keyframes slide-in-left {
+    from {
+        opacity: 0;
+        transform: translateX(-16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slide-in-right {
+    from {
+        opacity: 0;
+        transform: translateX(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
