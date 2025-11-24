@@ -231,6 +231,7 @@
 [data-color-theme="matrix"] {
     --color-primary: #00ff41;
     --color-primary-hover: #00d936;
+    --color-primary-text: #0a0a0a;
     --color-primary-bg: rgba(0, 255, 65, 0.1);
     --color-active-bg: #00ff41;
     --color-focus-ring: rgba(0, 255, 65, 0.3);
