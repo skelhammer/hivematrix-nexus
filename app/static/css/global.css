@@ -312,12 +312,17 @@
     opacity: 1;
 }
 
-/* Honeycomb background pattern */
-[data-color-theme="bee"] body {
+/* Honeycomb background pattern - light mode only */
+[data-theme="light"][data-color-theme="bee"] body {
     background-image:
         repeating-linear-gradient(30deg, transparent, transparent 50px, rgba(255, 179, 0, 0.02) 50px, rgba(255, 179, 0, 0.02) 100px),
         repeating-linear-gradient(150deg, transparent, transparent 50px, rgba(255, 193, 7, 0.02) 50px, rgba(255, 193, 7, 0.02) 100px),
         repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(255, 152, 0, 0.01) 50px, rgba(255, 152, 0, 0.01) 100px);
+}
+
+/* No honeycomb in dark mode - prevents tartan plaid effect */
+[data-theme="dark"][data-color-theme="bee"] body {
+    background-image: none;
 }
 
 [data-color-theme="bee"] .hivematrix-content {

@@ -1129,7 +1129,6 @@ def main_gateway(path):
 
                             // Animate bee
                             let startTime = Date.now();
-                            let rotation = 0;
 
                             function animateBee() {
                                 const elapsed = Date.now() - startTime;
@@ -1159,13 +1158,9 @@ def main_gateway(path):
                                     opacity = (1 - progress) / 0.1;
                                 }
 
-                                // Rotate bee slightly as it flies
-                                rotation += 2;
-
                                 bee.style.left = currentX + 'px';
                                 bee.style.top = currentY + 'px';
                                 bee.style.opacity = opacity;
-                                bee.style.transform = `rotate(${rotation}deg)`;
 
                                 requestAnimationFrame(animateBee);
                             }
