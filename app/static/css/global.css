@@ -3925,12 +3925,12 @@ textarea:focus-visible {
 .data-table .sortable-header::after {
     content: '';
     display: inline-block;
-    width: 0.8em;
+    width: 1.2em;
     text-align: center;
-    margin-left: 4px;
+    margin-left: 0.5rem;
     opacity: 0.3;
     vertical-align: middle;
-    font-size: 0.7em;
+    font-size: 1.2em;
 }
 
 .data-table .sortable-header.sort-asc::after {
