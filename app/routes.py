@@ -852,22 +852,37 @@ def main_gateway(path):
         except requests.exceptions.RequestException as e:
             return f"Keycloak proxy error: {e}", 502
 
+    # Allow unauthenticated access to Beacon public display routes (for TV displays)
+    # These routes don't require authentication to allow TV displays without login
+    beacon_public_path_match = (
+        path.startswith('beacon/display/') or
+        path == 'beacon/display' or
+        path.startswith('beacon/api/tickets/') or  # API endpoint for ticket data
+        path.startswith('beacon/static/') or       # CSS/JS/images
+        path == 'beacon/health'                     # Health check endpoint
+    )
+    skip_authentication = beacon_public_path_match
+
     # --- Check if user has a token ---
-    if 'token' not in session:
-        # No token at all - redirect to Nexus's login (which proxies to Core/Keycloak)
-        return redirect(url_for('login_proxy', next=request.full_path))
+    if not skip_authentication:
+        if 'token' not in session:
+            # No token at all - redirect to Nexus's login (which proxies to Core/Keycloak)
+            return redirect(url_for('login_proxy', next=request.full_path))
 
-    # --- Validate the token ---
-    token = session['token']
-    token_data = validate_token(token)
+        # --- Validate the token ---
+        token = session['token']
+        token_data = validate_token(token)
 
-    if not token_data:
-        # Token is expired or invalid - clear session and redirect to login
-        session.clear()
-        return redirect(url_for('login_proxy', next=request.full_path))
+        if not token_data:
+            # Token is expired or invalid - clear session and redirect to login
+            session.clear()
+            return redirect(url_for('login_proxy', next=request.full_path))
 
-    # Update session with fresh token data (in case it was decoded again)
-    session['user'] = token_data
+        # Update session with fresh token data (in case it was decoded again)
+        session['user'] = token_data
+    else:
+        # Public route - set minimal user data for logging/audit purposes
+        token_data = {'sub': 'public-display', 'permission_level': 'public'}
 
     # If the path is empty, redirect to the user's preferred home page
     if not path:
@@ -926,7 +941,10 @@ def main_gateway(path):
 
     # --- Add Auth Header and X-Forwarded Headers to Proxied Request ---
     headers = {key: value for (key, value) in request.headers if key != 'Host'}
-    headers['Authorization'] = f"Bearer {token}"
+
+    # Only add Authorization header if user is authenticated (not a public route)
+    if not skip_authentication:
+        headers['Authorization'] = f"Bearer {token}"
 
     # Add X-Forwarded headers so backend knows it's behind a proxy
     headers['X-Forwarded-For'] = request.remote_addr
