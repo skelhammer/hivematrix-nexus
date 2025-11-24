@@ -110,11 +110,11 @@
 }
 
 /* ========================================
-   Modern Theme Variants
+   Modern Color Theme Variants
    ======================================== */
 
 /* Modern Blue - Professional & Trustworthy */
-[data-theme="blue"] {
+[data-color-theme="blue"] {
     --color-primary: #0ea5e9;
     --color-primary-hover: #0284c7;
     --color-primary-bg: rgba(14, 165, 233, 0.1);
@@ -123,7 +123,7 @@
     --gradient-primary: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
 }
 
-[data-theme="blue"][data-theme="dark"] {
+[data-theme="dark"][data-color-theme="blue"] {
     --color-primary: #38bdf8;
     --color-primary-hover: #7dd3fc;
     --color-primary-text: #0a0a0a;
@@ -133,7 +133,7 @@
 }
 
 /* Modern Green - Calm & Growth-Focused */
-[data-theme="green"] {
+[data-color-theme="green"] {
     --color-primary: #10b981;
     --color-primary-hover: #059669;
     --color-primary-bg: rgba(16, 185, 129, 0.1);
@@ -142,7 +142,7 @@
     --gradient-primary: linear-gradient(135deg, #10b981 0%, #34d399 100%);
 }
 
-[data-theme="green"][data-theme="dark"] {
+[data-theme="dark"][data-color-theme="green"] {
     --color-primary: #34d399;
     --color-primary-hover: #6ee7b7;
     --color-primary-text: #0a0a0a;
@@ -152,7 +152,7 @@
 }
 
 /* Modern Orange - Warm & Energetic */
-[data-theme="orange"] {
+[data-color-theme="orange"] {
     --color-primary: #f97316;
     --color-primary-hover: #ea580c;
     --color-primary-bg: rgba(249, 115, 22, 0.1);
@@ -161,7 +161,7 @@
     --gradient-primary: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
 }
 
-[data-theme="orange"][data-theme="dark"] {
+[data-theme="dark"][data-color-theme="orange"] {
     --color-primary: #fb923c;
     --color-primary-hover: #fdba74;
     --color-primary-text: #0a0a0a;
@@ -171,7 +171,7 @@
 }
 
 /* Modern Gold (Integotec Brand) - Fresh & Vibrant */
-[data-theme="gold"] {
+[data-color-theme="gold"] {
     --color-primary: #05f29b;
     --color-primary-hover: #04d689;
     --color-primary-bg: rgba(5, 242, 155, 0.1);
@@ -180,7 +180,7 @@
     --gradient-primary: linear-gradient(135deg, #05f29b 0%, #34faa8 100%);
 }
 
-[data-theme="gold"][data-theme="dark"] {
+[data-theme="dark"][data-color-theme="gold"] {
     --color-primary: #34faa8;
     --color-primary-hover: #6ffcbb;
     --color-primary-text: #0a0a0a;
@@ -1927,6 +1927,65 @@ table td a:hover {
     font-weight: normal;
     margin: 0;
     color: var(--color-text-primary);
+}
+
+/* ========================================
+   Color Theme Preview Swatches
+   ======================================== */
+
+.color-preview-grid {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.color-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border: 2px solid var(--color-border-light);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--color-surface);
+}
+
+.color-preview:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.color-preview.selected {
+    border-color: var(--color-primary);
+    background: var(--color-primary-bg);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.color-preview__swatch {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s ease;
+}
+
+.color-preview:hover .color-preview__swatch {
+    transform: scale(1.1);
+}
+
+.color-preview__label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+}
+
+.color-preview.selected .color-preview__label {
+    color: var(--color-primary);
+    font-weight: 600;
 }
 
 /* ========================================

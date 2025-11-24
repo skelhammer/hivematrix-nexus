@@ -79,29 +79,32 @@ def validate_token(token):
 
 def get_user_theme(token_data):
     """
-    Fetch user's theme preference from Codex with session caching.
-    Falls back to 'light' if Codex is unavailable or user not found.
+    Fetch user's theme preferences from Codex with session caching.
+    Falls back to defaults if Codex is unavailable or user not found.
 
     Args:
         token_data: Decoded JWT token containing user info
 
     Returns:
-        str: 'light' or 'dark'
+        dict: {'theme': 'light'|'dark', 'color_theme': 'purple'|'blue'|'green'|'orange'|'gold'}
     """
     user_email = token_data.get('email')
     current_app.logger.debug(f"get_user_theme called for email: {user_email}")
 
+    default_prefs = {'theme': 'light', 'color_theme': 'purple'}
+
     if not user_email:
         current_app.logger.debug("No email in token, defaulting to light theme")
-        return 'light'  # Default if no email in token
+        return default_prefs
 
     # Check session cache first
     cached_theme = session.get('cached_theme')
+    cached_color_theme = session.get('cached_color_theme')
     cache_time = session.get('cached_theme_time', 0)
 
-    if cached_theme and (time.time() - cache_time) < PREFERENCE_CACHE_TTL:
-        current_app.logger.debug(f"Using cached theme: {cached_theme}")
-        return cached_theme
+    if cached_theme and cached_color_theme and (time.time() - cache_time) < PREFERENCE_CACHE_TTL:
+        current_app.logger.debug(f"Using cached themes: {cached_theme}, {cached_color_theme}")
+        return {'theme': cached_theme, 'color_theme': cached_color_theme}
 
     try:
         # Call Codex API using proper service-to-service authentication
@@ -117,22 +120,24 @@ def get_user_theme(token_data):
         if response.status_code == 200:
             data = response.json()
             theme = data.get('theme', 'light')
-            current_app.logger.debug(f"Theme from Codex: {theme}")
+            color_theme = data.get('color_theme', 'purple')
+            current_app.logger.debug(f"Themes from Codex: {theme}, {color_theme}")
 
-            # Validate theme value
-            if theme in ['light', 'dark']:
+            # Validate theme values
+            if theme in ['light', 'dark'] and color_theme in ['purple', 'blue', 'green', 'orange', 'gold']:
                 # Cache in session
                 session['cached_theme'] = theme
+                session['cached_color_theme'] = color_theme
                 session['cached_theme_time'] = time.time()
-                return theme
+                return {'theme': theme, 'color_theme': color_theme}
 
     except Exception as e:
         # Log error but don't fail the page load
         current_app.logger.warning(f"Failed to fetch user theme from Codex: {e}")
 
     # Default to light theme if anything goes wrong
-    current_app.logger.debug("Defaulting to light theme")
-    return 'light'
+    current_app.logger.debug("Defaulting to default themes")
+    return default_prefs
 
 
 def get_user_home_page(token_data):
@@ -199,6 +204,7 @@ def invalidate_preference_cache():
     Clear cached user preferences. Call this when user updates their settings.
     """
     session.pop('cached_theme', None)
+    session.pop('cached_color_theme', None)
     session.pop('cached_theme_time', None)
     session.pop('cached_home_page', None)
     session.pop('cached_home_page_time', None)
@@ -959,12 +965,13 @@ def main_gateway(path):
         if 'text/html' in resp.headers.get('Content-Type', ''):
             soup = BeautifulSoup(content, 'html.parser')
 
-            # Add data-theme attribute to html tag
-            # Fetch user's theme preference from Codex
+            # Add data-theme and data-color-theme attributes to html tag
+            # Fetch user's theme preferences from Codex
             html_tag = soup.find('html')
             if html_tag:
-                theme = get_user_theme(token_data)
-                html_tag['data-theme'] = theme
+                theme_prefs = get_user_theme(token_data)
+                html_tag['data-theme'] = theme_prefs['theme']
+                html_tag['data-color-theme'] = theme_prefs['color_theme']
 
             head = soup.find('head')
             if head:
