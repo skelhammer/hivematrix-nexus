@@ -1072,16 +1072,13 @@ label {
 }
 
 /* Sortable table headers - grey text, no hover effects like Ledger */
-/* Works for both <a class="sortable-header"> (Codex) and <th class="sortable-header"> (Beacon) */
+/* Shared styles for both <a> and <th> variants */
 a.sortable-header,
 th.sortable-header {
     cursor: pointer;
     user-select: none;
     color: var(--color-text-secondary) !important;
     text-decoration: none !important;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
     font-weight: 600;
     font-size: 0.75rem;
     text-transform: uppercase;
@@ -1090,6 +1087,13 @@ th.sortable-header {
     box-shadow: none !important;
     border: none !important;
     background: transparent !important;
+}
+
+/* Only <a> tags need flex for internal alignment */
+a.sortable-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 a.sortable-header:hover,
