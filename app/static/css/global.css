@@ -136,6 +136,61 @@ body.u-no-scroll {
 }
 
 /* ========================================
+   Responsive Container System
+   ======================================== */
+
+/* Main content container with responsive max-width */
+main {
+    width: 100%;
+    margin: 0 auto;
+    padding: 1rem; /* Mobile: 16px */
+}
+
+/* Tablet: 640px+ */
+@media (min-width: 640px) {
+    main {
+        padding: 1.5rem; /* 24px */
+        max-width: 640px;
+    }
+}
+
+/* Desktop: 1024px+ */
+@media (min-width: 1024px) {
+    main {
+        padding: 2rem; /* 32px */
+        max-width: 1280px;
+    }
+}
+
+/* Large Desktop: 1440px+ */
+@media (min-width: 1440px) {
+    main {
+        max-width: 1400px;
+    }
+}
+
+/* Ultrawide/4K: 1920px+ */
+@media (min-width: 1920px) {
+    main {
+        max-width: 1800px;
+    }
+}
+
+/* Super Ultrawide: 2560px+ */
+@media (min-width: 2560px) {
+    main {
+        max-width: 2200px;
+        padding: 3rem;
+    }
+}
+
+/* Full-width override for special layouts */
+main.main--full {
+    max-width: none;
+    padding: 0;
+}
+
+/* ========================================
    Typography
    ======================================== */
 
@@ -153,6 +208,19 @@ h3 { font-size: 1.5rem; }
 h4 { font-size: 1.25rem; }
 h5 { font-size: 1.1rem; }
 h6 { font-size: 1rem; }
+
+/* Responsive typography scaling */
+@media (max-width: 640px) {
+    h1 { font-size: 1.75rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.25rem; }
+}
+
+@media (min-width: 1920px) {
+    h1 { font-size: 2.25rem; }
+    h2 { font-size: 1.875rem; }
+    body { font-size: 1.0625rem; } /* Slightly larger base text */
+}
 
 p {
     margin: 0.5rem 0;
@@ -1009,6 +1077,7 @@ label {
     border-radius: 12px;
     background: var(--color-surface);
     border: 1px solid var(--color-border-light);
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
 .data-table {
@@ -1094,6 +1163,19 @@ label {
 
 .data-table tbody a:hover::after {
     width: 100%;
+}
+
+/* Responsive table adjustments */
+@media (max-width: 768px) {
+    .data-table th,
+    .data-table td {
+        padding: 0.75rem 0.875rem; /* Reduced padding on mobile */
+        font-size: 0.8125rem; /* Slightly smaller text */
+    }
+
+    .data-table th {
+        font-size: 0.6875rem; /* Smaller headers on mobile */
+    }
 }
 
 /* Sortable table headers - grey text, no hover effects like Ledger */
@@ -3246,6 +3328,18 @@ table td a:hover {
     .dashboard-grid--three-col .dashboard-card {
         flex: 0 1 100%;
         max-width: 100%;
+    }
+}
+
+/* Ultrawide: 4 columns on very large screens */
+@media (min-width: 1920px) {
+    .dashboard-grid--three-col .dashboard-card {
+        flex: 0 1 calc(25% - 1.125rem); /* 4 columns */
+        max-width: 420px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     }
 }
 
