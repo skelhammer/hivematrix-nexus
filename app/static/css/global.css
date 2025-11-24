@@ -110,6 +110,86 @@
 }
 
 /* ========================================
+   Modern Theme Variants
+   ======================================== */
+
+/* Modern Blue - Professional & Trustworthy */
+[data-theme="blue"] {
+    --color-primary: #0ea5e9;
+    --color-primary-hover: #0284c7;
+    --color-primary-bg: rgba(14, 165, 233, 0.1);
+    --color-active-bg: #0ea5e9;
+    --color-focus-ring: rgba(14, 165, 233, 0.3);
+    --gradient-primary: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+}
+
+[data-theme="blue"][data-theme="dark"] {
+    --color-primary: #38bdf8;
+    --color-primary-hover: #7dd3fc;
+    --color-primary-text: #0a0a0a;
+    --color-primary-bg: rgba(56, 189, 248, 0.15);
+    --color-active-bg: #38bdf8;
+    --gradient-primary: linear-gradient(135deg, #38bdf8 0%, #7dd3fc 100%);
+}
+
+/* Modern Green - Calm & Growth-Focused */
+[data-theme="green"] {
+    --color-primary: #10b981;
+    --color-primary-hover: #059669;
+    --color-primary-bg: rgba(16, 185, 129, 0.1);
+    --color-active-bg: #10b981;
+    --color-focus-ring: rgba(16, 185, 129, 0.3);
+    --gradient-primary: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+}
+
+[data-theme="green"][data-theme="dark"] {
+    --color-primary: #34d399;
+    --color-primary-hover: #6ee7b7;
+    --color-primary-text: #0a0a0a;
+    --color-primary-bg: rgba(52, 211, 153, 0.15);
+    --color-active-bg: #34d399;
+    --gradient-primary: linear-gradient(135deg, #34d399 0%, #6ee7b7 100%);
+}
+
+/* Modern Orange - Warm & Energetic */
+[data-theme="orange"] {
+    --color-primary: #f97316;
+    --color-primary-hover: #ea580c;
+    --color-primary-bg: rgba(249, 115, 22, 0.1);
+    --color-active-bg: #f97316;
+    --color-focus-ring: rgba(249, 115, 22, 0.3);
+    --gradient-primary: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+}
+
+[data-theme="orange"][data-theme="dark"] {
+    --color-primary: #fb923c;
+    --color-primary-hover: #fdba74;
+    --color-primary-text: #0a0a0a;
+    --color-primary-bg: rgba(251, 146, 60, 0.15);
+    --color-active-bg: #fb923c;
+    --gradient-primary: linear-gradient(135deg, #fb923c 0%, #fdba74 100%);
+}
+
+/* Modern Gold (Integotec Brand) - Fresh & Vibrant */
+[data-theme="gold"] {
+    --color-primary: #05f29b;
+    --color-primary-hover: #04d689;
+    --color-primary-bg: rgba(5, 242, 155, 0.1);
+    --color-active-bg: #05f29b;
+    --color-focus-ring: rgba(5, 242, 155, 0.3);
+    --gradient-primary: linear-gradient(135deg, #05f29b 0%, #34faa8 100%);
+}
+
+[data-theme="gold"][data-theme="dark"] {
+    --color-primary: #34faa8;
+    --color-primary-hover: #6ffcbb;
+    --color-primary-text: #0a0a0a;
+    --color-primary-bg: rgba(52, 250, 168, 0.15);
+    --color-active-bg: #34faa8;
+    --gradient-primary: linear-gradient(135deg, #34faa8 0%, #6ffcbb 100%);
+}
+
+/* ========================================
    Base Styles
    ======================================== */
 
