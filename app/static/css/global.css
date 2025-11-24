@@ -575,10 +575,28 @@ a:hover {
     color: var(--color-primary-text);
     border: none;
     box-shadow: 0 4px 14px 0 var(--color-focus-ring);
+    position: relative;
+}
+
+.btn--primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.btn--primary:hover::before {
+    opacity: 1;
 }
 
 .btn--primary:hover {
-    filter: brightness(1.15);
     color: var(--color-primary-text);
     transform: translateY(-2px);
     box-shadow: 0 6px 20px 0 var(--color-focus-ring);
