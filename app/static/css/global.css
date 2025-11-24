@@ -1689,6 +1689,7 @@ table td a:hover {
 
 .form-group__input {
     width: 100%;
+    max-width: 500px;
     padding: 0.75rem 1rem;
     background: var(--color-surface);
     border: 2px solid var(--color-border-light);
@@ -1721,6 +1722,7 @@ table td a:hover {
 /* Phase 2 Enhancement: Enhanced select focus */
 .form-group__select {
     width: 100%;
+    max-width: 500px;
     padding: 0.75rem 1rem;
     background: var(--color-surface);
     border: 2px solid var(--color-border-light);
