@@ -1116,9 +1116,9 @@ def main_gateway(path):
                             const startX = Math.random() < 0.5 ? -50 : window.innerWidth + 50;
                             const endX = startX < 0 ? window.innerWidth + 50 : -50;
 
-                            // Determine direction: if flying right to left, flip the bee
+                            // Determine direction: flip bee based on flight direction
                             const flyingLeftToRight = startX < 0;
-                            if (!flyingLeftToRight) {
+                            if (flyingLeftToRight) {
                                 bee.style.transform = 'scaleX(-1)';
                             }
 
