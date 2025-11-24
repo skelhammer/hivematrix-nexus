@@ -1007,25 +1007,45 @@ def main_gateway(path):
 
                         const ctx = canvas.getContext('2d');
 
-                        // Set canvas size
+                        // Matrix characters - Katakana + Latin + numbers
+                        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ';
+                        const fontSize = 14;
+                        let columns = 0;
+                        let drops = [];
+
+                        // Set canvas size and recalculate columns/drops
                         function resizeCanvas() {
                             canvas.width = window.innerWidth;
                             canvas.height = window.innerHeight;
+
+                            // Recalculate columns for new width
+                            const newColumns = Math.floor(canvas.width / fontSize);
+
+                            // Only reset drops if column count changed
+                            if (newColumns !== columns) {
+                                columns = newColumns;
+                                drops = Array(columns).fill(1).map(() => Math.floor(Math.random() * canvas.height / fontSize));
+                            }
                         }
                         resizeCanvas();
                         window.addEventListener('resize', resizeCanvas);
 
-                        // Matrix characters - Katakana + Latin + numbers
-                        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ';
-                        const fontSize = 14;
-                        const columns = Math.floor(canvas.width / fontSize);
-                        const drops = Array(columns).fill(1);
+                        // Frame counter for slower animation
+                        let frameCount = 0;
+                        const frameSkip = 2; // Draw every 3rd frame (slower animation)
 
                         function drawMatrixRain() {
                             // Check if Matrix theme is active
                             const isMatrixTheme = document.documentElement.getAttribute('data-color-theme') === 'matrix';
                             if (!isMatrixTheme) {
                                 ctx.clearRect(0, 0, canvas.width, canvas.height);
+                                requestAnimationFrame(drawMatrixRain);
+                                return;
+                            }
+
+                            // Only update every frameSkip frames for slower animation
+                            frameCount++;
+                            if (frameCount % (frameSkip + 1) !== 0) {
                                 requestAnimationFrame(drawMatrixRain);
                                 return;
                             }
