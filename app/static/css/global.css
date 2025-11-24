@@ -532,6 +532,57 @@ a:hover {
 }
 
 /* ========================================
+   Page Header Component (BEM)
+   ======================================== */
+
+.page-header {
+    margin: 2rem auto 2rem auto;
+    max-width: 1400px;
+    padding: 0 1rem;
+}
+
+.page-header__title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+}
+
+.page-header__description {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Responsive page header */
+@media (max-width: 640px) {
+    .page-header {
+        margin: 1.5rem auto 1.5rem auto;
+    }
+
+    .page-header__title {
+        font-size: 1.75rem;
+    }
+
+    .page-header__description {
+        font-size: 0.9375rem;
+    }
+}
+
+@media (min-width: 1920px) {
+    .page-header__title {
+        font-size: 2.5rem;
+    }
+
+    .page-header__description {
+        font-size: 1.125rem;
+    }
+}
+
+/* ========================================
    Card Component (BEM)
    ======================================== */
 
