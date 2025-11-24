@@ -1072,7 +1072,9 @@ label {
 }
 
 /* Sortable table headers - grey text, no hover effects like Ledger */
-a.sortable-header {
+/* Works for both <a class="sortable-header"> (Codex) and <th class="sortable-header"> (Beacon) */
+a.sortable-header,
+th.sortable-header {
     cursor: pointer;
     user-select: none;
     color: var(--color-text-secondary) !important;
@@ -1090,7 +1092,8 @@ a.sortable-header {
     background: transparent !important;
 }
 
-a.sortable-header:hover {
+a.sortable-header:hover,
+th.sortable-header:hover {
     color: var(--color-text-secondary) !important;
     outline: none !important;
     box-shadow: none !important;
@@ -1098,14 +1101,16 @@ a.sortable-header:hover {
     background: transparent !important;
 }
 
-a.sortable-header:focus {
+a.sortable-header:focus,
+th.sortable-header:focus {
     outline: none !important;
     box-shadow: none !important;
     border: none !important;
     background: transparent !important;
 }
 
-a.sortable-header:active {
+a.sortable-header:active,
+th.sortable-header:active {
     outline: none !important;
     box-shadow: none !important;
     border: none !important;
