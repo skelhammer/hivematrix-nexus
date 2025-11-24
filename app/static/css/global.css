@@ -132,23 +132,23 @@
     --gradient-primary: linear-gradient(135deg, #38bdf8 0%, #7dd3fc 100%);
 }
 
-/* Modern Green - Calm & Growth-Focused */
+/* Forest Green - Natural & Earthy */
 [data-color-theme="green"] {
-    --color-primary: #10b981;
-    --color-primary-hover: #059669;
-    --color-primary-bg: rgba(16, 185, 129, 0.1);
-    --color-active-bg: #10b981;
-    --color-focus-ring: rgba(16, 185, 129, 0.3);
-    --gradient-primary: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    --color-primary: #059669;
+    --color-primary-hover: #047857;
+    --color-primary-bg: rgba(5, 150, 105, 0.1);
+    --color-active-bg: #059669;
+    --color-focus-ring: rgba(5, 150, 105, 0.3);
+    --gradient-primary: linear-gradient(135deg, #059669 0%, #10b981 100%);
 }
 
 [data-theme="dark"][data-color-theme="green"] {
-    --color-primary: #34d399;
-    --color-primary-hover: #6ee7b7;
+    --color-primary: #10b981;
+    --color-primary-hover: #34d399;
     --color-primary-text: #0a0a0a;
-    --color-primary-bg: rgba(52, 211, 153, 0.15);
-    --color-active-bg: #34d399;
-    --gradient-primary: linear-gradient(135deg, #34d399 0%, #6ee7b7 100%);
+    --color-primary-bg: rgba(16, 185, 129, 0.15);
+    --color-active-bg: #10b981;
+    --gradient-primary: linear-gradient(135deg, #10b981 0%, #34d399 100%);
 }
 
 /* Modern Orange - Warm & Energetic */
@@ -225,6 +225,25 @@
     --color-primary-bg: rgba(251, 191, 36, 0.15);
     --color-active-bg: #fbbf24;
     --gradient-primary: linear-gradient(135deg, #fbbf24 0%, #fcd34d 100%);
+}
+
+/* Matrix Green - Neon & Digital */
+[data-color-theme="matrix"] {
+    --color-primary: #00ff41;
+    --color-primary-hover: #00d936;
+    --color-primary-bg: rgba(0, 255, 65, 0.1);
+    --color-active-bg: #00ff41;
+    --color-focus-ring: rgba(0, 255, 65, 0.3);
+    --gradient-primary: linear-gradient(135deg, #00ff41 0%, #39ff14 100%);
+}
+
+[data-theme="dark"][data-color-theme="matrix"] {
+    --color-primary: #39ff14;
+    --color-primary-hover: #5aff40;
+    --color-primary-text: #0a0a0a;
+    --color-primary-bg: rgba(57, 255, 20, 0.15);
+    --color-active-bg: #39ff14;
+    --gradient-primary: linear-gradient(135deg, #39ff14 0%, #5aff40 100%);
 }
 
 /* ========================================
