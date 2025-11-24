@@ -856,41 +856,19 @@ a:hover {
     transition: all 0.2s ease;
 }
 
-/* Phase 1 Enhancement: Badge glow effects */
 .badge--success {
     background: var(--color-success-bg);
     color: var(--color-success);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 12px rgba(34, 197, 94, 0.2);
-}
-
-.badge--success:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), 0 0 16px rgba(34, 197, 94, 0.3);
 }
 
 .badge--danger {
     background: var(--color-danger-bg);
     color: var(--color-danger);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 12px rgba(239, 68, 68, 0.2);
-    animation: dangerPulse 2s ease-in-out infinite;
-}
-
-@keyframes dangerPulse {
-    0%, 100% {
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 12px rgba(239, 68, 68, 0.2);
-    }
-    50% {
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 20px rgba(239, 68, 68, 0.4);
-    }
 }
 
 .badge--warning {
     background: var(--color-warning-bg);
     color: #92400e;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 12px rgba(234, 179, 8, 0.15);
-}
-
-.badge--warning:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), 0 0 16px rgba(234, 179, 8, 0.25);
 }
 
 [data-theme="dark"] .badge--warning {
@@ -900,11 +878,6 @@ a:hover {
 .badge--info {
     background: rgba(6, 182, 212, 0.1);
     color: var(--color-info);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 12px rgba(6, 182, 212, 0.2);
-}
-
-.badge--info:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), 0 0 16px rgba(6, 182, 212, 0.3);
 }
 
 [data-theme="dark"] .badge--info {
@@ -1071,8 +1044,8 @@ label {
     white-space: nowrap;
 }
 
-/* Phase 1 Enhancement: Animated underline for table links */
-.data-table a {
+/* Phase 1 Enhancement: Animated underline for table body links only */
+.data-table tbody a {
     position: relative;
     font-weight: 500;
     color: var(--color-primary);
@@ -1080,7 +1053,7 @@ label {
     transition: color 0.2s ease;
 }
 
-.data-table a::after {
+.data-table tbody a::after {
     content: '';
     position: absolute;
     bottom: -2px;
@@ -1091,11 +1064,11 @@ label {
     transition: width 0.2s ease;
 }
 
-.data-table a:hover {
+.data-table tbody a:hover {
     color: var(--color-primary);
 }
 
-.data-table a:hover::after {
+.data-table tbody a:hover::after {
     width: 100%;
 }
 
@@ -3134,21 +3107,21 @@ table td a:hover {
     overflow: hidden;
 }
 
-/* Shine effect on hover - Phase 1 Enhancement */
+/* Very subtle shine effect on hover - Phase 1 Enhancement */
 .dashboard-card::before {
     content: '';
     position: absolute;
     top: 0;
-    left: -100%;
-    width: 100%;
+    left: -30%;
+    width: 30%;
     height: 100%;
     background: linear-gradient(
         90deg,
         transparent,
-        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.015),
         transparent
     );
-    transition: left 0.5s ease;
+    transition: left 0.25s ease;
 }
 
 .dashboard-card:hover::before {
