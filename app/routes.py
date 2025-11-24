@@ -273,10 +273,9 @@ def inject_side_panel(soup, current_service, user_data=None):
         active_class = 'side-panel__item--active' if service_name == current_service else ''
         display_name = service_name.title()
 
-        tooltip_text = f"Go to {display_name}"
         side_panel_html += f'''
             <li class="side-panel__item {active_class}">
-                <a href="/{service_name}/" class="side-panel__link" data-tooltip="{tooltip_text}" data-tooltip-position="right">
+                <a href="/{service_name}/" class="side-panel__link">
                     <span class="side-panel__icon">{icon}</span>
                     <span class="side-panel__label">{display_name}</span>
                 </a>
@@ -287,15 +286,15 @@ def inject_side_panel(soup, current_service, user_data=None):
             </ul>
         </nav>
         <div class="side-panel__footer">
-            <a href="/codex/settings" class="side-panel__link" data-tooltip="Change theme and preferences" data-tooltip-position="right">
+            <a href="/codex/settings" class="side-panel__link">
                 <span class="side-panel__icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
                 <span class="side-panel__label">Settings</span>
             </a>
-            <a href="/logout" class="side-panel__link" data-tooltip="Sign out of HiveMatrix" data-tooltip-position="right">
+            <a href="/logout" class="side-panel__link">
                 <span class="side-panel__icon"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
                 <span class="side-panel__label">Logout</span>
             </a>
-            <button class="theme-toggle" id="theme-toggle-btn" aria-label="Toggle theme" data-tooltip="Toggle light/dark mode" data-tooltip-position="right">
+            <button class="theme-toggle" id="theme-toggle-btn" aria-label="Toggle theme">
                 <span class="theme-toggle__track">
                     <span class="theme-toggle__thumb">
                         <svg viewBox="0 0 24 24" class="theme-icon-moon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
