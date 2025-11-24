@@ -312,17 +312,20 @@
     opacity: 1;
 }
 
-/* Honeycomb background pattern - light mode only */
+/* Honeycomb background pattern - proper hexagons */
 [data-theme="light"][data-color-theme="bee"] body {
-    background-image:
-        repeating-linear-gradient(30deg, transparent, transparent 50px, rgba(255, 179, 0, 0.02) 50px, rgba(255, 179, 0, 0.02) 100px),
-        repeating-linear-gradient(150deg, transparent, transparent 50px, rgba(255, 193, 7, 0.02) 50px, rgba(255, 193, 7, 0.02) 100px),
-        repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(255, 152, 0, 0.01) 50px, rgba(255, 152, 0, 0.01) 100px);
+    background-color: var(--color-bg-primary);
+    background-image: url("data:image/svg+xml,%3Csvg width='56' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M28 66L0 50L0 16L28 0L56 16L56 50L28 66L28 100' fill='none' stroke='%23FFB300' stroke-opacity='0.03' stroke-width='1'/%3E%3Cpath d='M28 0L28 34L0 50L0 84L28 100L56 84L56 50L28 34' fill='none' stroke='%23FFC107' stroke-opacity='0.02' stroke-width='1'/%3E%3C/svg%3E");
+    background-size: 56px 100px;
+    background-repeat: repeat;
 }
 
-/* No honeycomb in dark mode - prevents tartan plaid effect */
+/* Dark mode honeycomb - very subtle */
 [data-theme="dark"][data-color-theme="bee"] body {
-    background-image: none;
+    background-color: var(--color-bg-primary);
+    background-image: url("data:image/svg+xml,%3Csvg width='56' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M28 66L0 50L0 16L28 0L56 16L56 50L28 66L28 100' fill='none' stroke='%23FFB300' stroke-opacity='0.015' stroke-width='1'/%3E%3Cpath d='M28 0L28 34L0 50L0 84L28 100L56 84L56 50L28 34' fill='none' stroke='%23FFC107' stroke-opacity='0.01' stroke-width='1'/%3E%3C/svg%3E");
+    background-size: 56px 100px;
+    background-repeat: repeat;
 }
 
 [data-color-theme="bee"] .hivematrix-content {
