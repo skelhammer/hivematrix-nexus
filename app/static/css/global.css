@@ -1071,7 +1071,7 @@ label {
     width: 100%;
 }
 
-/* Sortable table headers - grey text, no purple links */
+/* Sortable table headers - grey text, no hover effects like Ledger */
 a.sortable-header {
     cursor: pointer;
     user-select: none;
@@ -1080,15 +1080,20 @@ a.sortable-header {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    transition: color 0.2s ease;
     font-weight: 600;
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    outline: none;
 }
 
 a.sortable-header:hover {
-    color: var(--color-primary);
+    color: var(--color-text-secondary);
+    outline: none;
+}
+
+a.sortable-header:focus {
+    outline: none;
 }
 
 /* Styles for plain table elements */
