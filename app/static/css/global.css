@@ -853,21 +853,44 @@ a:hover {
     letter-spacing: 0.02em;
     background: var(--color-bg-secondary);
     color: var(--color-text-secondary);
+    transition: all 0.2s ease;
 }
 
+/* Phase 1 Enhancement: Badge glow effects */
 .badge--success {
     background: var(--color-success-bg);
     color: var(--color-success);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 12px rgba(34, 197, 94, 0.2);
+}
+
+.badge--success:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), 0 0 16px rgba(34, 197, 94, 0.3);
 }
 
 .badge--danger {
     background: var(--color-danger-bg);
     color: var(--color-danger);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 12px rgba(239, 68, 68, 0.2);
+    animation: dangerPulse 2s ease-in-out infinite;
+}
+
+@keyframes dangerPulse {
+    0%, 100% {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 12px rgba(239, 68, 68, 0.2);
+    }
+    50% {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 20px rgba(239, 68, 68, 0.4);
+    }
 }
 
 .badge--warning {
     background: var(--color-warning-bg);
     color: #92400e;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 12px rgba(234, 179, 8, 0.15);
+}
+
+.badge--warning:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), 0 0 16px rgba(234, 179, 8, 0.25);
 }
 
 [data-theme="dark"] .badge--warning {
@@ -877,6 +900,11 @@ a:hover {
 .badge--info {
     background: rgba(6, 182, 212, 0.1);
     color: var(--color-info);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 12px rgba(6, 182, 212, 0.2);
+}
+
+.badge--info:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), 0 0 16px rgba(6, 182, 212, 0.3);
 }
 
 [data-theme="dark"] .badge--info {
@@ -1011,15 +1039,19 @@ label {
 
 .data-table tbody tr {
     border-bottom: 1px solid var(--color-border-light);
-    transition: background-color 0.15s ease;
+    transition: all 0.2s ease;
+    position: relative;
 }
 
 .data-table tbody tr:last-child {
     border-bottom: none;
 }
 
+/* Phase 1 Enhancement: Left border accent and subtle lift on hover */
 .data-table tbody tr:hover {
     background: var(--color-hover-bg);
+    box-shadow: inset 3px 0 0 var(--color-primary), 0 2px 4px rgba(0, 0, 0, 0.05);
+    transform: scale(1.001);
 }
 
 .data-table td {
@@ -1037,6 +1069,34 @@ label {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+/* Phase 1 Enhancement: Animated underline for table links */
+.data-table a {
+    position: relative;
+    font-weight: 500;
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.data-table a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--color-primary);
+    transition: width 0.2s ease;
+}
+
+.data-table a:hover {
+    color: var(--color-primary);
+}
+
+.data-table a:hover::after {
+    width: 100%;
 }
 
 .sortable-header {
@@ -1244,39 +1304,71 @@ table td a:hover {
 }
 
 /* ========================================
-   Alert/Flash Messages & Banners
+   Alert/Flash Messages & Banners - Phase 1 Enhanced
    ======================================== */
 
 .alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
     padding: 1rem 1.25rem;
     border-radius: 12px;
     margin-bottom: 1.5rem;
     border-left: 4px solid;
     animation: slideIn 0.3s ease-out;
+    position: relative;
+    overflow: hidden;
 }
 
 .alert--success {
-    background: var(--color-success-bg);
+    background: linear-gradient(
+        135deg,
+        var(--color-success-bg) 0%,
+        rgba(34, 197, 94, 0.06) 100%
+    );
     border-left-color: var(--color-success);
     color: var(--color-success);
 }
 
 .alert--error {
-    background: var(--color-danger-bg);
+    background: linear-gradient(
+        135deg,
+        var(--color-danger-bg) 0%,
+        rgba(239, 68, 68, 0.06) 100%
+    );
     border-left-color: var(--color-danger);
     color: var(--color-danger);
 }
 
 .alert--warning {
-    background: var(--color-warning-bg);
+    background: linear-gradient(
+        135deg,
+        var(--color-warning-bg) 0%,
+        rgba(234, 179, 8, 0.06) 100%
+    );
     border-left-color: var(--color-warning);
     color: var(--color-warning);
 }
 
 .alert--info {
-    background: rgba(148, 163, 184, 0.1);
+    background: linear-gradient(
+        135deg,
+        rgba(148, 163, 184, 0.1) 0%,
+        rgba(148, 163, 184, 0.05) 100%
+    );
     border-left-color: var(--color-text-muted);
     color: var(--color-text-primary);
+}
+
+.alert__message {
+    flex: 1;
+    color: var(--color-text-primary);
+    line-height: 1.6;
+}
+
+.alert__title {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
 }
 
 /* Toast Notifications */
@@ -1888,27 +1980,59 @@ table td a:hover {
 }
 
 /* ========================================
-   Empty State
+   Empty State - Phase 1 Enhanced
    ======================================== */
 
 .empty-state {
-    padding: 3rem 1rem;
+    padding: 3rem 2rem;
     text-align: center;
     color: var(--color-text-muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    min-height: 200px;
+    justify-content: center;
+    background: linear-gradient(
+        135deg,
+        rgba(99, 102, 241, 0.03) 0%,
+        rgba(139, 92, 246, 0.03) 100%
+    );
+    border-radius: 12px;
+    border: 2px dashed var(--color-border-medium);
+    margin: 1.5rem 0;
 }
 
 .empty-state__icon {
     width: 48px;
     height: 48px;
     margin: 0 auto 1rem;
-    opacity: 0.5;
+    opacity: 0.3;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
 }
 
 .empty-state__title {
-    font-size: 1rem;
+    font-size: 1.125rem;
     font-weight: 600;
-    color: var(--color-text-secondary);
-    margin-bottom: 0.5rem;
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+.empty-state__message {
+    max-width: 400px;
+    font-size: 0.875rem;
+    margin: 0;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+}
+
+.empty-state__action {
+    margin-top: 1rem;
 }
 
 /* ========================================
@@ -3006,6 +3130,29 @@ table td a:hover {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Shine effect on hover - Phase 1 Enhancement */
+.dashboard-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
+    transition: left 0.5s ease;
+}
+
+.dashboard-card:hover::before {
+    left: 100%;
 }
 
 .dashboard-card:hover {
