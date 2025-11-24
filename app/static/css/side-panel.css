@@ -56,8 +56,8 @@
 }
 
 .side-panel__toggle:hover {
-    background: var(--color-hover-bg);
-    color: var(--color-text-primary);
+    background: var(--color-primary-bg);
+    color: var(--color-primary);
 }
 
 .side-panel__toggle svg {
@@ -169,8 +169,8 @@ html.sidebar-collapsed .side-panel__label {
 }
 
 .side-panel__link:hover {
-    background: var(--color-hover-bg);
-    color: var(--color-text-primary);
+    background: var(--color-primary-bg);
+    color: var(--color-primary);
 }
 
 .side-panel__item--active .side-panel__link {
@@ -211,7 +211,7 @@ html.sidebar-collapsed .side-panel__label {
 }
 
 .side-panel__link:hover .side-panel__icon {
-    color: var(--color-text-primary);
+    color: var(--color-primary);
 }
 
 .side-panel__label {
@@ -238,8 +238,8 @@ html.sidebar-collapsed .side-panel__label {
 }
 
 .side-panel__footer .side-panel__link:hover {
-    background: var(--color-hover-bg);
-    color: var(--color-text-primary);
+    background: var(--color-primary-bg);
+    color: var(--color-primary);
 }
 
 /* Theme toggle button styling */
