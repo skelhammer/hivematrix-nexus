@@ -5039,23 +5039,11 @@ textarea:focus-visible {
    3.3 Dropdown Enhancements
    ======================================== */
 
-/* Smooth dropdown opening */
-.dropdown-menu,
-select,
-.select-wrapper select {
-    animation: dropdown-slide-in 0.2s ease;
-}
+/* NOTE: Dropdown slide animation removed to prevent jarring page loads.
+   Enhanced hover states remain active for better UX */
 
-@keyframes dropdown-slide-in {
-    from {
-        opacity: 0;
-        transform: translateY(-4px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+/* No automatic animations - caused content to flash invisible on page load */
+/* Keeping only the hover enhancements below */
 
 /* Enhanced dropdown hover states */
 select:hover,
