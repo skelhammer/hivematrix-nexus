@@ -597,6 +597,7 @@ a:hover {
 }
 
 .btn--primary:hover {
+    background: var(--gradient-primary);
     color: var(--color-primary-text);
     transform: translateY(-2px);
     box-shadow: 0 6px 20px 0 var(--color-focus-ring);
