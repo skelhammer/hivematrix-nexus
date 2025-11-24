@@ -1020,11 +1020,10 @@ label {
     border-bottom: none;
 }
 
-/* Phase 1 Enhancement: Left border accent and subtle lift on hover */
+/* Phase 1 Enhancement: Left border accent on hover */
 .data-table tbody tr:hover {
     background: var(--color-hover-bg);
     box-shadow: inset 3px 0 0 var(--color-primary), 0 2px 4px rgba(0, 0, 0, 0.05);
-    transform: scale(1.001);
 }
 
 .data-table td {
