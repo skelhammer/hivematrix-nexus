@@ -124,7 +124,7 @@ def get_user_theme(token_data):
             current_app.logger.debug(f"Themes from Codex: {theme}, {color_theme}")
 
             # Validate theme values
-            if theme in ['light', 'dark'] and color_theme in ['purple', 'blue', 'green', 'orange', 'gold']:
+            if theme in ['light', 'dark'] and color_theme in ['purple', 'blue', 'green', 'orange', 'gold', 'red', 'yellow']:
                 # Cache in session
                 session['cached_theme'] = theme
                 session['cached_color_theme'] = color_theme

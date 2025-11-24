@@ -170,23 +170,61 @@
     --gradient-primary: linear-gradient(135deg, #fb923c 0%, #fdba74 100%);
 }
 
-/* Modern Gold (Integotec Brand) - Fresh & Vibrant */
+/* Gold - Elegant & Sophisticated */
 [data-color-theme="gold"] {
-    --color-primary: #05f29b;
-    --color-primary-hover: #04d689;
-    --color-primary-bg: rgba(5, 242, 155, 0.1);
-    --color-active-bg: #05f29b;
-    --color-focus-ring: rgba(5, 242, 155, 0.3);
-    --gradient-primary: linear-gradient(135deg, #05f29b 0%, #34faa8 100%);
+    --color-primary: #B39B7E;
+    --color-primary-hover: #9F8969;
+    --color-primary-bg: rgba(179, 155, 126, 0.1);
+    --color-active-bg: #B39B7E;
+    --color-focus-ring: rgba(179, 155, 126, 0.3);
+    --gradient-primary: linear-gradient(135deg, #B39B7E 0%, #C9B697 100%);
 }
 
 [data-theme="dark"][data-color-theme="gold"] {
-    --color-primary: #34faa8;
-    --color-primary-hover: #6ffcbb;
+    --color-primary: #C9B697;
+    --color-primary-hover: #D4C4A8;
     --color-primary-text: #0a0a0a;
-    --color-primary-bg: rgba(52, 250, 168, 0.15);
-    --color-active-bg: #34faa8;
-    --gradient-primary: linear-gradient(135deg, #34faa8 0%, #6ffcbb 100%);
+    --color-primary-bg: rgba(201, 182, 151, 0.15);
+    --color-active-bg: #C9B697;
+    --gradient-primary: linear-gradient(135deg, #C9B697 0%, #D4C4A8 100%);
+}
+
+/* Red - Bold & Energetic */
+[data-color-theme="red"] {
+    --color-primary: #dc2626;
+    --color-primary-hover: #b91c1c;
+    --color-primary-bg: rgba(220, 38, 38, 0.1);
+    --color-active-bg: #dc2626;
+    --color-focus-ring: rgba(220, 38, 38, 0.3);
+    --gradient-primary: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+}
+
+[data-theme="dark"][data-color-theme="red"] {
+    --color-primary: #ef4444;
+    --color-primary-hover: #f87171;
+    --color-primary-text: #0a0a0a;
+    --color-primary-bg: rgba(239, 68, 68, 0.15);
+    --color-active-bg: #ef4444;
+    --gradient-primary: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+}
+
+/* Yellow - Bright & Cheerful */
+[data-color-theme="yellow"] {
+    --color-primary: #eab308;
+    --color-primary-hover: #ca8a04;
+    --color-primary-bg: rgba(234, 179, 8, 0.1);
+    --color-active-bg: #eab308;
+    --color-focus-ring: rgba(234, 179, 8, 0.3);
+    --gradient-primary: linear-gradient(135deg, #eab308 0%, #fbbf24 100%);
+}
+
+[data-theme="dark"][data-color-theme="yellow"] {
+    --color-primary: #fbbf24;
+    --color-primary-hover: #fcd34d;
+    --color-primary-text: #0a0a0a;
+    --color-primary-bg: rgba(251, 191, 36, 0.15);
+    --color-active-bg: #fbbf24;
+    --gradient-primary: linear-gradient(135deg, #fbbf24 0%, #fcd34d 100%);
 }
 
 /* ========================================
