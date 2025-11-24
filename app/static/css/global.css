@@ -4981,22 +4981,25 @@ textarea:focus-visible {
 }
 
 /* ========================================
-   3.2 Breadcrumb Animations
+   3.2 Breadcrumb Animations (OPT-IN)
    ======================================== */
 
-.breadcrumb {
-    animation: breadcrumb-fade-in 0.4s ease;
+/* NOTE: Breadcrumb animations are opt-in to prevent performance issues.
+   Add .animate-breadcrumb class to .breadcrumb element to enable */
+
+.breadcrumb.animate-breadcrumb {
+    animation: breadcrumb-fade-in 0.3s ease;
 }
 
-.breadcrumb__item {
-    animation: breadcrumb-slide-in 0.3s ease backwards;
+.breadcrumb.animate-breadcrumb .breadcrumb__item {
+    animation: breadcrumb-slide-in 0.2s ease backwards;
 }
 
-.breadcrumb__item:nth-child(1) { animation-delay: 0.05s; }
-.breadcrumb__item:nth-child(2) { animation-delay: 0.1s; }
-.breadcrumb__item:nth-child(3) { animation-delay: 0.15s; }
-.breadcrumb__item:nth-child(4) { animation-delay: 0.2s; }
-.breadcrumb__item:nth-child(5) { animation-delay: 0.25s; }
+.breadcrumb.animate-breadcrumb .breadcrumb__item:nth-child(1) { animation-delay: 0.03s; }
+.breadcrumb.animate-breadcrumb .breadcrumb__item:nth-child(2) { animation-delay: 0.06s; }
+.breadcrumb.animate-breadcrumb .breadcrumb__item:nth-child(3) { animation-delay: 0.09s; }
+.breadcrumb.animate-breadcrumb .breadcrumb__item:nth-child(4) { animation-delay: 0.12s; }
+.breadcrumb.animate-breadcrumb .breadcrumb__item:nth-child(5) { animation-delay: 0.15s; }
 
 @keyframes breadcrumb-fade-in {
     from {
@@ -5010,7 +5013,7 @@ textarea:focus-visible {
 @keyframes breadcrumb-slide-in {
     from {
         opacity: 0;
-        transform: translateX(-8px);
+        transform: translateX(-4px);
     }
     to {
         opacity: 1;
@@ -5019,8 +5022,8 @@ textarea:focus-visible {
 }
 
 /* Breadcrumb separator animation */
-.breadcrumb__separator {
-    animation: breadcrumb-separator-fade 0.4s ease 0.2s backwards;
+.breadcrumb.animate-breadcrumb .breadcrumb__separator {
+    animation: breadcrumb-separator-fade 0.3s ease 0.1s backwards;
 }
 
 @keyframes breadcrumb-separator-fade {
@@ -5092,12 +5095,15 @@ select option:hover {
 }
 
 /* ========================================
-   3.4 Page Transitions
+   3.4 Page Transitions (OPT-IN)
    ======================================== */
 
-/* Fade-in animation for page content */
-body {
-    animation: page-fade-in 0.3s ease;
+/* NOTE: Page transitions are opt-in to prevent freezing.
+   Add .page-transition class to enable */
+
+/* Fade-in animation for page content - OPT-IN */
+body.page-transition {
+    animation: page-fade-in 0.2s ease;
 }
 
 @keyframes page-fade-in {
@@ -5109,15 +5115,15 @@ body {
     }
 }
 
-/* Content area slide-in */
-.hivematrix-content {
-    animation: content-slide-in 0.4s ease;
+/* Content area slide-in - OPT-IN */
+.page-transition .hivematrix-content {
+    animation: content-slide-in 0.3s ease;
 }
 
 @keyframes content-slide-in {
     from {
         opacity: 0;
-        transform: translateY(8px);
+        transform: translateY(4px);
     }
     to {
         opacity: 1;
@@ -5125,17 +5131,17 @@ body {
     }
 }
 
-/* Page header fade-in */
-.page-header,
-h1:first-of-type,
-.dashboard-header {
-    animation: header-fade-in 0.4s ease 0.1s backwards;
+/* Page header fade-in - Disabled by default, use .animate-header class */
+.page-header.animate-header,
+h1.animate-header,
+.dashboard-header.animate-header {
+    animation: header-fade-in 0.3s ease 0.1s backwards;
 }
 
 @keyframes header-fade-in {
     from {
         opacity: 0;
-        transform: translateY(-8px);
+        transform: translateY(-4px);
     }
     to {
         opacity: 1;
@@ -5144,72 +5150,63 @@ h1:first-of-type,
 }
 
 /* ========================================
-   3.5 Staggered List Animations
+   3.5 Staggered List Animations (OPT-IN)
    ======================================== */
 
-/* Apply to list items for cascade effect */
+/* NOTE: Staggered animations are opt-in to prevent performance issues.
+   Add .staggered-list, .staggered-table, or .staggered-grid to enable */
+
+/* Apply to list items for cascade effect - OPT-IN */
 .staggered-list > *,
-.table tbody tr,
-.card-grid > *,
-.dashboard-grid > * {
+.staggered-table tbody tr,
+.staggered-grid > * {
     animation: item-fade-in 0.3s ease backwards;
 }
 
-/* Stagger delays for first 20 items */
+/* Stagger delays for first 10 items */
 .staggered-list > *:nth-child(1),
-.table tbody tr:nth-child(1),
-.card-grid > *:nth-child(1),
-.dashboard-grid > *:nth-child(1) { animation-delay: 0.05s; }
+.staggered-table tbody tr:nth-child(1),
+.staggered-grid > *:nth-child(1) { animation-delay: 0.03s; }
 
 .staggered-list > *:nth-child(2),
-.table tbody tr:nth-child(2),
-.card-grid > *:nth-child(2),
-.dashboard-grid > *:nth-child(2) { animation-delay: 0.08s; }
+.staggered-table tbody tr:nth-child(2),
+.staggered-grid > *:nth-child(2) { animation-delay: 0.06s; }
 
 .staggered-list > *:nth-child(3),
-.table tbody tr:nth-child(3),
-.card-grid > *:nth-child(3),
-.dashboard-grid > *:nth-child(3) { animation-delay: 0.11s; }
+.staggered-table tbody tr:nth-child(3),
+.staggered-grid > *:nth-child(3) { animation-delay: 0.09s; }
 
 .staggered-list > *:nth-child(4),
-.table tbody tr:nth-child(4),
-.card-grid > *:nth-child(4),
-.dashboard-grid > *:nth-child(4) { animation-delay: 0.14s; }
+.staggered-table tbody tr:nth-child(4),
+.staggered-grid > *:nth-child(4) { animation-delay: 0.12s; }
 
 .staggered-list > *:nth-child(5),
-.table tbody tr:nth-child(5),
-.card-grid > *:nth-child(5),
-.dashboard-grid > *:nth-child(5) { animation-delay: 0.17s; }
+.staggered-table tbody tr:nth-child(5),
+.staggered-grid > *:nth-child(5) { animation-delay: 0.15s; }
 
 .staggered-list > *:nth-child(6),
-.table tbody tr:nth-child(6),
-.card-grid > *:nth-child(6),
-.dashboard-grid > *:nth-child(6) { animation-delay: 0.2s; }
+.staggered-table tbody tr:nth-child(6),
+.staggered-grid > *:nth-child(6) { animation-delay: 0.18s; }
 
 .staggered-list > *:nth-child(7),
-.table tbody tr:nth-child(7),
-.card-grid > *:nth-child(7),
-.dashboard-grid > *:nth-child(7) { animation-delay: 0.23s; }
+.staggered-table tbody tr:nth-child(7),
+.staggered-grid > *:nth-child(7) { animation-delay: 0.21s; }
 
 .staggered-list > *:nth-child(8),
-.table tbody tr:nth-child(8),
-.card-grid > *:nth-child(8),
-.dashboard-grid > *:nth-child(8) { animation-delay: 0.26s; }
+.staggered-table tbody tr:nth-child(8),
+.staggered-grid > *:nth-child(8) { animation-delay: 0.24s; }
 
 .staggered-list > *:nth-child(9),
-.table tbody tr:nth-child(9),
-.card-grid > *:nth-child(9),
-.dashboard-grid > *:nth-child(9) { animation-delay: 0.29s; }
+.staggered-table tbody tr:nth-child(9),
+.staggered-grid > *:nth-child(9) { animation-delay: 0.27s; }
 
 .staggered-list > *:nth-child(10),
-.table tbody tr:nth-child(10),
-.card-grid > *:nth-child(10),
-.dashboard-grid > *:nth-child(10) { animation-delay: 0.32s; }
+.staggered-table tbody tr:nth-child(10),
+.staggered-grid > *:nth-child(10) { animation-delay: 0.3s; }
 
 .staggered-list > *:nth-child(n+11),
-.table tbody tr:nth-child(n+11),
-.card-grid > *:nth-child(n+11),
-.dashboard-grid > *:nth-child(n+11) { animation-delay: 0.35s; }
+.staggered-table tbody tr:nth-child(n+11),
+.staggered-grid > *:nth-child(n+11) { animation-delay: 0.3s; }
 
 @keyframes item-fade-in {
     from {
