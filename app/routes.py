@@ -1118,7 +1118,6 @@ def main_gateway(path):
 
                             // Determine direction: flip bee based on flight direction
                             const flyingLeftToRight = startX < 0;
-                            console.log('Spawning bee:', flyingLeftToRight ? 'left→right' : 'right→left');
                             if (flyingLeftToRight) {
                                 bee.style.transform = 'scaleX(-1)';
                             }
@@ -1175,7 +1174,7 @@ def main_gateway(path):
                             requestAnimationFrame(animateBee);
                         }
 
-                        // Spawn bees at random intervals (3-6 seconds for testing)
+                        // Spawn bees at random intervals (3-6 seconds)
                         function scheduleBee() {
                             const delay = 3000 + Math.random() * 3000;
                             setTimeout(() => {
