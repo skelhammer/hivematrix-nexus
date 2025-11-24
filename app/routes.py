@@ -999,7 +999,7 @@ def main_gateway(path):
                 # Inject Matrix rain Easter egg animation
                 matrix_rain_script = soup.new_tag('script')
                 matrix_rain_script.string = '''
-                    (function() {
+                    document.addEventListener('DOMContentLoaded', function() {
                         // Create canvas for Matrix rain
                         const canvas = document.createElement('canvas');
                         canvas.id = 'matrix-rain';
@@ -1058,7 +1058,7 @@ def main_gateway(path):
 
                         // Start animation
                         drawMatrixRain();
-                    })();
+                    });
                 '''
                 head.append(matrix_rain_script)
 
