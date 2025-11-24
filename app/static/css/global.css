@@ -1075,8 +1075,8 @@ label {
 a.sortable-header {
     cursor: pointer;
     user-select: none;
-    color: var(--color-text-secondary);
-    text-decoration: none;
+    color: var(--color-text-secondary) !important;
+    text-decoration: none !important;
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -1084,16 +1084,32 @@ a.sortable-header {
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    outline: none;
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: transparent !important;
 }
 
 a.sortable-header:hover {
-    color: var(--color-text-secondary);
-    outline: none;
+    color: var(--color-text-secondary) !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: transparent !important;
 }
 
 a.sortable-header:focus {
-    outline: none;
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+a.sortable-header:active {
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: transparent !important;
 }
 
 /* Styles for plain table elements */
