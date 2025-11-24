@@ -263,6 +263,16 @@
     opacity: 1;
 }
 
+/* Make body/html background black for Matrix theme to show canvas */
+[data-color-theme="matrix"] html,
+[data-color-theme="matrix"] body {
+    background: #000000;
+}
+
+[data-color-theme="matrix"] .hivematrix-content {
+    background-color: transparent;
+}
+
 /* ========================================
    Base Styles
    ======================================== */
