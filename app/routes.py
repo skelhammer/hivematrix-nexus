@@ -65,9 +65,23 @@ def validate_token(token):
                 current_app.logger.warning(f"Token validation failed at Core: {validation_response.status_code}")
                 return None
         except requests.exceptions.RequestException as e:
-            # If Core is unreachable, fall back to local validation
-            # This ensures the system keeps working even if Core is down
-            current_app.logger.warning(f"Could not reach Core for validation: {e}, falling back to local validation")
+            # If Core is unreachable, fall back to local validation with restrictions
+            # Only accept tokens issued within the last 5 minutes to limit exposure
+            # This ensures the system keeps working during brief Core outages
+            # while preventing long-term use of potentially revoked tokens
+            token_issued_at = data.get('iat', 0)
+            token_age_seconds = time.time() - token_issued_at
+            max_fallback_age = 300  # 5 minutes
+
+            if token_age_seconds > max_fallback_age:
+                current_app.logger.warning(
+                    f"Core unreachable and token too old for fallback ({token_age_seconds:.0f}s > {max_fallback_age}s)"
+                )
+                return None
+
+            current_app.logger.warning(
+                f"Could not reach Core for validation: {e}, accepting recent token (age: {token_age_seconds:.0f}s)"
+            )
             return data
 
     except jwt.ExpiredSignatureError:
@@ -592,7 +606,8 @@ def keycloak_proxy(path):
         return Response(content, resp.status_code, response_headers)
 
     except requests.exceptions.RequestException as e:
-        return f"Keycloak proxy error: {e}", 502
+        current_app.logger.error(f"Keycloak proxy error: {e}")
+        return "Authentication service temporarily unavailable", 502
 
 
 @app.route('/login')
@@ -601,8 +616,14 @@ def login_proxy():
     Initiates Keycloak login by building the authorization URL directly.
     This ensures external-facing URLs are used instead of localhost.
     """
-    # Save where the user wanted to go
-    session['next_url'] = request.args.get('next', '/')
+    # Save where the user wanted to go (with open redirect protection)
+    next_url = request.args.get('next', '/')
+    # Only allow relative URLs to prevent open redirect attacks
+    # Reject any URL that starts with // (protocol-relative) or contains ://
+    if next_url.startswith('/') and not next_url.startswith('//') and '://' not in next_url:
+        session['next_url'] = next_url
+    else:
+        session['next_url'] = '/'
 
     # Generate state and nonce for OIDC
     state = secrets.token_urlsafe(32)
@@ -685,7 +706,8 @@ def keycloak_callback():
         )
 
         if token_response.status_code != 200:
-            return f"Failed to exchange code for token: {token_response.text}", 502
+            current_app.logger.error(f"Failed to exchange code for token: {token_response.text}")
+            return "Authentication failed - please try again", 502
 
         token_data = token_response.json()
         access_token = token_data.get('access_token')
@@ -711,10 +733,12 @@ def keycloak_callback():
                     # Redirect to original destination
                     return redirect(session.pop('next_url', '/'))
 
-        return f"Failed to get JWT from Core: {jwt_response.status_code}", 502
+        current_app.logger.error(f"Failed to get JWT from Core: {jwt_response.status_code}")
+        return "Authentication failed - please try again", 502
 
     except requests.exceptions.RequestException as e:
-        return f"Authentication flow error: {e}", 502
+        current_app.logger.error(f"Authentication flow error: {e}")
+        return "Authentication service temporarily unavailable", 502
 
 
 
@@ -850,7 +874,8 @@ def main_gateway(path):
 
             return Response(resp.content, resp.status_code, response_headers)
         except requests.exceptions.RequestException as e:
-            return f"Keycloak proxy error: {e}", 502
+            current_app.logger.error(f"Keycloak proxy error: {e}")
+            return "Authentication service temporarily unavailable", 502
 
     # Allow unauthenticated access to Beacon public display routes (for TV displays)
     # These routes don't require authentication to allow TV displays without login
@@ -1218,4 +1243,5 @@ def main_gateway(path):
         return Response(content, resp.status_code, response_headers)
 
     except requests.exceptions.RequestException as e:
-        return f"Proxy error: {e}", 502
+        current_app.logger.error(f"Proxy error for {path}: {e}")
+        return "Service temporarily unavailable", 502

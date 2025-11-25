@@ -1,4 +1,5 @@
 from flask import Flask
+from werkzeug.middleware.proxy_fix import ProxyFix
 import json
 import os
 
@@ -9,6 +10,18 @@ _flaskenv_path = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspat
 load_dotenv(_flaskenv_path)
 
 app = Flask(__name__)
+
+# Apply ProxyFix if Nexus is behind another reverse proxy (e.g., nginx, cloudflare)
+# This ensures correct client IP detection for rate limiting and logging
+# Set BEHIND_PROXY=true in .flaskenv if using an external reverse proxy
+if os.environ.get('BEHIND_PROXY', 'false').lower() in ('true', '1', 'yes'):
+    app.wsgi_app = ProxyFix(
+        app.wsgi_app,
+        x_for=1,      # Trust X-Forwarded-For
+        x_proto=1,    # Trust X-Forwarded-Proto
+        x_host=1,     # Trust X-Forwarded-Host
+        x_prefix=1    # Trust X-Forwarded-Prefix
+    )
 
 # Configure rate limiting (higher limits for gateway service)
 from flask_limiter import Limiter
