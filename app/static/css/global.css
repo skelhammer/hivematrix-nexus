@@ -6096,6 +6096,7 @@ h1.animate-header,
     flex: 1 !important;
     overflow-y: auto !important;
     height: auto !important;
+    min-height: 500px !important;
 }
 
 /* Markdown Editor Textarea */
