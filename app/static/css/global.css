@@ -5542,7 +5542,7 @@ h1.animate-header,
     box-shadow: var(--shadow-md);
     position: relative;
     /* Match .card positioning */
-    margin: 1.5rem auto;
+    margin: 1rem auto;
     max-width: 1400px;
 }
 
