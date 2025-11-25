@@ -611,7 +611,7 @@ a:hover {
 .card {
     background: var(--color-surface);
     border-radius: 16px;
-    margin: 2rem auto;
+    margin: 1.75rem auto;
     max-width: 1400px;
     box-shadow: var(--shadow-md);
     border: 1px solid var(--color-border-light);
@@ -3231,14 +3231,28 @@ table td a:hover {
 .chat {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 22rem);
-    max-height: calc(100vh - 22rem);
+    height: calc(100vh - 180px);
+    max-height: calc(100vh - 180px);
     max-width: 1400px;
-    margin: 0 auto 2rem auto;
+    margin: 1.75rem auto;
+    margin-bottom: 0;
     background: var(--color-surface);
-    box-shadow: var(--shadow-xl);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--color-border-light);
     border-radius: 16px;
     overflow: hidden;
+    position: relative;
+}
+
+.chat::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--gradient-primary);
+    z-index: 1;
 }
 
 .chat__header {
@@ -3697,11 +3711,11 @@ table td a:hover {
 /* Line height utilities */
 .u-lh-2 { line-height: 2; }
 
-/* Icon size utilities */
-.u-icon-sm { width: 14px; height: 14px; }
-.u-icon-md { width: 16px; height: 16px; }
-.u-icon-lg { width: 18px; height: 18px; }
-.u-icon-xl { width: 20px; height: 20px; }
+/* Icon size utilities (also targets SVGs inside for Lucide icons) */
+.u-icon-sm, .u-icon-sm svg { width: 14px; height: 14px; }
+.u-icon-md, .u-icon-md svg { width: 16px; height: 16px; }
+.u-icon-lg, .u-icon-lg svg { width: 18px; height: 18px; }
+.u-icon-xl, .u-icon-xl svg { width: 20px; height: 20px; }
 
 /* Font size utilities */
 .u-text-sm { font-size: 0.875rem; }
@@ -5542,7 +5556,8 @@ h1.animate-header,
     box-shadow: var(--shadow-md);
     position: relative;
     /* Match .card positioning */
-    margin: 1rem auto;
+    margin: 1.75rem auto;
+    margin-bottom: 0;
     max-width: 1400px;
 }
 
@@ -5671,8 +5686,14 @@ h1.animate-header,
 }
 
 .kt-tree-item__icon {
-    font-size: 0.875rem;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+.kt-tree-item__icon svg {
+    width: 14px;
+    height: 14px;
 }
 
 .kt-tree-item__name {
@@ -5890,7 +5911,14 @@ h1.animate-header,
 }
 
 .kt-file__icon {
-    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.kt-file__icon svg {
+    width: 32px;
+    height: 32px;
 }
 
 .kt-file__name {
@@ -5911,8 +5939,9 @@ h1.animate-header,
     border-radius: 6px;
 }
 
-.kt-files--list .kt-file__icon {
-    font-size: 1.25rem;
+.kt-files--list .kt-file__icon svg {
+    width: 20px;
+    height: 20px;
 }
 
 .kt-files--list .kt-file__name {
@@ -6112,6 +6141,263 @@ h1.animate-header,
 
 #article-editor .ck-editor__editable::-webkit-scrollbar-thumb:hover {
     background: var(--color-text-muted);
+}
+
+/* CKEditor Dark Mode Support */
+[data-theme="dark"] .ck.ck-editor {
+    --ck-color-base-background: var(--color-surface);
+    --ck-color-base-foreground: var(--color-bg-secondary);
+    --ck-color-base-border: var(--color-border-medium);
+    --ck-color-base-text: var(--color-text-primary);
+    --ck-color-focus-border: var(--color-primary);
+    --ck-color-focus-outer-shadow: transparent;
+    --ck-color-button-default-background: transparent;
+    --ck-color-button-default-hover-background: var(--color-hover-bg);
+    --ck-color-button-default-active-background: var(--color-hover-bg);
+    --ck-color-button-on-background: var(--color-primary);
+    --ck-color-button-on-hover-background: var(--color-primary-hover);
+    --ck-color-button-on-active-background: var(--color-primary);
+    --ck-color-button-on-color: white;
+    --ck-color-text: var(--color-text-primary);
+    --ck-color-icon: var(--color-text-primary);
+    --ck-color-toolbar-background: var(--color-bg-secondary);
+    --ck-color-toolbar-border: var(--color-border-medium);
+    --ck-color-panel-background: var(--color-surface);
+    --ck-color-panel-border: var(--color-border-medium);
+    --ck-color-dropdown-panel-background: var(--color-surface);
+    --ck-color-dropdown-panel-border: var(--color-border-medium);
+    --ck-color-list-background: var(--color-surface);
+    --ck-color-list-button-hover-background: var(--color-hover-bg);
+    --ck-color-list-button-on-background: var(--color-primary);
+    --ck-color-list-button-on-background-focus: var(--color-primary-hover);
+    --ck-color-list-button-on-text: white;
+    --ck-color-input-background: var(--color-surface);
+    --ck-color-input-border: var(--color-border-medium);
+    --ck-color-input-text: var(--color-text-primary);
+    --ck-color-input-disabled-background: var(--color-bg-secondary);
+    --ck-color-input-disabled-border: var(--color-border-light);
+    --ck-color-input-disabled-text: var(--color-text-muted);
+    --ck-color-labeled-field-label-background: var(--color-surface);
+    --ck-color-tooltip-background: var(--color-bg-tertiary);
+    --ck-color-tooltip-text: var(--color-text-primary);
+    --ck-color-shadow-drop: rgba(0, 0, 0, 0.3);
+    --ck-color-shadow-inner: rgba(0, 0, 0, 0.2);
+    --ck-color-split-button-hover-background: var(--color-hover-bg);
+    --ck-color-split-button-hover-border: var(--color-border-medium);
+}
+
+/* CKEditor main toolbar split buttons */
+[data-theme="dark"] .ck.ck-editor .ck-splitbutton__arrow {
+    color: var(--color-text-primary) !important;
+}
+[data-theme="dark"] .ck.ck-editor .ck-splitbutton__arrow:hover {
+    background: var(--color-hover-bg) !important;
+}
+[data-theme="dark"] .ck.ck-editor .ck-splitbutton__arrow svg {
+    color: var(--color-text-primary) !important;
+}
+[data-theme="dark"] .ck.ck-editor .ck-splitbutton.ck-splitbutton_open > .ck-splitbutton__arrow {
+    background: var(--color-hover-bg) !important;
+}
+[data-theme="dark"] .ck.ck-editor .ck-splitbutton:hover .ck-button .ck-icon {
+    color: var(--color-text-primary) !important;
+}
+
+/* CKEditor editor content area */
+[data-theme="dark"] .ck.ck-editor__main>.ck-editor__editable,
+[data-theme="dark"] .ck.ck-editor__editable:not(.ck-editor__nested-editable) {
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    border-color: var(--color-border-medium);
+}
+
+/* CKEditor code blocks */
+[data-theme="dark"] .ck-content pre {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+}
+[data-theme="dark"] .ck-content code {
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+}
+
+/* CKEditor balloon panels (link editor, table toolbar) */
+[data-theme="dark"] .ck.ck-balloon-panel,
+.ck-dark-mode .ck.ck-balloon-panel {
+    --ck-color-base-background: var(--color-surface);
+    --ck-color-base-foreground: var(--color-bg-secondary);
+    --ck-color-base-border: var(--color-border-medium);
+    --ck-color-base-text: var(--color-text-primary);
+    --ck-color-button-default-background: transparent;
+    --ck-color-button-default-hover-background: var(--color-hover-bg);
+    --ck-color-button-on-background: var(--color-primary);
+    --ck-color-button-on-color: white;
+    --ck-color-text: var(--color-text-primary);
+    --ck-color-icon: var(--color-text-primary);
+    --ck-color-panel-background: var(--color-surface);
+    --ck-color-panel-border: var(--color-border-medium);
+    --ck-color-dropdown-panel-background: var(--color-surface);
+    --ck-color-dropdown-panel-border: var(--color-border-medium);
+    --ck-color-input-background: var(--color-surface);
+    --ck-color-input-border: var(--color-border-medium);
+    --ck-color-input-text: var(--color-text-primary);
+    --ck-color-list-background: var(--color-surface);
+    --ck-color-list-button-hover-background: var(--color-hover-bg);
+    --ck-color-list-button-on-background: var(--color-primary);
+    --ck-color-list-button-on-text: white;
+    --ck-color-labeled-field-label-background: var(--color-surface);
+    --ck-color-toolbar-background: var(--color-surface);
+    --ck-color-toolbar-border: var(--color-border-medium);
+    background: var(--color-surface) !important;
+    border-color: var(--color-border-medium) !important;
+}
+
+/* Balloon panel toolbar */
+[data-theme="dark"] .ck.ck-balloon-panel .ck-toolbar,
+.ck-dark-mode .ck.ck-balloon-panel .ck-toolbar {
+    background: var(--color-surface) !important;
+    border-color: var(--color-border-medium) !important;
+}
+[data-theme="dark"] .ck.ck-balloon-panel .ck-toolbar .ck-button,
+.ck-dark-mode .ck.ck-balloon-panel .ck-toolbar .ck-button {
+    color: var(--color-text-primary) !important;
+}
+[data-theme="dark"] .ck.ck-balloon-panel .ck-toolbar .ck-button .ck-icon,
+.ck-dark-mode .ck.ck-balloon-panel .ck-toolbar .ck-button .ck-icon {
+    color: var(--color-text-primary) !important;
+}
+[data-theme="dark"] .ck.ck-balloon-panel .ck-toolbar .ck-button:hover,
+.ck-dark-mode .ck.ck-balloon-panel .ck-toolbar .ck-button:hover {
+    background: var(--color-hover-bg) !important;
+}
+[data-theme="dark"] .ck.ck-balloon-panel .ck-toolbar .ck-button.ck-on,
+.ck-dark-mode .ck.ck-balloon-panel .ck-toolbar .ck-button.ck-on {
+    background: var(--color-primary) !important;
+    color: white !important;
+}
+[data-theme="dark"] .ck.ck-balloon-panel .ck-toolbar .ck-dropdown__arrow,
+.ck-dark-mode .ck.ck-balloon-panel .ck-toolbar .ck-dropdown__arrow {
+    color: var(--color-text-primary) !important;
+}
+
+/* Balloon panel split buttons */
+[data-theme="dark"] .ck.ck-balloon-panel .ck-splitbutton .ck-button,
+.ck-dark-mode .ck.ck-balloon-panel .ck-splitbutton .ck-button {
+    color: var(--color-text-primary) !important;
+}
+[data-theme="dark"] .ck.ck-balloon-panel .ck-splitbutton .ck-button .ck-icon,
+.ck-dark-mode .ck.ck-balloon-panel .ck-splitbutton .ck-button .ck-icon {
+    color: var(--color-text-primary) !important;
+}
+[data-theme="dark"] .ck.ck-balloon-panel .ck-splitbutton .ck-button:hover,
+.ck-dark-mode .ck.ck-balloon-panel .ck-splitbutton .ck-button:hover {
+    background: var(--color-hover-bg) !important;
+}
+[data-theme="dark"] .ck.ck-balloon-panel .ck-splitbutton__arrow,
+.ck-dark-mode .ck.ck-balloon-panel .ck-splitbutton__arrow {
+    color: var(--color-text-primary) !important;
+}
+[data-theme="dark"] .ck.ck-balloon-panel .ck-splitbutton__arrow:hover,
+.ck-dark-mode .ck.ck-balloon-panel .ck-splitbutton__arrow:hover {
+    background: var(--color-hover-bg) !important;
+}
+[data-theme="dark"] .ck.ck-balloon-panel .ck-splitbutton__arrow svg,
+.ck-dark-mode .ck.ck-balloon-panel .ck-splitbutton__arrow svg {
+    color: var(--color-text-primary) !important;
+}
+[data-theme="dark"] .ck.ck-balloon-panel .ck-splitbutton.ck-splitbutton_open > .ck-splitbutton__arrow,
+.ck-dark-mode .ck.ck-balloon-panel .ck-splitbutton.ck-splitbutton_open > .ck-splitbutton__arrow {
+    background: var(--color-hover-bg) !important;
+}
+
+/* Balloon panel arrow */
+[data-theme="dark"] .ck.ck-balloon-panel::before,
+[data-theme="dark"] .ck.ck-balloon-panel::after {
+    border-bottom-color: var(--color-surface) !important;
+}
+[data-theme="dark"] .ck.ck-balloon-panel[class*="arrow_n"]::before,
+[data-theme="dark"] .ck.ck-balloon-panel[class*="arrow_n"]::after {
+    border-bottom-color: var(--color-surface) !important;
+}
+[data-theme="dark"] .ck.ck-balloon-panel[class*="arrow_s"]::before,
+[data-theme="dark"] .ck.ck-balloon-panel[class*="arrow_s"]::after {
+    border-top-color: var(--color-surface) !important;
+}
+
+/* Table properties form */
+[data-theme="dark"] .ck.ck-balloon-panel .ck-form,
+[data-theme="dark"] .ck.ck-balloon-panel .ck-table-form,
+[data-theme="dark"] .ck.ck-balloon-panel .ck-table-properties-form,
+[data-theme="dark"] .ck.ck-balloon-panel .ck-table-cell-properties-form {
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+}
+[data-theme="dark"] .ck.ck-balloon-panel .ck-form__header {
+    background: var(--color-bg-secondary);
+    border-bottom-color: var(--color-border-medium);
+}
+[data-theme="dark"] .ck.ck-balloon-panel .ck-form__header__label {
+    color: var(--color-text-primary);
+}
+[data-theme="dark"] .ck.ck-balloon-panel .ck-labeled-field-view .ck-label {
+    color: var(--color-text-secondary);
+    background: var(--color-surface);
+}
+[data-theme="dark"] .ck.ck-balloon-panel .ck-input {
+    background: var(--color-surface) !important;
+    border-color: var(--color-border-medium) !important;
+    color: var(--color-text-primary) !important;
+}
+[data-theme="dark"] .ck.ck-balloon-panel .ck-dropdown__panel {
+    background: var(--color-surface);
+    border-color: var(--color-border-medium);
+}
+[data-theme="dark"] .ck.ck-balloon-panel .ck-list {
+    background: var(--color-surface);
+}
+[data-theme="dark"] .ck.ck-balloon-panel .ck-list__item .ck-button {
+    color: var(--color-text-primary);
+}
+[data-theme="dark"] .ck.ck-balloon-panel .ck-list__item .ck-button:hover {
+    background: var(--color-hover-bg);
+}
+[data-theme="dark"] .ck.ck-balloon-panel .ck-list__item .ck-button.ck-on {
+    background: var(--color-primary);
+    color: white;
+}
+[data-theme="dark"] .ck.ck-balloon-panel .ck-button {
+    color: var(--color-text-primary);
+}
+[data-theme="dark"] .ck.ck-balloon-panel .ck-button:hover {
+    background: var(--color-hover-bg);
+}
+[data-theme="dark"] .ck.ck-balloon-panel .ck-button.ck-on {
+    background: var(--color-primary);
+    color: white;
+}
+[data-theme="dark"] .ck.ck-balloon-panel .ck-dropdown .ck-button .ck-button__label {
+    color: var(--color-text-primary);
+}
+[data-theme="dark"] .ck.ck-balloon-panel .ck-dropdown__arrow {
+    color: var(--color-text-primary);
+}
+[data-theme="dark"] .ck.ck-color-grid {
+    background: var(--color-surface);
+}
+
+/* Standalone dropdowns outside balloon panels */
+[data-theme="dark"] .ck-body-wrapper .ck-dropdown__panel {
+    background: var(--color-surface);
+    border-color: var(--color-border-medium);
+}
+[data-theme="dark"] .ck-body-wrapper .ck-list {
+    background: var(--color-surface);
+}
+[data-theme="dark"] .ck-body-wrapper .ck-list__item .ck-button {
+    color: var(--color-text-primary);
+}
+[data-theme="dark"] .ck-body-wrapper .ck-list__item .ck-button:hover {
+    background: var(--color-hover-bg);
 }
 
 /* Markdown Editor Textarea */
