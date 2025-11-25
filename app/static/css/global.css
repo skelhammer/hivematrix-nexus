@@ -5925,6 +5925,7 @@ h1.animate-header,
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    min-height: 0;
     padding: 1.5rem;
     gap: 1rem;
     background: var(--color-surface);
@@ -5935,6 +5936,7 @@ h1.animate-header,
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    min-height: 0;
     background: var(--color-surface);
     border-radius: 8px;
 }
@@ -6062,11 +6064,12 @@ h1.animate-header,
     cursor: default;
 }
 
-/* Article display (view mode) */
+/* Article display (view mode) - scroll inside card */
 #article-display {
     flex: 1;
     overflow-y: auto;
     padding: 1.5rem;
+    min-height: 0;
 }
 
 /* Editor container height */
@@ -6075,16 +6078,10 @@ h1.animate-header,
     display: flex;
     flex-direction: column;
     min-height: 0;
+    overflow: hidden;
 }
 
 #article-editor .ck.ck-editor {
-    display: flex !important;
-    flex-direction: column !important;
-    flex: 1 !important;
-    min-height: 0 !important;
-}
-
-#article-editor .ck-editor__main {
     flex: 1 !important;
     display: flex !important;
     flex-direction: column !important;
@@ -6092,11 +6089,29 @@ h1.animate-header,
     overflow: hidden !important;
 }
 
-#article-editor .ck-editor__editable {
+#article-editor .ck-editor__main {
     flex: 1 !important;
-    overflow-y: auto !important;
-    height: auto !important;
-    min-height: 500px !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+}
+
+/* CKEditor scrollbar styling (height/overflow set via JS API) */
+#article-editor .ck-editor__editable::-webkit-scrollbar {
+    width: 8px;
+}
+
+#article-editor .ck-editor__editable::-webkit-scrollbar-track {
+    background: var(--color-bg-secondary);
+    border-radius: 4px;
+}
+
+#article-editor .ck-editor__editable::-webkit-scrollbar-thumb {
+    background: var(--color-border-medium);
+    border-radius: 4px;
+}
+
+#article-editor .ck-editor__editable::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-muted);
 }
 
 /* Markdown Editor Textarea */
